@@ -66,7 +66,14 @@ div[data-testid="stCheckbox"] label p,div[data-testid="stCheckbox"] label span{c
 div[data-testid="stMetric"]{background:#f8fafc!important}
 div[data-testid="stMetric"] label,div[data-testid="stMetric"] label p{color:#475467!important}
 div[data-testid="stMetric"] [data-testid="stMetricValue"],div[data-testid="stMetric"] [data-testid="stMetricValue"] *{color:#101828!important}
-[data-testid="stDataFrame"]{color:#101828}
+[data-testid="stDataFrame"]{color:#101828!important;border:1px solid #dfe3e8!important;border-radius:12px!important;overflow:hidden!important;background:#fff!important;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+[data-testid="stDataFrame"] *{font-size:.9rem!important}
+[data-testid="stDataFrame"] [role="columnheader"]{background:#f2f4f7!important;color:#344054!important;font-weight:750!important;border-color:#d0d5dd!important}
+[data-testid="stDataFrame"] [role="columnheader"] *{color:#344054!important;font-weight:750!important}
+[data-testid="stDataFrame"] [role="gridcell"]{background:#fff!important;color:#101828!important;border-color:#eaecf0!important}
+[data-testid="stDataFrame"] [role="gridcell"] *{color:#101828!important}
+[data-testid="stDataFrame"] [role="row"]:hover [role="gridcell"]{background:#f9fafb!important}
+[data-testid="stDataFrame"] canvas{filter:none!important}
 h1,h2,h3,h4{color:#101828!important}
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
