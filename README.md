@@ -24,7 +24,7 @@ Mapeo basado en RSPO P&C 2024 v4.2, indicador 7.1.2 (C):
 Las restricciones o prohibiciones nacionales deben verificarse aparte.
 
 ### ISCC
-Mapeo basado en ISCC EU 202-2, requisito 2.4.1:
+Mapeo basado en **ISCC EU 202-2 v1.1** (válido desde el 1 de diciembre de 2022), requisito 2.4.1:
 - OMS 1a / 1b.
 - Convenio de Estocolmo.
 - Anexo III del Convenio de Rotterdam.
@@ -32,6 +32,8 @@ Mapeo basado en ISCC EU 202-2, requisito 2.4.1:
 La aplicación no traslada automáticamente a ISCC otros criterios de Rainforest Alliance.
 
 ### Rainforest Alliance
+Fuente oficial: [Anexo al capítulo Agricultura v1.4](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14)
+
 Se conservan como referencia complementaria las listas locales de:
 - PROHIBIDOS.
 - OBSOLETOS.
