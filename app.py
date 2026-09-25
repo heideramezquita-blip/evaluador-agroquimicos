@@ -41,7 +41,7 @@ div.stButton>button *,div.stButton>button p,div.stButton>button span,div.stButto
 div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
 .divider{height:1px;background:#eee;margin:3rem 0 2rem}
 .result-card{padding:1.35rem 1.45rem;border-radius:14px;margin:1rem 0 1.5rem;border:1px solid;border-left-width:7px}
-.result-card h2{margin:0 0 .5rem;font-size:1.42rem}.result-card p{margin:0;line-height:1.58}
+.result-card h2{margin:0 0 .5rem;font-size:1.42rem}.result-card p{margin:0;line-height:1.58}.result-note{display:block;margin-top:.55rem;font-size:.9rem;color:#667085;font-weight:500}
 .result-red{background:#fff2f1;border-color:#ef4444;color:#7f1d1d}
 .result-orange{background:#fff6ed;border-color:#f97316;color:#7c2d12}
 .result-yellow{background:#fffbeb;border-color:#eab308;color:#713f12}
@@ -162,7 +162,11 @@ def result_card(status,message):
     elif status in (STATUS_MATCH_REVIEW,STATUS_RA_SEVERE,STATUS_MITIGATION): css,icon='result-orange','⚠️'
     elif status==STATUS_DOCUMENT_REVIEW: css,icon='result-yellow','📄'
     else: css,icon='result-neutral','✓'
-    st.markdown(f'<div class="result-card {css}"><h2>{icon} {escape(status)}</h2><p>{escape(message)}</p></div>',unsafe_allow_html=True)
+    parts=message.split(' Resultado basado en ',1)
+    body=escape(parts[0])
+    if len(parts)==2:
+        body+=f'<span class="result-note">Resultado basado en {escape(parts[1])}</span>'
+    st.markdown(f'<div class="result-card {css}"><h2>{icon} {escape(status)}</h2><p>{body}</p></div>',unsafe_allow_html=True)
 
 def pubchem_url(cas):
     cas=(cas or '').strip()
