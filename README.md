@@ -15,6 +15,8 @@ La evaluación es local y determinística. No consulta servicios externos para d
 ## Criterios considerados
 
 ### RSPO
+Fuente oficial: [RSPO Principles and Criteria 2024 v4.2 — español](https://rspo.org/wp-content/uploads/SPA-2024-RSPO-Principles-and-Criteria-%E2%80%93-Version-4.2-spanish.pdf)
+
 Mapeo basado en RSPO P&C 2024 v4.2, indicador 7.1.2 (C):
 - OMS 1A / 1B.
 - Carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A / 1B.
@@ -24,6 +26,8 @@ Mapeo basado en RSPO P&C 2024 v4.2, indicador 7.1.2 (C):
 Las restricciones o prohibiciones nacionales deben verificarse aparte.
 
 ### ISCC
+Fuente oficial: [ISCC EU 202-2 Agricultural Biomass: ISCC Principles 2-6](https://iscc-system.org/wp-content/uploads/dlm_uploads/2026/03/ISCC-EU-202-2-Agricultural-Biomass-ISCC-Principles-2-6.pdf)
+
 Mapeo basado en **ISCC EU 202-2 v1.1** (válido desde el 1 de diciembre de 2022), requisito 2.4.1:
 - OMS 1a / 1b.
 - Convenio de Estocolmo.
