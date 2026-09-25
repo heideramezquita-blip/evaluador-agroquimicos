@@ -26,12 +26,18 @@ div[data-testid="stFileUploader"]{max-width:760px;margin:0 auto}
 div[data-testid="stFileUploader"]>label{display:none}
 div[data-testid="stFileUploader"] section{min-height:210px;border:2px dashed #d0d5dd!important;border-radius:16px!important;background:#fafafa!important;padding:2.2rem 1rem!important;transition:.18s ease}
 div[data-testid="stFileUploader"] section:hover{border-color:var(--accent)!important;background:#fff8f7!important}
-div[data-testid="stFileUploader"] section button{background:var(--accent)!important;color:white!important;border:0!important;border-radius:9px!important;font-weight:750!important;padding:.65rem 1.1rem!important}
+div[data-testid="stFileUploader"] section button{background:var(--accent)!important;color:#fff!important;border:0!important;border-radius:9px!important;font-weight:750!important;padding:.65rem 1.1rem!important}
+div[data-testid="stFileUploader"] section button *,div[data-testid="stFileUploader"] section button p,div[data-testid="stFileUploader"] section button span,div[data-testid="stFileUploader"] section button svg{color:#fff!important;fill:#fff!important}
+div[data-testid="stFileUploader"] section>div{width:100%!important;align-items:center!important;text-align:center!important}
+div[data-testid="stFileUploader"] section [data-testid="stFileUploaderDropzoneInstructions"]{align-items:center!important;text-align:center!important}
+div[data-testid="stFileUploader"] section [data-testid="stFileUploaderDropzoneInstructions"]>div{text-align:center!important}
+div[data-testid="stFileUploader"] section button{margin-left:auto!important;margin-right:auto!important}
 .helper{text-align:center;color:#667085;font-size:.9rem;font-weight:500;margin:.3rem 0 1.8rem}
 .secondary{max-width:760px;margin:0 auto}
 div[data-testid="stExpander"]{border:1px solid #d0d5dd;border-radius:12px;background:#fff} div[data-testid="stExpander"] summary,div[data-testid="stExpander"] summary *{color:#344054!important;font-weight:650!important;opacity:1!important} div[data-testid="stExpander"] svg{fill:#667085!important;color:#667085!important}
 div.stButton{max-width:760px;margin:1.2rem auto 0}
-div.stButton>button{min-height:3.2rem;border:0;border-radius:10px;font-size:1rem;font-weight:750;background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(229,50,45,.18)}
+div.stButton>button{min-height:3.2rem;border:0;border-radius:10px;font-size:1rem;font-weight:750;background:var(--accent)!important;color:#fff!important;box-shadow:0 4px 12px rgba(229,50,45,.18)}
+div.stButton>button *,div.stButton>button p,div.stButton>button span,div.stButton>button svg{color:#fff!important;fill:#fff!important}
 div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
 .divider{height:1px;background:#eee;margin:3rem 0 2rem}
 .result-card{padding:1.35rem 1.45rem;border-radius:14px;margin:1rem 0 1.5rem;border:1px solid;border-left-width:7px}
