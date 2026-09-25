@@ -81,6 +81,19 @@ div[data-testid="stMetric"] [data-testid="stMetricValue"],div[data-testid="stMet
 [data-testid="stDataFrame"] [role="row"]:hover [role="gridcell"]{background:#f9fafb!important}
 [data-testid="stDataFrame"] canvas{filter:none!important}
 h1,h2,h3,h4{color:#101828!important}
+
+/* File uploader: light file chips + centered empty-state controls */
+div[data-testid="stFileUploader"] section{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important}
+div[data-testid="stFileUploader"] section>div{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:.7rem!important;width:100%!important}
+div[data-testid="stFileUploader"] section [data-testid="stFileUploaderDropzoneInstructions"]{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;width:auto!important}
+div[data-testid="stFileUploader"] section [data-testid="stFileUploaderDropzoneInstructions"] *{text-align:center!important}
+div[data-testid="stFileUploader"] section small{color:#667085!important;text-align:center!important}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"]{background:#fff!important;border:1px solid #d0d5dd!important;border-radius:10px!important;color:#344054!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] *{color:#344054!important}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button{background:#f2f4f7!important;border:1px solid #e4e7ec!important;color:#475467!important}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button *{color:#475467!important;fill:#475467!important}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover{background:#fee4e2!important;border-color:#fda29b!important}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover *{color:#b42318!important;fill:#b42318!important}
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
 </style>
