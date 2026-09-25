@@ -272,9 +272,9 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
 with st.expander('Fuentes normativas y alcance de la evaluación'):
     st.markdown('''**RSPO — marco principal:** Principios y Criterios RSPO 2024, versión 4.2, indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS 1A/1B; carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
 
-**ISCC — marco principal:** ISCC EU 202-2, requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
+**ISCC — marco principal:** ISCC EU 202-2 v1.1 (válido desde el 1 de diciembre de 2022), requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
 
-**Rainforest Alliance — referencia complementaria y base local de detección:** Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
+**Rainforest Alliance — referencia complementaria y base local de detección:** [Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA)](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
 
 La aplicación no consulta estos estándares en tiempo real. Una coincidencia de Rainforest Alliance solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita codificada; en los demás casos se muestra para revisión, sin inferir equivalencia normativa.''')
 
