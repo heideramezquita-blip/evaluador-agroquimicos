@@ -1,7 +1,9 @@
 import re
 
-import fitz  # PyMuPDF
+import fitz
 import streamlit as st
+
+from src.ingredient_parser import detectar_bloques_composicion
 
 
 # -------------------------------------------------
