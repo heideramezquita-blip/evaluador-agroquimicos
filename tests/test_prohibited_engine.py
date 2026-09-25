@@ -26,6 +26,13 @@ class ProhibitedEngineTests(unittest.TestCase):
   r=run_text('SECCIÓN 3 COMPOSICIÓN\nIngrediente activo: metilarsonato de sodio CAS 2163-80-6\nGrupo químico: Herbicida Arsenical')
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
   self.assertTrue(any(h.entry.ingredient=='Arsénico y sus compuestos' for h in r['all_hits']))
+  self.assertFalse(any(h.strength=='validated_cas' and h.entry.ingredient=='Arsénico y sus compuestos' for h in r['all_hits']))
+ def test_nondeterministic_arsenic_group_cannot_become_no_use_from_wording(self):
+  r=run_text('COMPOSICIÓN GARANTIZADA\nIngrediente activo: MSMA metilarsonato de sodio 720 g/L\nCAS 2163-80-6\nHerbicida arsenical. Arsénico. Arsenato. Información del ingrediente activo.')
+  self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
+  arsenic=[h for h in r['all_hits'] if h.entry.ingredient=='Arsénico y sus compuestos']
+  self.assertTrue(arsenic)
+  self.assertTrue(all(h.strength=='group_candidate' for h in arsenic))
  def test_scanned_pdf_is_document_review(self):
   with patch('src.engine.read_pdf',return_value=PdfDocument('scan.pdf',[PdfPage(1,'')],1,0,0,False,['sin texto'])):
    r=analyze([('scan.pdf',b'x')],master_path=MASTER)
