@@ -3,7 +3,7 @@ from html import escape
 from pathlib import Path
 import streamlit as st
 from src.engine import analyze
-from src.rules import STATUS_NO_USE,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW
+from src.rules import STATUS_NO_USE,STATUS_OBSOLETE,STATUS_RA_SEVERE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW
 
 BASE_DIR=Path(__file__).resolve().parent
 MASTER_PATH=BASE_DIR/'data'/'master_restrictions.csv'
@@ -119,9 +119,9 @@ footer{visibility:hidden}
 </style>
 """,unsafe_allow_html=True)
 
-st.markdown('<div class="brand"><span class="brand-mark">A</span><span>Evaluador de Agroquímicos</span><span class="brand-badge">PROHIBIDOS</span></div>',unsafe_allow_html=True)
-st.markdown("""<div class="hero"><h1>Evalúa tus documentos contra PROHIBIDOS</h1>
-<p>Carga la ficha técnica, la ficha de datos de seguridad o ambas. El sistema busca CAS, nombres y grupos incluidos en la lista corporativa de plaguicidas prohibidos.</p></div>""",unsafe_allow_html=True)
+st.markdown('<div class="brand"><span class="brand-mark">A</span><span>Evaluador de Agroquímicos</span><span class="brand-badge">RA · RSPO · ISCC</span></div>',unsafe_allow_html=True)
+st.markdown("""<div class="hero"><h1>Evalúa tus documentos contra las listas de plaguicidas</h1>
+<p>Carga la ficha técnica, la ficha de datos de seguridad o ambas. El sistema busca CAS, nombres y grupos en PROHIBIDOS, OBSOLETOS y MITIGACIÓN DE RIESGOS, y presenta su alcance normativo.</p></div>""",unsafe_allow_html=True)
 
 files=st.file_uploader('Seleccionar archivos PDF',type=['pdf'],accept_multiple_files=True,help='Puede cargar varios documentos del mismo producto.')
 st.markdown('<div class="helper">Selecciona los PDF o arrástralos y suéltalos aquí · Puedes cargar FT + FDS del mismo producto</div>',unsafe_allow_html=True)
@@ -133,8 +133,8 @@ with st.expander('Introducir CAS manualmente · opcional'):
 st.markdown('</div>',unsafe_allow_html=True)
 
 def result_card(status,message):
-    if status==STATUS_NO_USE: css,icon='result-red','⛔'
-    elif status==STATUS_MATCH_REVIEW: css,icon='result-orange','⚠️'
+    if status in (STATUS_NO_USE,STATUS_OBSOLETE): css,icon='result-red','⛔'
+    elif status in (STATUS_MATCH_REVIEW,STATUS_RA_SEVERE,STATUS_MITIGATION): css,icon='result-orange','⚠️'
     elif status==STATUS_DOCUMENT_REVIEW: css,icon='result-yellow','📄'
     else: css,icon='result-neutral','✓'
     st.markdown(f'<div class="result-card {css}"><h2>{icon} {escape(status)}</h2><p>{escape(message)}</p></div>',unsafe_allow_html=True)
@@ -153,8 +153,8 @@ def table_html(rows):
 def consolidated_hits(hits):
     grouped={}
     for h in hits:
-        key=(h.entry.ingredient,h.entry.cas,h.source_file,h.channel)
-        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'channel':h.channel,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'contexts':[]})
+        key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file,h.channel)
+        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'channel':h.channel,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'source_list':h.entry.source_list,'source_version':h.entry.source_version,'contexts':[]})
         if h.page:g['pages'].add(h.page)
         g['classes'].add(h.context_class)
         if h.context and h.context not in g['contexts']:g['contexts'].append(h.context)
@@ -164,7 +164,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     items=[(f.name,f.getvalue()) for f in (files or [])]
     if not items and not manual.strip():
         st.warning('Carga al menos un PDF o introduce un CAS para iniciar la evaluación.');st.stop()
-    with st.spinner('Analizando documentos y cruzando con PROHIBIDOS...'):
+    with st.spinner('Analizando documentos y cruzando con las listas normativas...'):
         result=analyze(items,manual_cas_text=manual,manual_active_confirmed=manual_active,master_path=MASTER_PATH)
     ev=result['evaluation']
     st.markdown('<div class="divider"></div>',unsafe_allow_html=True)
@@ -172,7 +172,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     result_card(ev.status,ev.message)
 
     if ev.status==STATUS_MATCH_REVIEW:
-        st.caption('La coincidencia con PROHIBIDOS es real; lo pendiente es confirmar el papel de la sustancia dentro del producto.')
+        st.caption('La coincidencia con la lista es real; lo pendiente es confirmar el papel de la sustancia dentro del producto.')
     elif ev.status==STATUS_DOCUMENT_REVIEW:
         st.caption('No existe una coincidencia demostrada. La revisión se solicita porque el documento no pudo evaluarse de forma suficiente.')
 
@@ -180,10 +180,11 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
         for g in consolidated_hits(ev.hits):
             pages=', '.join(map(str,sorted(g['pages']))) if g['pages'] else '—';classes=', '.join(sorted(g['classes']))
-            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>CAS:</b> {escape(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}</div></div>',unsafe_allow_html=True)
+            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(g["source_list"])} &nbsp;·&nbsp; <b>CAS:</b> {escape(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}</div></div>',unsafe_allow_html=True)
             with st.expander(f'Ver contexto — {g["ingredient"]}'):
-                if g['usage']:st.write('**Uso en PROHIBIDOS:**',g['usage'])
-                if g['criteria']:st.write('**Criterio en PROHIBIDOS:**',g['criteria'])
+                if g['usage']:st.write('**Uso principal:**',g['usage'])
+                if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
+                st.write('**Fuente:**',f'{g["source_list"]} · versión {g["source_version"]}')
                 for i,context in enumerate(g['contexts'][:5],1):
                     st.caption(f'Ocurrencia {i}');st.write(context)
 
@@ -191,18 +192,29 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     for w in ev.warnings:st.info(w)
 
     with st.expander('Detalles técnicos y trazabilidad'):
-        c1,c2,c3=st.columns(3)
-        c1.metric('PROHIBIDOS con CAS',result['prohibited_specific_count']);c2.metric('Grupos / CAS varios',result['prohibited_group_count']);c3.metric('CAS procesados',len(ev.cas_records))
+        c1,c2,c3,c4=st.columns(4)
+        c1.metric('PROHIBIDOS',result['prohibited_specific_count']+result['prohibited_group_count']);c2.metric('OBSOLETOS',result['obsolete_count']);c3.metric('MITIGACIÓN',result['mitigation_count']);c4.metric('CAS procesados',len(ev.cas_records))
         if result['documents']:
             st.markdown('#### Documentos')
             st.markdown(table_html([{'Archivo':d.file_name,'Páginas':d.page_count,'Caracteres':d.character_count,'Páginas con texto':d.pages_with_text,'Texto extraíble':'Sí' if d.processable else 'No'} for d in result['documents']]),unsafe_allow_html=True)
         if result['all_hits']:
             st.markdown('#### Todas las coincidencias candidatas')
-            st.markdown(table_html([{'Entrada PROHIBIDOS':h.entry.ingredient,'CAS':h.entry.cas or 'Varios','Canal':h.channel,'Valor':h.matched_value,'Clase contextual':h.context_class,'Archivo':h.source_file,'Página':h.page or '—'} for h in result['all_hits']]),unsafe_allow_html=True)
+            st.markdown(table_html([{'Lista':h.entry.source_list,'Entrada':h.entry.ingredient,'CAS':h.entry.cas or 'Varios','Canal':h.channel,'Valor':h.matched_value,'Clase contextual':h.context_class,'Archivo':h.source_file,'Página':h.page or '—'} for h in result['all_hits']]),unsafe_allow_html=True)
         if ev.cas_records:
             st.markdown('#### CAS válidos detectados/procesados')
             st.markdown(table_html([{'CAS':r.cas,'Fuentes':', '.join(sorted({o.source_file for o in r.occurrences})),'Ocurrencias':len(r.occurrences)} for r in ev.cas_records]),unsafe_allow_html=True)
         if result['invalid_candidates']:
             st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
 
-st.markdown('<div class="helper" style="margin-top:3rem">La evaluación se limita a la lista PROHIBIDOS y no sustituye la revisión técnica o normativa aplicable.</div>',unsafe_allow_html=True)
+with st.expander('Cómo interpretar abreviaturas y criterios'):
+    st.markdown('''**Uso principal:** A = Acaricida · Ad = Adyuvante · Fun = Fungicida · Fum = Fumigante · H = Herbicida · I = Insecticida · N = Nematicida · R = Rodenticida · Conserv. Mad. = Conservación de la madera.
+
+**Toxicidad aguda:** 1A = extremadamente peligroso y 1B = altamente peligroso según la clasificación OMS usada por el anexo.
+
+**Convenciones internacionales:** M = Protocolo de Montreal · R = Convenio de Rotterdam · E = Convenio de Estocolmo.
+
+**Efectos graves:** criterio propio de Rainforest Alliance. En esta herramienta no se traslada por sí solo como prohibición a RSPO ni ISCC.
+
+**Mitigación de riesgos:** una marca ✓ identifica el tipo de medida/riesgo aplicable (EPP de nivel superior, riesgo acuático, vida silvestre, polinizadores o espectador).''')
+
+st.markdown('<div class="helper" style="margin-top:3rem">La herramienta clasifica coincidencias documentales y no sustituye la verificación técnica de requisitos, excepciones o condiciones aplicables.</div>',unsafe_allow_html=True)
