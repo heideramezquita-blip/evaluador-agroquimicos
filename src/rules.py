@@ -13,8 +13,13 @@ NON_SUPPORTING={INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE}
 
 def _strong_hits(items):
     active=[h for h in items if h.context_class==ACTIVE]
-    if any(h.strength in ('validated_cas','exact_name','group_deterministic') for h in active):
-        return active+[h for h in items if h.strength=='validated_cas' and h.context_class==COMPOSITION]
+    # A non-deterministic group-name hit is only a screening signal. It must
+    # never become decisive merely because wording such as "arsenical" appears
+    # near the active ingredient. Exact validated CAS evidence has priority;
+    # CAS-less groups require an explicitly deterministic membership rule.
+    decisive=[h for h in active if h.strength in ('validated_cas','exact_name','group_deterministic')]
+    if decisive:
+        return decisive+[h for h in items if h.strength=='validated_cas' and h.context_class==COMPOSITION]
     if any(h.strength=='validated_cas' for h in items) and any(h.strength=='exact_name' and h.context_class==ACTIVE for h in items):
         return items
     return []
