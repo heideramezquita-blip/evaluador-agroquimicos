@@ -1,25 +1,25 @@
 source_list,action,scope,ingredient,cas,usage,criteria,source_code,source_version,source_date
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,"2,3,4,5-Bistetrahidro-2- furaldehido",126-15-8,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,"2,4,5-T",93-76-5,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,"2,4,5-TCP, sal de potasio",35471-43-3,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Aldrín,309-00-2,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Binapacril,485-31-4,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Cloranilo,118-75-2,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Clordecona (Kepone),143-50-0,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Clordimeformo,6164-98-3,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Clorobencilato,510-15-6,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,DBCP,96-12-8,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Dieldrín,60-57-1,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Dinoseb y sus sales y ésteres,88-85-7,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Endrín,72-20-8,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Heptacloro,76-44-8,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Leptofós,21609-90-5,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Mirex,2385-85-5,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Nitrofeno,1836-75-5,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Octametilpirofosforamida (OMPA),152-16-9,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Profam,122-42-9,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Safrol,94-59-7,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Silvex,93-72-1,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Estrobano,8001-50-1,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,TDE,72-54-8,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
-OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Toxafeno (canfecloro),8001-35-2,,Listado de plaguicidas obsoletos,SGA.PRO.14,01,2026-03-24
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,"2,3,4,5-Bistetrahidro-2- furaldehido",126-15-8,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,"2,4,5-T",93-76-5,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,"2,4,5-TCP, sal de potasio",35471-43-3,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Aldrín,309-00-2,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Binapacril,485-31-4,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Cloranilo,118-75-2,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Clordecona (Kepone),143-50-0,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Clordimeformo,6164-98-3,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Clorobencilato,510-15-6,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,DBCP,96-12-8,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Dieldrín,60-57-1,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Dinoseb y sus sales y ésteres,88-85-7,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Endrín,72-20-8,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Heptacloro,76-44-8,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Leptofós,21609-90-5,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Mirex,2385-85-5,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Nitrofeno,1836-75-5,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Octametilpirofosforamida (OMPA),152-16-9,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Profam,122-42-9,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Safrol,94-59-7,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Silvex,93-72-1,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Estrobano,8001-50-1,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,TDE,72-54-8,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
+OBSOLETE,REVISAR_OBSOLETO,ACTIVE_INGREDIENT,Toxafeno (canfecloro),8001-35-2,,Listado de plaguicidas obsoletos,A-07-SCRL-B-FA,1.4,
