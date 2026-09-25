@@ -6,7 +6,7 @@ Este directorio contiene las listas normalizadas utilizadas por el evaluador:
 - `obsolete.csv`: OBSOLETOS.
 - `risk_mitigation.csv`: MITIGACIÓN DE RIESGOS.
 
-Las listas provienen de la documentación corporativa basada en el Anexo al capítulo Agricultura de Rainforest Alliance y funcionan como base local de detección.
+Las listas locales se normalizaron a partir del Anexo al capítulo Agricultura de Rainforest Alliance y funcionan como base de detección.
 
 Los registros con CAS específico se consultan por CAS. Las entradas con CAS `varios` se tratan mediante reglas conservadoras en `src/prohibited_database.py`.
 
