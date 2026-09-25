@@ -1,6 +1,6 @@
 import re
 
-import fitz
+import fitz  # PyMuPDF
 import streamlit as st
 
 from src.ingredient_parser import (
@@ -39,7 +39,7 @@ def validar_cas(cas):
 
     for multiplicador, digito in enumerate(
         reversed(numeros),
-        start=1
+        start=1,
     ):
         suma += int(digito) * multiplicador
 
@@ -94,9 +94,8 @@ def extraer_cas(texto):
 st.set_page_config(
     page_title="Evaluador de Agroquímicos",
     page_icon="🌱",
-    layout="centered"
+    layout="centered",
 )
-
 
 st.title("Evaluador de Agroquímicos")
 
@@ -109,7 +108,7 @@ st.subheader("Cargue una ficha técnica o SDS")
 
 archivo = st.file_uploader(
     "Seleccione un archivo PDF",
-    type=["pdf"]
+    type=["pdf"],
 )
 
 
@@ -134,7 +133,7 @@ if archivo is not None:
 
         documento = fitz.open(
             stream=contenido_pdf,
-            filetype="pdf"
+            filetype="pdf",
         )
 
         numero_paginas = len(documento)
@@ -144,7 +143,7 @@ if archivo is not None:
 
         for numero_pagina, pagina in enumerate(
             documento,
-            start=1
+            start=1,
         ):
 
             texto = pagina.get_text("text").strip()
@@ -152,7 +151,7 @@ if archivo is not None:
             paginas.append(
                 {
                     "pagina": numero_pagina,
-                    "texto": texto
+                    "texto": texto,
                 }
             )
 
@@ -264,7 +263,7 @@ if archivo is not None:
 
                 for numero_bloque, bloque in enumerate(
                     bloques_composicion,
-                    start=1
+                    start=1,
                 ):
 
                     with st.expander(
@@ -283,60 +282,61 @@ if archivo is not None:
                     "No se encontraron encabezados claros de "
                     "composición o ingrediente activo."
                 )
-# -------------------------------------------------
-# Componentes declarados en SDS
-# -------------------------------------------------
 
-componentes_sds = []
+            # -------------------------------------------------
+            # Componentes declarados en SDS
+            # -------------------------------------------------
 
-for bloque in bloques_composicion:
+            componentes_sds = []
 
-    encabezado_normalizado = bloque[
-        "encabezado"
-    ].lower()
+            for bloque in bloques_composicion:
 
-    if (
-        "sección 3" in encabezado_normalizado
-        or "seccion 3" in encabezado_normalizado
-    ):
+                encabezado_normalizado = bloque[
+                    "encabezado"
+                ].lower()
 
-        componentes = extraer_componentes_sds(
-            bloque
-        )
+                if (
+                    "sección 3" in encabezado_normalizado
+                    or "seccion 3" in encabezado_normalizado
+                ):
 
-        componentes_sds.extend(componentes)
+                    componentes = extraer_componentes_sds(
+                        bloque
+                    )
 
+                    componentes_sds.extend(componentes)
 
-if componentes_sds:
+            if componentes_sds:
 
-    st.subheader(
-        "Componentes declarados en la SDS"
-    )
+                st.subheader(
+                    "Componentes declarados en la SDS"
+                )
 
-    tabla_componentes = []
+                tabla_componentes = []
 
-    for componente in componentes_sds:
+                for componente in componentes_sds:
 
-        tabla_componentes.append(
-            {
-                "Componente": componente["nombre"],
-                "CAS": componente["cas"],
-                "Concentración": (
-                    componente["concentracion"]
-                    or "No identificada"
-                ),
-                "Página": componente["pagina"],
-                "Tipo de evidencia": (
-                    "Componente declarado en Sección 3"
-                ),
-            }
-        )
+                    tabla_componentes.append(
+                        {
+                            "Componente": componente["nombre"],
+                            "CAS": componente["cas"],
+                            "Concentración": (
+                                componente["concentracion"]
+                                or "No identificada"
+                            ),
+                            "Página": componente["pagina"],
+                            "Tipo de evidencia": (
+                                "Componente declarado en Sección 3"
+                            ),
+                        }
+                    )
 
-    st.dataframe(
-        tabla_componentes,
-        use_container_width=True,
-        hide_index=True,
-    )
+                st.dataframe(
+                    tabla_componentes,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
             # -------------------------------------------------
             # CAS encontrados
             # -------------------------------------------------
@@ -361,14 +361,14 @@ if componentes_sds:
                                 str(p)
                                 for p in paginas_cas
                             ),
-                            "Validación": "Dígito de control válido"
+                            "Validación": "Dígito de control válido",
                         }
                     )
 
                 st.dataframe(
                     tabla_cas,
                     use_container_width=True,
-                    hide_index=True
+                    hide_index=True,
                 )
 
             else:
@@ -400,14 +400,14 @@ if componentes_sds:
                                     str(p)
                                     for p in paginas_cas
                                 ),
-                                "Validación": "Dígito de control inválido"
+                                "Validación": "Dígito de control inválido",
                             }
                         )
 
                     st.dataframe(
                         tabla_invalidos,
                         use_container_width=True,
-                        hide_index=True
+                        hide_index=True,
                     )
 
             # -------------------------------------------------
@@ -427,6 +427,7 @@ if componentes_sds:
                         st.text(
                             pagina["texto"]
                         )
+
         documento.close()
 
     except Exception as error:
