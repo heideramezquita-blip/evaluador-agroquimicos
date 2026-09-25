@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 from src.engine import analyze
 from src.models import PdfDocument,PdfPage
-from src.rules import STATUS_NO_USE,STATUS_RA_SEVERE,STATUS_MITIGATION,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_NO_MATCH
+from src.rules import STATUS_NO_USE,STATUS_MITIGATION,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_NO_MATCH
 MASTER=Path(__file__).resolve().parents[1]/'data'/'master_restrictions.csv'
 
 def doc(text,name='test.pdf'):
@@ -15,7 +15,7 @@ def run_text(text):
 class ProhibitedEngineTests(unittest.TestCase):
  def test_engeo_tiametoxam_active_is_no_use(self):
   r=run_text('COMPOSICIÓN GARANTIZADA\nIngredientes Activos:\nLambda-cihalotrina\nTiametoxam\nCAS 153719-23-4\nConcentración 141 g/L')
-  self.assertEqual(r['evaluation'].status,STATUS_RA_SEVERE)
+  self.assertEqual(r['evaluation'].status,STATUS_NO_USE)
  def test_specific_prohibited_cas_uncertain_is_orange_review(self):
   r=run_text('Ficha de seguridad de sustancia química. Identificador CAS 153719-23-4. Información general del producto y propiedades.')
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
@@ -42,7 +42,7 @@ class ProhibitedEngineTests(unittest.TestCase):
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
  def test_manual_prohibited_with_active_confirmation_is_no_use(self):
   r=analyze([],manual_cas_text='153719234',manual_active_confirmed=True,master_path=MASTER)
-  self.assertEqual(r['evaluation'].status,STATUS_RA_SEVERE)
+  self.assertEqual(r['evaluation'].status,STATUS_NO_USE)
  def test_mitigation_list_triggers_attention(self):
   r=analyze([],manual_cas_text='52918-63-5',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_MITIGATION)
