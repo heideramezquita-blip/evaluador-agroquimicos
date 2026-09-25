@@ -45,18 +45,24 @@ Se conservan como referencia complementaria las listas locales de:
 
 Una clasificación de RA solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita implementada.
 
-## Resultados
+## Cómo interpretar los resultados
 
-- `NO UTILIZAR — RSPO E ISCC`
-- `NO UTILIZAR — RSPO`
-- `ATENCIÓN — PROHIBIDO EN RA; REVISAR RSPO / ISCC`
-- `ATENCIÓN — PLAGUICIDA OBSOLETO SEGÚN RA`
-- `ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA`
-- `COINCIDENCIA NORMATIVA — REVISAR`
-- `REVISIÓN DOCUMENTAL`
-- `SIN COINCIDENCIAS DETECTADAS`
+La aplicación separa **coincidencias normativas confirmadas**, **alertas que requieren revisión** y **limitaciones documentales**. El estado mostrado depende de la identidad del ingrediente, el contexto en que aparece en los PDF y la correspondencia explícita implementada para cada estándar.
 
-Un resultado sin coincidencias se limita a la información disponible en los documentos analizados y a las reglas implementadas.
+| Resultado | Qué significa |
+| --- | --- |
+| `NO UTILIZAR — RSPO E ISCC` | Existe evidencia suficiente de que el ingrediente activo coincide con un criterio de prohibición explícito tanto en RSPO como en ISCC. |
+| `NO UTILIZAR — RSPO` | Existe evidencia suficiente y el criterio está prohibido explícitamente por RSPO. La aplicación no afirma automáticamente que también esté prohibido por ISCC. |
+| `ATENCIÓN — PROHIBIDO EN RA; REVISAR RSPO / ISCC` | Rainforest Alliance incluye el ingrediente en su lista de prohibidos, pero el criterio detectado no basta por sí solo para afirmar una prohibición equivalente en RSPO o ISCC. Requiere revisión específica. |
+| `ATENCIÓN — PLAGUICIDA OBSOLETO SEGÚN RA` | Rainforest Alliance clasifica el ingrediente como obsoleto. Se conserva como alerta complementaria y debe revisarse frente al estándar aplicable y la normativa nacional. |
+| `ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA` | Rainforest Alliance exige medidas de mitigación para ese ingrediente. La alerta no se convierte automáticamente en una prohibición RSPO o ISCC. |
+| `COINCIDENCIA NORMATIVA — REVISAR` | Se encontró una coincidencia real por CAS, nombre o grupo, pero no se confirmó automáticamente que corresponda al ingrediente activo o que la pertenencia normativa sea concluyente. |
+| `REVISIÓN DOCUMENTAL` | El documento no pudo evaluarse con suficiente confiabilidad, por ejemplo porque carece de texto extraíble. No debe interpretarse como ausencia de riesgo. |
+| `SIN COINCIDENCIAS DETECTADAS` | No se identificaron coincidencias con las listas y reglas implementadas a partir de la información disponible en los documentos analizados. |
+
+Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingrediente activo; una mera mención incidental, una referencia bibliográfica, una negación o un producto de descomposición no debe producir por sí sola una decisión fuerte.
+
+`SIN COINCIDENCIAS DETECTADAS` describe únicamente el resultado del análisis de los documentos cargados y de las reglas disponibles; no constituye una autorización regulatoria del producto.
 
 ## Datos locales
 
