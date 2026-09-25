@@ -272,7 +272,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
 with st.expander('Fuentes normativas y alcance de la evaluación'):
     st.markdown('''**RSPO — marco principal:** Principios y Criterios RSPO 2024, versión 4.2, indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS 1A/1B; carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
 
-**ISCC — marco principal:** ISCC EU 201 v4.2 remite, para biomasa agrícola, a ISCC EU 202-2 (Principios 2–6). El requisito 2.4.1 prohíbe los productos incluidos en OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. La aplicación no amplía automáticamente ISCC a otros criterios.
+**ISCC — marco principal:** ISCC EU 202-2, requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
 
 **Rainforest Alliance — referencia complementaria y base local de detección:** Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
 
