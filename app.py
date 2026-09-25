@@ -221,7 +221,16 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
                 if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
                 st.write('**Fuente:**',f'{g["source_list"]} · versión {g["source_version"]}')
                 for i,context in enumerate(g['contexts'][:5],1):
-                    st.caption(f'Ocurrencia {i}');st.write(context)
+                    st.caption(f'Ocurrencia {i}')
+                    # Convert valid CAS visible inside evidence context into reference links.
+                    import re
+                    parts=[]; last=0
+                    for m in re.finditer(r'(?<!\\d)(\\d{2,7}-\\d{2}-\\d)(?!\\d)',context):
+                        parts.append(escape(context[last:m.start()]))
+                        parts.append(cas_html(m.group(1)))
+                        last=m.end()
+                    parts.append(escape(context[last:]))
+                    st.markdown(''.join(parts),unsafe_allow_html=True)
 
     if result['manual_invalid']:st.warning('CAS manuales descartados por formato/checksum: '+', '.join(result['manual_invalid']))
     for w in ev.warnings:st.info(w)
