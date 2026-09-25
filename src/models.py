@@ -47,6 +47,8 @@ class ProhibitedEntry:
     source_version: str
     source_date: str
     is_group: bool = False
+    source_list: str = "PROHIBITED"
+    action: str = "NO_UTILIZAR"
 
 @dataclass
 class EvidenceHit:
