@@ -195,3 +195,172 @@ def detectar_bloques_composicion(
             )
 
     return bloques
+
+import re
+
+
+PATRON_CAS_LINEA = re.compile(
+    r"^\s*(\d{2,7})\s*[-‐-‒–—−]\s*(\d{2})\s*[-‐-‒–—−]\s*(\d)\s*$"
+)
+
+
+def normalizar_cas_linea(linea):
+    """
+    Si una línea contiene únicamente un CAS,
+    devuelve el CAS normalizado con guiones ASCII.
+
+    Si no corresponde a un CAS completo, devuelve None.
+    """
+
+    coincidencia = PATRON_CAS_LINEA.match(
+        linea.strip()
+    )
+
+    if not coincidencia:
+        return None
+
+    return (
+        f"{coincidencia.group(1)}-"
+        f"{coincidencia.group(2)}-"
+        f"{coincidencia.group(3)}"
+    )
+
+
+def parece_concentracion(linea):
+    """
+    Reconoce formatos habituales de concentración.
+
+    Ejemplos:
+    >= 10 - < 20
+    >= 0,0003 - < 0,0015
+    15 %
+    600 g/kg
+    """
+
+    texto = linea.strip().lower()
+
+    patrones = [
+        r"^[<>=~≤≥\s]*\d+(?:[.,]\d+)?"
+        r"(?:\s*[-–]\s*[<>=~≤≥\s]*\d+(?:[.,]\d+)?)?"
+        r"\s*%?\s*(?:w/w|p/p|v/v|p/v)?$",
+
+        r"^\d+(?:[.,]\d+)?\s*"
+        r"(?:g/kg|g/l|mg/l|mg/kg|%|ppm|ppb)$",
+    ]
+
+    return any(
+        re.match(patron, texto, re.IGNORECASE)
+        for patron in patrones
+    )
+
+
+def extraer_componentes_sds(bloque):
+    """
+    Extrae componentes de una Sección 3 de SDS.
+
+    Estructura esperada después de los encabezados:
+
+    nombre químico
+    [continuación opcional del nombre]
+    CAS
+    concentración
+
+    Devuelve una lista con:
+    - nombre
+    - CAS
+    - concentración
+    - página
+    """
+
+    lineas = bloque["lineas"]
+
+    # -------------------------------------------------
+    # Localizar el encabezado de concentración
+    # -------------------------------------------------
+
+    indice_inicio = None
+
+    for indice, linea in enumerate(lineas):
+
+        linea_normalizada = normalizar_texto(
+            linea
+        )
+
+        if (
+            "concentracion" in linea_normalizada
+            and (
+                "%" in linea
+                or "w/w" in linea_normalizada
+                or "p/p" in linea_normalizada
+            )
+        ):
+            indice_inicio = indice + 1
+            break
+
+    if indice_inicio is None:
+        return []
+
+    datos = lineas[indice_inicio:]
+
+    componentes = []
+    nombre_acumulado = []
+
+    indice = 0
+
+    while indice < len(datos):
+
+        linea = datos[indice].strip()
+
+        cas = normalizar_cas_linea(linea)
+
+        # Todavía estamos acumulando el nombre
+        if cas is None:
+
+            if linea:
+                nombre_acumulado.append(linea)
+
+            indice += 1
+            continue
+
+        # Encontramos CAS
+        nombre = " ".join(nombre_acumulado).strip()
+
+        nombre_acumulado = []
+
+        concentracion = None
+
+        # Buscar la primera línea siguiente
+        # que tenga apariencia de concentración
+        siguiente = indice + 1
+
+        while siguiente < len(datos):
+
+            candidata = datos[siguiente].strip()
+
+            if parece_concentracion(candidata):
+                concentracion = candidata
+                break
+
+            # Si encontramos otro CAS antes,
+            # no asignamos concentración.
+            if normalizar_cas_linea(candidata):
+                break
+
+            siguiente += 1
+
+        componentes.append(
+            {
+                "nombre": nombre,
+                "cas": cas,
+                "concentracion": concentracion,
+                "pagina": bloque["pagina"],
+            }
+        )
+
+        # Continuamos después de la concentración
+        if concentracion is not None:
+            indice = siguiente + 1
+        else:
+            indice += 1
+
+    return componentes
