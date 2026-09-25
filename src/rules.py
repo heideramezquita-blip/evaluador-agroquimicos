@@ -4,7 +4,6 @@ from .models import Evaluation
 
 STATUS_NO_USE='NO UTILIZAR'
 STATUS_OBSOLETE='NO UTILIZAR — PLAGUICIDA OBSOLETO'
-STATUS_RA_SEVERE='ATENCIÓN — PROHIBIDO RA POR EFECTOS GRAVES'
 STATUS_MITIGATION='ATENCIÓN — PLAGUICIDA SUJETO A MITIGACIÓN DE RIESGOS'
 STATUS_MATCH_REVIEW='COINCIDENCIA NORMATIVA — REVISAR'
 STATUS_DOCUMENT_REVIEW='REVISIÓN DOCUMENTAL'
@@ -24,10 +23,6 @@ def _strong_hits(items):
         return items
     return []
 
-def _severe_only(entry):
-    parts=[x.strip() for x in entry.criteria.split(';') if x.strip()]
-    return bool(parts) and all(x.startswith('Efectos graves') for x in parts)
-
 def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):
     warnings=list(warnings or [])
     by_entry={}
@@ -41,13 +36,8 @@ def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):
         elif source_list=='MITIGATE_RISK':strong_mitigation.extend(strong)
 
     if strong_prohibited:
-        severe=[h for h in strong_prohibited if _severe_only(h.entry)]
-        other=[h for h in strong_prohibited if not _severe_only(h.entry)]
-        if other:
-            names=sorted({h.entry.ingredient for h in strong_prohibited})
-            return Evaluation(STATUS_NO_USE,'Existe evidencia documental suficiente de ingrediente activo incluido en PROHIBIDOS. Aplica a Rainforest Alliance y, salvo el criterio exclusivo de Efectos graves, a la evaluación RSPO/ISCC: '+', '.join(names)+'.',strong_prohibited,cas_records,warnings)
-        names=sorted({h.entry.ingredient for h in severe})
-        return Evaluation(STATUS_RA_SEVERE,'Rainforest Alliance lo clasifica como prohibido exclusivamente por el criterio Efectos graves: '+', '.join(names)+'. Este criterio propio de RA no se traslada como prohibición a RSPO ni ISCC.',severe,cas_records,warnings)
+        names=sorted({h.entry.ingredient for h in strong_prohibited})
+        return Evaluation(STATUS_NO_USE,'Existe evidencia documental suficiente de ingrediente activo incluido en la lista PROHIBIDOS de Rainforest Alliance: '+', '.join(names)+'.',strong_prohibited,cas_records,warnings)
 
     if strong_obsolete:
         names=sorted({h.entry.ingredient for h in strong_obsolete})
