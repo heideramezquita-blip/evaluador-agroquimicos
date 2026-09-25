@@ -6,6 +6,7 @@ import streamlit as st
 from src.ingredient_parser import (
     detectar_bloques_composicion,
     extraer_componentes_sds,
+    extraer_ingredientes_activos_explicitos,
 )
 
 
@@ -336,7 +337,53 @@ if archivo is not None:
                     use_container_width=True,
                     hide_index=True,
                 )
+            # -------------------------------------------------
+            # Ingredientes activos explícitos
+            # -------------------------------------------------
 
+            ingredientes_activos = (
+                extraer_ingredientes_activos_explicitos(
+                    bloques_composicion
+                )
+            )
+
+            st.subheader(
+                "Ingredientes activos identificados"
+            )
+
+            if ingredientes_activos:
+
+                tabla_activos = []
+
+                for ingrediente in ingredientes_activos:
+
+                    tabla_activos.append(
+                        {
+                            "Ingrediente activo": ingrediente[
+                                "nombre"
+                            ],
+                            "Concentración": (
+                                ingrediente["concentracion"]
+                                or "No identificada"
+                            ),
+                            "Página": ingrediente["pagina"],
+                            "Evidencia": ingrediente["evidencia"],
+                        }
+                    )
+
+                st.dataframe(
+                    tabla_activos,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+            else:
+
+                st.warning(
+                    "El documento no declara de forma explícita "
+                    "un ingrediente activo en las zonas de "
+                    "composición detectadas."
+                )
             # -------------------------------------------------
             # CAS encontrados
             # -------------------------------------------------
