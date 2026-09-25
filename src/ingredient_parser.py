@@ -364,3 +364,186 @@ def extraer_componentes_sds(bloque):
             indice += 1
 
     return componentes
+def extraer_ingredientes_activos_explicitos(bloques):
+    """
+    Busca declaraciones explícitas de ingrediente activo.
+
+    Solo devuelve sustancias cuando el documento utiliza
+    expresamente etiquetas como:
+    - Ingrediente activo
+    - Ingredientes activos
+    - Active ingredient
+    - Active ingredients
+
+    No convierte automáticamente componentes de una SDS
+    en ingredientes activos.
+    """
+
+    resultados = []
+
+    etiquetas = {
+        "ingrediente activo",
+        "ingredientes activos",
+        "active ingredient",
+        "active ingredients",
+    }
+
+    for bloque in bloques:
+
+        lineas = bloque["lineas"]
+
+        for indice, linea in enumerate(lineas):
+
+            linea_normalizada = normalizar_texto(linea)
+            linea_limpia = limpiar_final_encabezado(
+                linea_normalizada
+            )
+
+            # ---------------------------------------------
+            # ¿Es una etiqueta explícita?
+            # ---------------------------------------------
+
+            es_etiqueta = (
+                linea_limpia in etiquetas
+                or any(
+                    linea_normalizada.startswith(
+                        etiqueta + ":"
+                    )
+                    for etiqueta in etiquetas
+                )
+            )
+
+            if not es_etiqueta:
+                continue
+
+            nombre = None
+            concentracion = None
+
+            # ---------------------------------------------
+            # Caso: Ingrediente activo: Azoxystrobin
+            # ---------------------------------------------
+
+            if ":" in linea:
+
+                valor_misma_linea = (
+                    linea.split(":", 1)[1].strip()
+                )
+
+                if valor_misma_linea:
+                    nombre = valor_misma_linea
+
+            # ---------------------------------------------
+            # Caso:
+            # Ingrediente activo:
+            # Metsulfuron Metil
+            # ---------------------------------------------
+
+            if nombre is None:
+
+                siguiente = indice + 1
+
+                while siguiente < len(lineas):
+
+                    candidata = lineas[
+                        siguiente
+                    ].strip()
+
+                    if candidata:
+                        nombre = candidata
+                        break
+
+                    siguiente += 1
+
+            if not nombre:
+                continue
+
+            # ---------------------------------------------
+            # Buscar concentración cerca del ingrediente
+            # ---------------------------------------------
+
+            limite_busqueda = min(
+                len(lineas),
+                indice + 8
+            )
+
+            for posicion in range(
+                indice + 1,
+                limite_busqueda
+            ):
+
+                candidata = lineas[
+                    posicion
+                ].strip()
+
+                candidata_normalizada = (
+                    normalizar_texto(candidata)
+                )
+
+                # Ejemplo:
+                # Concentración:
+                # 600 g/kg
+                if candidata_normalizada.startswith(
+                    "concentracion"
+                ):
+
+                    # Valor en la misma línea
+                    if ":" in candidata:
+
+                        valor = candidata.split(
+                            ":",
+                            1
+                        )[1].strip()
+
+                        if valor:
+                            concentracion = valor
+                            break
+
+                    # Valor en la siguiente línea
+                    if posicion + 1 < len(lineas):
+
+                        siguiente_valor = lineas[
+                            posicion + 1
+                        ].strip()
+
+                        if siguiente_valor:
+                            concentracion = (
+                                siguiente_valor
+                            )
+                            break
+
+            resultados.append(
+                {
+                    "nombre": nombre,
+                    "concentracion": concentracion,
+                    "pagina": bloque["pagina"],
+                    "evidencia": linea,
+                }
+            )
+
+    # -------------------------------------------------
+    # Eliminar duplicados
+    # -------------------------------------------------
+
+    unicos = {}
+
+    for resultado in resultados:
+
+        clave = normalizar_texto(
+            resultado["nombre"]
+        )
+
+        if clave not in unicos:
+
+            unicos[clave] = resultado
+
+        else:
+
+            # Si una aparición tiene concentración
+            # y la anterior no, conservar la más completa.
+            if (
+                not unicos[clave]["concentracion"]
+                and resultado["concentracion"]
+            ):
+                unicos[clave] = resultado
+
+    return list(unicos.values())
