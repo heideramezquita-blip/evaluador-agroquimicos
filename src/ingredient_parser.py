@@ -447,10 +447,28 @@ def extraer_ingredientes_activos_explicitos(bloques):
                     candidata = lineas[
                         siguiente
                     ].strip()
+if candidata:
 
-                    if candidata:
-                        nombre = candidata
-                        break
+    # Algunas fichas usan:
+    # Nombre común: nombre químico/IUPAC
+    #
+    # Ejemplo:
+    # Chlorantraniliprole:3-bromo-4'-chloro-...
+
+    if ":" in candidata:
+
+        posible_nombre = candidata.split(
+            ":",
+            1
+        )[0].strip()
+
+        if posible_nombre:
+            nombre = posible_nombre
+
+    else:
+        nombre = candidata
+
+    break
 
                     siguiente += 1
 
