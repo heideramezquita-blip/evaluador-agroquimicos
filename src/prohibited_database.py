@@ -29,19 +29,36 @@ def _aliases(name:str)->list[str]:
     return out
 
 class ProhibitedDatabase:
+    LIST_FILES=('master_restrictions.csv','obsolete.csv','risk_mitigation.csv')
     def __init__(self,csv_path:str|Path):
         self.path=Path(csv_path); self.entries=[]; self.by_cas={}; self.specific=[]; self.groups=[]
-        with self.path.open(encoding='utf-8-sig',newline='') as f:
-            for row in csv.DictReader(f):
-                if (row.get('source_list') or '').strip()!='PROHIBITED':continue
-                cas=(row.get('cas') or '').strip()
-                e=ProhibitedEntry((row.get('ingredient') or '').strip(),cas,(row.get('usage') or '').strip(),(row.get('criteria') or '').strip(),(row.get('source_code') or '').strip(),(row.get('source_version') or '').strip(),(row.get('source_date') or '').strip(),not bool(cas))
-                self.entries.append(e)
-                if cas:
-                    if not is_valid_cas(cas):raise ValueError(f'CAS inválido en PROHIBIDOS: {cas}')
-                    self.specific.append(e); self.by_cas.setdefault(cas,[]).append(e)
-                else:self.groups.append(e)
+        self.prohibited=[]; self.obsolete=[]; self.mitigation=[]
+        paths=[self.path]
+        for name in self.LIST_FILES[1:]:
+            p=self.path.parent/name
+            if p.exists(): paths.append(p)
+        for path in paths:
+            with path.open(encoding='utf-8-sig',newline='') as f:
+                for row in csv.DictReader(f):
+                    source_list=(row.get('source_list') or '').strip()
+                    if source_list not in {'PROHIBITED','OBSOLETE','MITIGATE_RISK'}:continue
+                    cas=(row.get('cas') or '').strip()
+                    action=(row.get('action') or row.get('decision') or '').strip()
+                    e=ProhibitedEntry(
+                        (row.get('ingredient') or '').strip(),cas,(row.get('usage') or '').strip(),
+                        (row.get('criteria') or '').strip(),(row.get('source_code') or '').strip(),
+                        (row.get('source_version') or '').strip(),(row.get('source_date') or '').strip(),
+                        not bool(cas),source_list,action
+                    )
+                    self.entries.append(e)
+                    {'PROHIBITED':self.prohibited,'OBSOLETE':self.obsolete,'MITIGATE_RISK':self.mitigation}[source_list].append(e)
+                    if cas:
+                        if not is_valid_cas(cas):raise ValueError(f'CAS inválido en {source_list}: {cas}')
+                        self.specific.append(e); self.by_cas.setdefault(cas,[]).append(e)
+                    else:self.groups.append(e)
     def aliases(self,entry):return _aliases(entry.ingredient)
     def group_rule(self,entry):
         key=match_key(entry.ingredient)
-        return GROUP_RULES.get(key,{'terms':self.aliases(entry),'deterministic':False})
+        if entry.source_list=='PROHIBITED':
+            return GROUP_RULES.get(key,{'terms':self.aliases(entry),'deterministic':False})
+        return {'terms':self.aliases(entry),'deterministic':False}
