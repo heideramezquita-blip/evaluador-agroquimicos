@@ -1,0 +1,31 @@
+suite,product_id,ft_file,hs_file,both_processable,valid_cas_count,valid_cas,explicit_active_names,matches,status
+principal,01,01. FT Agroin-B.pdf,01. HS Agroin-B.pdf,True,1,63428-82-0,Beauveria bassiana,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,02,02. FT Agroin-M.pdf,02. HS Agroin-M.pdf,True,1,67892-13-1,Metarhizium anisopliae,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,03,03. FT Agroin-T.pdf,03. HS Agroin-T.pdf,True,1,67892-31-3,Trichoderma harzianum,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,04,04. FT Bioplant.pdf,04. HS Bioplant.pdf,True,0,,,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE
+principal,05,05. FT CABTRAC.pdf,05. HS CABTRAC.pdf,True,3,1318-33-8;1314-13-2;3811-73-2,,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,06,06. FT Óxido de Calcio.pdf,06. HS Óxido de Calcio.pdf,True,1,1305-78-8,,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,07,07. FT Coragen 20 SC.pdf,07. HS Coragen 20 SC.pdf,True,2,500008-45-7;55965-84-9,Chlorantraniliprole,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,08,08. FT Cosmo Aguas SP.pdf,08. HS Cosmo Aguas.pdf,True,0,,Citratos Reguladores de pH,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE
+principal,09,09. FT Cumbre WP.pdf,09. HS Cumbre WP.pdf,True,2,1405-41-0;2058-46-0,Gentamicin sulphate;Sulfato de gentamicina,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,10,10. FT DeltaPoint 2.5 WP.pdf,10. HS DeltaPoint 2.5 WP.pdf,True,1,52918-63-5,Deltametrina,52918-63-5:MITIGATE_RISK:MITIGAR,REQUIERE MITIGACIÓN
+principal,11,11. FT Dipel WG.pdf,11. HS Dipel WG.pdf,True,1,68038-71-1,bacillus thuringiensis subsp. kurstaki,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,12,12. FT Engeo SC.pdf,12. HS Engeo.pdf,True,6,153719-23-4;91465-08-6;64742-94-5;68611-14-3;2634-33-5;52-51-7,Lambda-cihalotrina;Tiametoxam,153719-23-4:PROHIBITED:NO_UTILIZAR;91465-08-6:MITIGATE_RISK:MITIGAR,NO UTILIZAR
+principal,13,13. FT Touchdown IQ SL.pdf,13. HS Touchdown.pdf,True,1,39600-42-5,Glifosato Acido,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,14,14. FT Inicipio SC.pdf,14. HS Inicipio SC.pdf,True,3,2061933-85-3;9003-11-6;55965-84-9,Isocycloseram,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,15,15. FT INEX A.pdf,15. HS INEX A.pdf,True,0,,,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE
+principal,16,16. FT Malathion 57 EC.pdf,16. HS Malathion 57 EC.pdf,True,2,121-75-5;1330-20-7,Malathion,121-75-5:MITIGATE_RISK:MITIGAR,REQUIERE MITIGACIÓN
+principal,17,17. FT Mesamate 720 SL.pdf,17. HS Mesamate 720 SL.pdf,True,1,2163-80-6,S.M.A,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,18,18. FT Numetrin EC.pdf,18. HS Numetrin EC.pdf,True,1,52315-07-8,CIPERMETRINA,52315-07-8:MITIGATE_RISK:MITIGAR,REQUIERE MITIGACIÓN
+principal,19,19. FT Polythion SC.pdf,19. HS Polythion SC.pdf,True,1,7704-34-9,Azufre CAS 7704-34-9,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,20,20. FT Metsulfuron.pdf,20. HS Metsulfuron.pdf,True,1,74223-64-6,Metsulfuron Metil;Metsulfuron methyl,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,21,21. FT Prevalor SL.pdf,21. HS Prevalor SL.PDF,True,3,24579-73-5;15845-66-6;7647-14-5,Fosetyl;Propamocarb,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,22,22. FT Carbonato de calcio.pdf,22. HS Carbonato de calcio.pdf,True,0,,,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE
+principal,23,23. FT Zintrac.pdf,23. HS Zintrac.pdf,True,3,1314-13-2;107-21-1;3811-73-2,,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,24,24. FT Fossile 80 WP.pdf,24. HS Fossile 80 WP.pdf,True,1,39148-24-8,Fosetyl-aluminium,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+principal,24.1,24.1 FT Fosetyl Agrogen 800 WP.pdf,24.1 HS Fosetyl Agrogen 800 WP.pdf,True,2,39148-24-8;14808-60-7,,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+suplementario,01,01. FT Touchdown IQ.pdf,01. HS Touchdown IQ.pdf,True,4,39600-42-5;1310-58-3;68515-73-1;61791-14-8,,,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+suplementario,02,02. FT Mezulfuron.pdf,02. HS Mezulfuron.pdf,False,0,,,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE
+suplementario,03,03. FT Aquaffer.pdf,03. HS Aquaffer.pdf,True,2,77-92-9;64-02-8,"Ácido cítrico;(Ácido 2-hidroxi-1,2,3 propanotricarboxílico);D.T.A",,SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS
+suplementario,04,04. FT Activo.pdf,04. HS Activo.pdf,True,0,,,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE
+suplementario,05,05. FT Domazon.pdf,05. HS Domazon.pdf,False,0,,,,NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE

@@ -1,268 +1,96 @@
+from __future__ import annotations
+
 import re
 from urllib.parse import quote
 
 import requests
 
+from .cas_utils import is_valid_cas
+
 
 PUBCHEM_BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug"
-
-PATRON_CAS = re.compile(
-    r"(?<!\d)(\d{2,7}-\d{2}-\d)(?!\d)"
-)
+CAS_IN_TEXT = re.compile(r"(?<!\d)(\d{2,7}-\d{2}-\d)(?!\d)")
 
 
-def validar_cas(cas):
-    """
-    Valida matemáticamente el dígito de control CAS.
-    """
-
-    partes = cas.split("-")
-
-    if len(partes) != 3:
-        return False
-
-    izquierda, centro, digito_control = partes
-
-    if not (
-        izquierda.isdigit()
-        and centro.isdigit()
-        and digito_control.isdigit()
-    ):
-        return False
-
-    numeros = izquierda + centro
-
-    suma = 0
-
-    for multiplicador, digito in enumerate(
-        reversed(numeros),
-        start=1
-    ):
-        suma += int(digito) * multiplicador
-
-    return suma % 10 == int(digito_control)
+def _valid_cas_strings(obj: object) -> list[str]:
+    found: list[str] = []
+    if isinstance(obj, dict):
+        for value in obj.values():
+            for cas in _valid_cas_strings(value):
+                if cas not in found:
+                    found.append(cas)
+    elif isinstance(obj, list):
+        for value in obj:
+            for cas in _valid_cas_strings(value):
+                if cas not in found:
+                    found.append(cas)
+    elif isinstance(obj, str):
+        for cas in CAS_IN_TEXT.findall(obj):
+            if is_valid_cas(cas) and cas not in found:
+                found.append(cas)
+    return found
 
 
-def extraer_cas_de_json(objeto):
-    """
-    Recorre una respuesta JSON de PubChem y extrae
-    cadenas con estructura CAS válida.
-    """
-
-    encontrados = set()
-
-    if isinstance(objeto, dict):
-
-        for valor in objeto.values():
-            encontrados.update(
-                extraer_cas_de_json(valor)
-            )
-
-    elif isinstance(objeto, list):
-
-        for valor in objeto:
-            encontrados.update(
-                extraer_cas_de_json(valor)
-            )
-
-    elif isinstance(objeto, str):
-
-        for cas in PATRON_CAS.findall(objeto):
-
-            if validar_cas(cas):
-                encontrados.add(cas)
-
-    return encontrados
-
-
-def consultar_pubchem(nombre):
-    """
-    Consulta un ingrediente por nombre en PubChem.
-
-    Estados posibles:
-    - identificado
-    - no_encontrado
-    - ambiguo
-    - sin_cas
-    - varios_cas
-    - error
-    """
-
-    nombre = nombre.strip()
-
-    resultado = {
+def consultar_pubchem(nombre: str, timeout: int = 10) -> dict:
+    nombre = (nombre or "").strip()
+    result = {
         "nombre_consultado": nombre,
-        "estado": None,
+        "estado": "error",
         "cid": None,
         "cas": None,
         "cas_candidatos": [],
-        "mensaje": None,
+        "mensaje": "",
     }
-
     if not nombre:
+        result["mensaje"] = "Nombre vacío."
+        return result
 
-        resultado["estado"] = "error"
-        resultado["mensaje"] = (
-            "El nombre del ingrediente está vacío."
-        )
-
-        return resultado
-
-    nombre_url = quote(
-        nombre,
-        safe=""
-    )
-
-    cabeceras = {
-        "User-Agent": (
-            "evaluador-agroquimicos/0.1 "
-            "(Streamlit prototype)"
-        )
-    }
-
-    # -------------------------------------------------
-    # 1. Buscar CID por nombre
-    # -------------------------------------------------
-
-    url_cid = (
-        f"{PUBCHEM_BASE}/compound/name/"
-        f"{nombre_url}/cids/JSON"
-    )
+    headers = {"User-Agent": "evaluador-agroquimicos/0.2"}
+    encoded = quote(nombre, safe="")
 
     try:
-
-        respuesta = requests.get(
-            url_cid,
-            headers=cabeceras,
-            timeout=10
-        )
-
-        if respuesta.status_code == 404:
-
-            resultado["estado"] = "no_encontrado"
-            resultado["mensaje"] = (
-                "PubChem no encontró una coincidencia "
-                "para este nombre."
-            )
-
-            return resultado
-
-        respuesta.raise_for_status()
-
-        datos = respuesta.json()
-
-        cids = (
-            datos
-            .get("IdentifierList", {})
-            .get("CID", [])
-        )
-
-        # Eliminar duplicados conservando orden
-        cids = list(dict.fromkeys(cids))
-
+        r = requests.get(f"{PUBCHEM_BASE}/compound/name/{encoded}/cids/JSON", headers=headers, timeout=timeout)
+        if r.status_code == 404:
+            result.update(estado="no_encontrado", mensaje="PubChem no encontró el nombre.")
+            return result
+        r.raise_for_status()
+        cids = list(dict.fromkeys(r.json().get("IdentifierList", {}).get("CID", [])))
         if not cids:
-
-            resultado["estado"] = "no_encontrado"
-            resultado["mensaje"] = (
-                "PubChem no devolvió ningún CID."
-            )
-
-            return resultado
-
-        if len(cids) > 1:
-
-            resultado["estado"] = "ambiguo"
-            resultado["mensaje"] = (
-                f"PubChem devolvió {len(cids)} "
-                "compuestos posibles para este nombre."
-            )
-
-            return resultado
+            result.update(estado="no_encontrado", mensaje="PubChem no devolvió CID.")
+            return result
+        if len(cids) != 1:
+            result.update(estado="ambiguo", mensaje=f"PubChem devolvió {len(cids)} CID posibles.")
+            return result
 
         cid = cids[0]
+        result["cid"] = cid
 
-        resultado["cid"] = cid
-
-        # -------------------------------------------------
-        # 2. Obtener identificadores CAS para ese CID
-        # -------------------------------------------------
-
-        url_cas = (
-            f"{PUBCHEM_BASE}/compound/cid/"
-            f"{cid}/identifiers/JSON"
-            f"?identifier_type=CAS"
+        r2 = requests.get(
+            f"{PUBCHEM_BASE}/compound/cid/{cid}/identifiers/JSON?identifier_type=CAS",
+            headers=headers,
+            timeout=timeout,
         )
+        candidates: list[str] = []
+        if r2.ok:
+            candidates = _valid_cas_strings(r2.json())
 
-        respuesta_cas = requests.get(
-            url_cas,
-            headers=cabeceras,
-            timeout=10
-        )
+        if not candidates:
+            r3 = requests.get(f"{PUBCHEM_BASE}/compound/cid/{cid}/synonyms/JSON", headers=headers, timeout=timeout)
+            if r3.ok:
+                candidates = _valid_cas_strings(r3.json())
 
-        if respuesta_cas.status_code == 404:
-
-            resultado["estado"] = "sin_cas"
-            resultado["mensaje"] = (
-                "Se encontró el compuesto en PubChem, "
-                "pero no se obtuvo un identificador CAS."
+        result["cas_candidatos"] = candidates
+        if len(candidates) == 1:
+            result.update(
+                estado="identificado",
+                cas=candidates[0],
+                mensaje="Nombre resuelto a un CAS único mediante PubChem.",
             )
-
-            return resultado
-
-        respuesta_cas.raise_for_status()
-
-        datos_cas = respuesta_cas.json()
-
-        cas_encontrados = sorted(
-            extraer_cas_de_json(datos_cas)
-        )
-
-        resultado["cas_candidatos"] = cas_encontrados
-
-        if len(cas_encontrados) == 0:
-
-            resultado["estado"] = "sin_cas"
-            resultado["mensaje"] = (
-                "PubChem identificó el compuesto, "
-                "pero no devolvió un CAS utilizable."
-            )
-
-            return resultado
-
-        if len(cas_encontrados) > 1:
-
-            resultado["estado"] = "varios_cas"
-            resultado["mensaje"] = (
-                "PubChem devolvió varios CAS para "
-                "el mismo compuesto. Requiere revisión manual."
-            )
-
-            return resultado
-
-        resultado["estado"] = "identificado"
-        resultado["cas"] = cas_encontrados[0]
-
-        resultado["mensaje"] = (
-            "Ingrediente y CAS identificados en PubChem."
-        )
-
-        return resultado
-
-    except requests.RequestException as error:
-
-        resultado["estado"] = "error"
-        resultado["mensaje"] = (
-            f"No fue posible consultar PubChem: {error}"
-        )
-
-        return resultado
-
-    except ValueError:
-
-        resultado["estado"] = "error"
-        resultado["mensaje"] = (
-            "PubChem devolvió una respuesta que no pudo "
-            "interpretarse como JSON."
-        )
-
-        return resultado
+        elif not candidates:
+            result.update(estado="sin_cas", mensaje="PubChem identificó el compuesto, pero no devolvió un CAS único utilizable.")
+        else:
+            result.update(estado="varios_cas", mensaje="PubChem devolvió varios CAS válidos; se requiere revisión manual.")
+        return result
+    except (requests.RequestException, ValueError) as error:
+        result.update(estado="error", mensaje=f"No fue posible consultar PubChem: {error}")
+        return result

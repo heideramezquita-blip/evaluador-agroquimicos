@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.streamlit/
+corpus_audit_documents.csv
+corpus_audit_pairs.csv
+.DS_Store

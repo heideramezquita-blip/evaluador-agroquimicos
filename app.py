@@ -1,98 +1,21 @@
-import re
+from __future__ import annotations
 
-import fitz  # PyMuPDF
+from pathlib import Path
+
 import streamlit as st
 
-from src.pubchem import consultar_pubchem
-
-from src.ingredient_parser import (
-    detectar_bloques_composicion,
-    extraer_componentes_sds,
-    extraer_ingredientes_activos_explicitos,
+from src.engine import analyze
+from src.rules import (
+    STATUS_MITIGATION,
+    STATUS_NO_CAS,
+    STATUS_NO_MATCH,
+    STATUS_NO_USE,
+    STATUS_REVIEW,
 )
 
 
-# -------------------------------------------------
-# Funciones CAS
-# -------------------------------------------------
-
-def validar_cas(cas):
-    """
-    Valida el dígito de control de un número CAS.
-    Ejemplo válido: 131860-33-8
-    """
-
-    partes = cas.split("-")
-
-    if len(partes) != 3:
-        return False
-
-    izquierda, centro, digito_control = partes
-
-    if not (
-        izquierda.isdigit()
-        and centro.isdigit()
-        and digito_control.isdigit()
-    ):
-        return False
-
-    numeros = izquierda + centro
-
-    suma = 0
-
-    for multiplicador, digito in enumerate(
-        reversed(numeros),
-        start=1,
-    ):
-        suma += int(digito) * multiplicador
-
-    calculado = suma % 10
-
-    return calculado == int(digito_control)
-
-
-def extraer_cas(texto):
-    """
-    Busca cadenas con estructura de CAS y devuelve:
-    - CAS válidos
-    - candidatos CAS que no superan el dígito de control
-
-    Se aceptan diferentes tipos de guion porque algunos PDF
-    no extraen el guion ASCII estándar.
-    """
-
-    patron = re.compile(
-        r"(?<!\d)"
-        r"(\d{2,7})"
-        r"\s*[-‐-‒–—−]\s*"
-        r"(\d{2})"
-        r"\s*[-‐-‒–—−]\s*"
-        r"(\d)"
-        r"(?!\d)"
-    )
-
-    validos = []
-    invalidos = []
-
-    for coincidencia in patron.finditer(texto):
-
-        cas = (
-            f"{coincidencia.group(1)}-"
-            f"{coincidencia.group(2)}-"
-            f"{coincidencia.group(3)}"
-        )
-
-        if validar_cas(cas):
-            validos.append(cas)
-        else:
-            invalidos.append(cas)
-
-    return validos, invalidos
-
-
-# -------------------------------------------------
-# Configuración Streamlit
-# -------------------------------------------------
+BASE_DIR = Path(__file__).resolve().parent
+MASTER_PATH = BASE_DIR / "data" / "master_restrictions.csv"
 
 st.set_page_config(
     page_title="Evaluador de Agroquímicos",
@@ -101,503 +24,149 @@ st.set_page_config(
 )
 
 st.title("Evaluador de Agroquímicos")
-
-st.write(
-    "Herramienta para evaluar fichas técnicas y hojas de datos de seguridad "
-    "de productos agroquímicos."
+st.caption(
+    "Motor CAS-first: extrae y valida CAS, consulta la base maestra y aplica reglas trazables."
 )
 
-st.subheader("Cargue una ficha técnica o SDS")
-
-archivo = st.file_uploader(
-    "Seleccione un archivo PDF",
+archivos = st.file_uploader(
+    "Cargue una ficha técnica, hoja de seguridad o ambos documentos",
     type=["pdf"],
+    accept_multiple_files=True,
 )
 
+st.subheader("CAS manual")
+manual_cas = st.text_area(
+    "Puede introducir uno o varios CAS en cualquier momento (separados por coma, punto y coma o salto de línea).",
+    placeholder="Ejemplo: 153719-23-4\n91465-08-6",
+)
+manual_es_activo = st.checkbox(
+    "Confirmo que TODOS los CAS introducidos manualmente corresponden a ingrediente(s) activo(s)",
+    value=False,
+    help=(
+        "Esta confirmación solo afecta reglas cuyo alcance en la base exige ingrediente activo. "
+        "Si no está seguro, déjela desmarcada."
+    ),
+)
 
-# -------------------------------------------------
-# Procesamiento
-# -------------------------------------------------
+analizar = st.button("Analizar", type="primary", use_container_width=True)
 
-if archivo is not None:
+if analizar:
+    file_items = [(f.name, f.getvalue()) for f in (archivos or [])]
 
-    tamano_bytes = archivo.size
-    tamano_mb = tamano_bytes / (1024 * 1024)
+    if not file_items and not manual_cas.strip():
+        st.warning("Cargue al menos un PDF o introduzca un CAS manualmente.")
+        st.stop()
 
-    contenido_pdf = archivo.getvalue()
-
-    st.success("Archivo recibido correctamente")
-
-    st.write(f"**Archivo:** {archivo.name}")
-    st.write(f"**Tamaño:** {tamano_mb:.2f} MB")
-    st.write(f"**Tipo:** {archivo.type}")
-
-    try:
-
-        documento = fitz.open(
-            stream=contenido_pdf,
-            filetype="pdf",
+    with st.spinner("Analizando CAS y comparando con la base maestra..."):
+        result = analyze(
+            file_items,
+            manual_cas_text=manual_cas,
+            manual_active_confirmed=manual_es_activo,
+            master_path=MASTER_PATH,
+            enable_name_fallback=True,
         )
 
-        numero_paginas = len(documento)
+    evaluation = result["evaluation"]
 
-        paginas = []
-        caracteres_por_pagina = []
+    if evaluation.status == STATUS_NO_USE:
+        st.error(f"### {evaluation.status}\n{evaluation.message}")
+    elif evaluation.status == STATUS_REVIEW:
+        st.warning(f"### {evaluation.status}\n{evaluation.message}")
+    elif evaluation.status == STATUS_MITIGATION:
+        st.warning(f"### {evaluation.status}\n{evaluation.message}")
+    elif evaluation.status == STATUS_NO_MATCH:
+        st.info(f"### {evaluation.status}\n{evaluation.message}")
+    elif evaluation.status == STATUS_NO_CAS:
+        st.warning(f"### {evaluation.status}\n{evaluation.message}")
+    else:
+        st.info(f"### {evaluation.status}\n{evaluation.message}")
 
-        for numero_pagina, pagina in enumerate(
-            documento,
-            start=1,
-        ):
-
-            texto = pagina.get_text("text").strip()
-
-            paginas.append(
+    if evaluation.matches:
+        st.subheader("Coincidencias con la base")
+        rows = []
+        for match in evaluation.matches:
+            rows.append(
                 {
-                    "pagina": numero_pagina,
-                    "texto": texto,
+                    "CAS": match.cas,
+                    "Sustancia en base": match.ingredient,
+                    "Lista": match.source_list,
+                    "Resultado de regla": match.applied_action,
+                    "Criterio": match.criteria or "—",
+                    "Ingrediente activo confirmado": "Sí" if match.active_confirmed else "No",
+                    "Fuente": f"{match.source_code} V{match.source_version} ({match.source_date})",
                 }
             )
+        st.dataframe(rows, use_container_width=True, hide_index=True)
 
-            caracteres_por_pagina.append(len(texto))
+        for match in evaluation.matches:
+            detail = match.rationale
+            if match.active_evidence:
+                detail += f" Evidencia de rol: {match.active_evidence}"
+            if detail:
+                st.caption(f"{match.cas} — {detail}")
 
-        texto_completo = "\n\n".join(
-            pagina["texto"]
-            for pagina in paginas
-            if pagina["texto"]
-        )
+    st.write(f"**CAS válidos procesados:** {len(evaluation.cas_records)}")
 
-        total_caracteres = len(texto_completo)
+    for warning in evaluation.warnings:
+        st.warning(warning)
 
-        paginas_con_texto = sum(
-            1
-            for cantidad in caracteres_por_pagina
-            if cantidad > 0
-        )
+    with st.expander("Trazabilidad / auditoría"):
+        st.write(f"**CAS consultables en la base:** {result['database_searchable_cas']}")
 
-        paginas_sin_texto = (
-            numero_paginas - paginas_con_texto
-        )
-
-        # -------------------------------------------------
-        # Diagnóstico
-        # -------------------------------------------------
-
-        st.subheader("Diagnóstico del documento")
-
-        st.write(
-            f"**Número de páginas:** {numero_paginas}"
-        )
-
-        st.write(
-            f"**Caracteres extraídos:** {total_caracteres:,}"
-        )
-
-        st.write(
-            f"**Páginas con texto:** {paginas_con_texto}"
-        )
-
-        st.write(
-            f"**Páginas sin texto:** {paginas_sin_texto}"
-        )
-
-        if total_caracteres == 0:
-
-            st.error(
-                "No se encontró texto extraíble. "
-                "Este documento puede estar escaneado y requerir OCR "
-                "o revisión manual."
-            )
-
-        else:
-
-            st.success(
-                "Se encontró texto extraíble en el documento."
-            )
-
-            # -------------------------------------------------
-            # Búsqueda de CAS
-            # -------------------------------------------------
-
-            cas_encontrados = {}
-            candidatos_invalidos = {}
-
-            for pagina in paginas:
-
-                validos, invalidos = extraer_cas(
-                    pagina["texto"]
+        if result["documents"]:
+            st.markdown("#### Diagnóstico de documentos")
+            doc_rows = []
+            for doc in result["documents"]:
+                doc_rows.append(
+                    {
+                        "Archivo": doc.file_name,
+                        "Páginas": doc.page_count,
+                        "Caracteres extraídos": doc.character_count,
+                        "Páginas con texto": doc.pages_with_text,
+                        "Procesable": "Sí" if doc.processable else "No",
+                    }
                 )
+            st.dataframe(doc_rows, use_container_width=True, hide_index=True)
 
-                for cas in validos:
+        if result["active_names"]:
+            st.markdown("#### Nombres explícitos de ingrediente activo usados solo como evidencia auxiliar")
+            st.dataframe(result["active_names"], use_container_width=True, hide_index=True)
 
-                    if cas not in cas_encontrados:
-                        cas_encontrados[cas] = []
-
-                    if pagina["pagina"] not in cas_encontrados[cas]:
-                        cas_encontrados[cas].append(
-                            pagina["pagina"]
-                        )
-
-                for cas in invalidos:
-
-                    if cas not in candidatos_invalidos:
-                        candidatos_invalidos[cas] = []
-
-                    if pagina["pagina"] not in candidatos_invalidos[cas]:
-                        candidatos_invalidos[cas].append(
-                            pagina["pagina"]
-                        )
-
-            # -------------------------------------------------
-            # Detección de zonas de composición
-            # -------------------------------------------------
-
-            bloques_composicion = detectar_bloques_composicion(
-                paginas
-            )
-
-            st.subheader("Zonas candidatas de composición")
-
-            if bloques_composicion:
-
-                st.success(
-                    f"Se encontraron "
-                    f"{len(bloques_composicion)} zona(s) candidata(s)."
-                )
-
-                for numero_bloque, bloque in enumerate(
-                    bloques_composicion,
-                    start=1,
-                ):
-
-                    with st.expander(
-                        f"Zona {numero_bloque} "
-                        f"— página {bloque['pagina']} "
-                        f"— {bloque['encabezado']}"
-                    ):
-
-                        st.text(
-                            "\n".join(bloque["lineas"])
-                        )
-
-            else:
-
-                st.warning(
-                    "No se encontraron encabezados claros de "
-                    "composición o ingrediente activo."
-                )
-
-            # -------------------------------------------------
-            # Componentes declarados en SDS
-            # -------------------------------------------------
-
-            componentes_sds = []
-
-            for bloque in bloques_composicion:
-
-                encabezado_normalizado = bloque[
-                    "encabezado"
-                ].lower()
-
-                if (
-                    "sección 3" in encabezado_normalizado
-                    or "seccion 3" in encabezado_normalizado
-                ):
-
-                    componentes = extraer_componentes_sds(
-                        bloque
-                    )
-
-                    componentes_sds.extend(componentes)
-
-            if componentes_sds:
-
-                st.subheader(
-                    "Componentes declarados en la SDS"
-                )
-
-                tabla_componentes = []
-
-                for componente in componentes_sds:
-
-                    tabla_componentes.append(
+        if evaluation.cas_records:
+            st.markdown("#### CAS detectados y evidencia")
+            audit_rows = []
+            for record in evaluation.cas_records:
+                for occurrence in record.occurrences:
+                    audit_rows.append(
                         {
-                            "Componente": componente["nombre"],
-                            "CAS": componente["cas"],
-                            "Concentración": (
-                                componente["concentracion"]
-                                or "No identificada"
-                            ),
-                            "Página": componente["pagina"],
-                            "Tipo de evidencia": (
-                                "Componente declarado en Sección 3"
-                            ),
+                            "CAS": record.cas,
+                            "Archivo": occurrence.source_file,
+                            "Página": occurrence.page,
+                            "Origen": occurrence.source,
+                            "Rol local": occurrence.role,
+                            "Contexto": occurrence.context,
+                            "Nota": occurrence.note,
                         }
                     )
+            st.dataframe(audit_rows, use_container_width=True, hide_index=True)
 
-                st.dataframe(
-                    tabla_componentes,
-                    use_container_width=True,
-                    hide_index=True,
+        if result["invalid_candidates"]:
+            st.markdown("#### Candidatos CAS descartados")
+            st.dataframe(result["invalid_candidates"], use_container_width=True, hide_index=True)
+
+        if result["fallback_attempts"]:
+            st.markdown("#### Resolución secundaria por nombre / PubChem")
+            fallback_rows = []
+            for item in result["fallback_attempts"]:
+                fallback_rows.append(
+                    {
+                        "Nombre": item.get("name"),
+                        "Archivo": item.get("source_file"),
+                        "Página": item.get("page"),
+                        "Estado": item.get("estado"),
+                        "CID": item.get("cid"),
+                        "CAS": item.get("cas"),
+                        "Mensaje": item.get("mensaje"),
+                    }
                 )
-            # -------------------------------------------------
-            # Ingredientes activos explícitos
-            # -------------------------------------------------
-
-            ingredientes_activos = (
-                extraer_ingredientes_activos_explicitos(
-                    bloques_composicion
-                )
-            )
-
-            st.subheader(
-                "Ingredientes activos identificados"
-            )
-
-            if ingredientes_activos:
-
-                tabla_activos = []
-
-                for ingrediente in ingredientes_activos:
-
-                    tabla_activos.append(
-                        {
-                            "Ingrediente activo": ingrediente[
-                                "nombre"
-                            ],
-                            "Concentración": (
-                                ingrediente["concentracion"]
-                                or "No identificada"
-                            ),
-                            "Página": ingrediente["pagina"],
-                            "Evidencia": ingrediente["evidencia"],
-                        }
-                    )
-
-                st.dataframe(
-                    tabla_activos,
-                    use_container_width=True,
-                    hide_index=True,
-                )
-
-            else:
-
-                st.warning(
-                    "El documento no declara de forma explícita "
-                    "un ingrediente activo en las zonas de "
-                    "composición detectadas."
-                )
-            # -------------------------------------------------
-            # CAS encontrados
-            # -------------------------------------------------
-
-            st.subheader("Números CAS detectados")
-
-            if cas_encontrados:
-
-                st.success(
-                    f"Se encontraron "
-                    f"{len(cas_encontrados)} CAS válido(s)."
-                )
-
-                tabla_cas = []
-
-                for cas, paginas_cas in cas_encontrados.items():
-
-                    tabla_cas.append(
-                        {
-                            "CAS": cas,
-                            "Página(s)": ", ".join(
-                                str(p)
-                                for p in paginas_cas
-                            ),
-                            "Validación": "Dígito de control válido",
-                        }
-                    )
-
-                st.dataframe(
-                    tabla_cas,
-                    use_container_width=True,
-                    hide_index=True,
-                )
-
-            else:
-
-                st.warning(
-                    "No se encontraron números CAS válidos "
-                    "en el documento."
-                )
-            # -------------------------------------------------
-            # Consulta a PubChem cuando falta CAS
-            # -------------------------------------------------
-
-            if (
-                ingredientes_activos
-                and not cas_encontrados
-            ):
-
-                st.subheader(
-                    "Identificación del CAS mediante PubChem"
-                )
-
-                for ingrediente in ingredientes_activos:
-
-                    nombre_ingrediente = ingrediente[
-                        "nombre"
-                    ]
-
-                    with st.spinner(
-                        f"Consultando PubChem para "
-                        f"{nombre_ingrediente}..."
-                    ):
-
-                        resultado_pubchem = consultar_pubchem(
-                            nombre_ingrediente
-                        )
-
-                    if (
-                        resultado_pubchem["estado"]
-                        == "identificado"
-                    ):
-
-                        st.success(
-                            "CAS identificado mediante PubChem."
-                        )
-
-                        st.write(
-                            f"**Ingrediente:** "
-                            f"{nombre_ingrediente}"
-                        )
-
-                        st.write(
-                            f"**PubChem CID:** "
-                            f"{resultado_pubchem['cid']}"
-                        )
-
-                        st.write(
-                            f"**CAS:** "
-                            f"{resultado_pubchem['cas']}"
-                        )
-
-                        st.write(
-                            "**Origen del CAS:** PubChem"
-                        )
-
-                    elif (
-                        resultado_pubchem["estado"]
-                        == "ambiguo"
-                    ):
-
-                        st.warning(
-                            "REVISIÓN MANUAL: PubChem encontró "
-                            "más de un compuesto posible para "
-                            f"{nombre_ingrediente}."
-                        )
-
-                    elif (
-                        resultado_pubchem["estado"]
-                        == "varios_cas"
-                    ):
-
-                        st.warning(
-                            "REVISIÓN MANUAL: PubChem devolvió "
-                            "más de un CAS para el compuesto."
-                        )
-
-                        st.write(
-                            resultado_pubchem[
-                                "cas_candidatos"
-                            ]
-                        )
-
-                    elif (
-                        resultado_pubchem["estado"]
-                        == "sin_cas"
-                    ):
-
-                        st.warning(
-                            "REVISIÓN MANUAL: el compuesto fue "
-                            "identificado en PubChem, pero no se "
-                            "obtuvo un CAS único."
-                        )
-
-                    elif (
-                        resultado_pubchem["estado"]
-                        == "no_encontrado"
-                    ):
-
-                        st.warning(
-                            "REVISIÓN MANUAL: PubChem no encontró "
-                            f"el ingrediente {nombre_ingrediente}."
-                        )
-
-                    else:
-
-                        st.error(
-                            resultado_pubchem["mensaje"]
-                        )
-            # -------------------------------------------------
-            # Candidatos con formato CAS pero inválidos
-            # -------------------------------------------------
-
-            if candidatos_invalidos:
-
-                with st.expander(
-                    "Ver candidatos con formato CAS "
-                    "que no superaron la validación"
-                ):
-
-                    tabla_invalidos = []
-
-                    for cas, paginas_cas in candidatos_invalidos.items():
-
-                        tabla_invalidos.append(
-                            {
-                                "Candidato": cas,
-                                "Página(s)": ", ".join(
-                                    str(p)
-                                    for p in paginas_cas
-                                ),
-                                "Validación": "Dígito de control inválido",
-                            }
-                        )
-
-                    st.dataframe(
-                        tabla_invalidos,
-                        use_container_width=True,
-                        hide_index=True,
-                    )
-
-            # -------------------------------------------------
-            # Texto extraído
-            # -------------------------------------------------
-
-            with st.expander("Ver texto extraído"):
-
-                for pagina in paginas:
-
-                    if pagina["texto"]:
-
-                        st.markdown(
-                            f"### Página {pagina['pagina']}"
-                        )
-
-                        st.text(
-                            pagina["texto"]
-                        )
-
-        documento.close()
-
-    except Exception as error:
-
-        st.error(
-            "No fue posible procesar el PDF."
-        )
-
-        st.write(
-            f"Detalle técnico: {error}"
-        )
-
-    st.info(
-        "El archivo se procesa temporalmente en memoria "
-        "y no se guarda de forma permanente."
-    )
+            st.dataframe(fallback_rows, use_container_width=True, hide_index=True)
