@@ -1,5 +1,10 @@
+import re
 import unicodedata
 
+
+# =========================================================
+# ENCABEZADOS DE COMPOSICIÓN
+# =========================================================
 
 ENCABEZADOS_EXACTOS = {
     "ingrediente activo",
@@ -13,9 +18,14 @@ ENCABEZADOS_EXACTOS = {
 }
 
 
+# =========================================================
+# NORMALIZACIÓN DE TEXTO
+# =========================================================
+
 def normalizar_texto(texto):
     """
     Normaliza texto para comparación:
+
     - minúsculas
     - sin tildes
     - espacios normalizados
@@ -23,7 +33,10 @@ def normalizar_texto(texto):
 
     texto = texto.lower().strip()
 
-    texto = unicodedata.normalize("NFD", texto)
+    texto = unicodedata.normalize(
+        "NFD",
+        texto
+    )
 
     texto = "".join(
         caracter
@@ -31,7 +44,9 @@ def normalizar_texto(texto):
         if unicodedata.category(caracter) != "Mn"
     )
 
-    return " ".join(texto.split())
+    return " ".join(
+        texto.split()
+    )
 
 
 def limpiar_final_encabezado(texto):
@@ -39,8 +54,14 @@ def limpiar_final_encabezado(texto):
     Elimina signos finales habituales de encabezados.
     """
 
-    return texto.rstrip(" :.-")
+    return texto.rstrip(
+        " :.-"
+    )
 
+
+# =========================================================
+# DETECCIÓN DE ENCABEZADOS DE COMPOSICIÓN
+# =========================================================
 
 def es_encabezado_composicion(linea):
     """
@@ -48,44 +69,67 @@ def es_encabezado_composicion(linea):
     relacionado con composición.
 
     Evita falsos positivos como:
+
     - descomposición
     - productos de descomposición
     """
 
-    linea_normalizada = normalizar_texto(linea)
+    linea_normalizada = normalizar_texto(
+        linea
+    )
+
     linea_limpia = limpiar_final_encabezado(
         linea_normalizada
     )
 
+    # -----------------------------------------------------
     # Encabezados exactos
+    # -----------------------------------------------------
+
     if linea_limpia in ENCABEZADOS_EXACTOS:
         return True
 
-    # Encabezados que contienen información en la misma línea
-    if linea_limpia.startswith("ingrediente activo:"):
-        return True
+    # -----------------------------------------------------
+    # Encabezados con contenido en la misma línea
+    # -----------------------------------------------------
 
-    if linea_limpia.startswith("ingredientes activos:"):
-        return True
+    for encabezado in [
+        "ingrediente activo:",
+        "ingredientes activos:",
+        "active ingredient:",
+        "active ingredients:",
+    ]:
 
-    if linea_limpia.startswith("active ingredient:"):
-        return True
+        if linea_normalizada.startswith(
+            encabezado
+        ):
+            return True
 
-    if linea_limpia.startswith("active ingredients:"):
-        return True
-
+    # -----------------------------------------------------
     # Sección 3 típica de una SDS
+    # -----------------------------------------------------
+
     if (
         linea_limpia.startswith("seccion 3")
         and "composicion" in linea_limpia
-        and "ingrediente" in linea_limpia
+        and (
+            "ingrediente" in linea_limpia
+            or "componente" in linea_limpia
+        )
     ):
         return True
 
     return False
 
 
-def encontrar_fin_seccion_3(lineas, indice_inicio):
+# =========================================================
+# SECCIÓN 3 DE SDS
+# =========================================================
+
+def encontrar_fin_seccion_3(
+    lineas,
+    indice_inicio
+):
     """
     Si estamos en la Sección 3 de una SDS,
     intenta capturar hasta el comienzo de la Sección 4.
@@ -100,7 +144,9 @@ def encontrar_fin_seccion_3(lineas, indice_inicio):
             lineas[indice]
         )
 
-        if linea_normalizada.startswith("seccion 4"):
+        if linea_normalizada.startswith(
+            "seccion 4"
+        ):
             return indice
 
     # Límite de seguridad si no encuentra Sección 4
@@ -110,6 +156,10 @@ def encontrar_fin_seccion_3(lineas, indice_inicio):
     )
 
 
+# =========================================================
+# DETECCIÓN DE BLOQUES DE COMPOSICIÓN
+# =========================================================
+
 def detectar_bloques_composicion(
     paginas,
     lineas_despues=20
@@ -118,18 +168,23 @@ def detectar_bloques_composicion(
     Detecta zonas candidatas de composición.
 
     Para Sección 3 de SDS:
-    captura hasta Sección 4.
+        captura hasta Sección 4.
 
     Para fichas técnicas:
-    captura un bloque local alrededor del encabezado.
+        captura un bloque local alrededor del encabezado.
     """
 
     bloques = []
 
     for pagina in paginas:
 
-        numero_pagina = pagina["pagina"]
-        texto = pagina["texto"]
+        numero_pagina = pagina[
+            "pagina"
+        ]
+
+        texto = pagina[
+            "texto"
+        ]
 
         lineas = [
             linea.strip()
@@ -139,19 +194,29 @@ def detectar_bloques_composicion(
 
         rangos_usados = []
 
-        for indice, linea in enumerate(lineas):
+        for indice, linea in enumerate(
+            lineas
+        ):
 
-            if not es_encabezado_composicion(linea):
+            if not es_encabezado_composicion(
+                linea
+            ):
                 continue
 
             linea_normalizada = normalizar_texto(
                 linea
             )
 
+            # -------------------------------------------------
             # Caso SDS — Sección 3
+            # -------------------------------------------------
+
             if (
-                linea_normalizada.startswith("seccion 3")
-                and "composicion" in linea_normalizada
+                linea_normalizada.startswith(
+                    "seccion 3"
+                )
+                and "composicion"
+                in linea_normalizada
             ):
 
                 inicio = indice
@@ -161,17 +226,25 @@ def detectar_bloques_composicion(
                     indice
                 )
 
+            # -------------------------------------------------
             # Caso ficha técnica / encabezado local
+            # -------------------------------------------------
+
             else:
 
                 inicio = indice
 
                 fin = min(
                     len(lineas),
-                    indice + lineas_despues + 1
+                    indice
+                    + lineas_despues
+                    + 1
                 )
 
+            # -------------------------------------------------
             # Evitar bloques duplicados o solapados
+            # -------------------------------------------------
+
             solapado = any(
                 inicio >= rango_inicio
                 and inicio < rango_fin
@@ -185,22 +258,37 @@ def detectar_bloques_composicion(
             bloques.append(
                 {
                     "pagina": numero_pagina,
-                    "encabezado": lineas[indice],
-                    "lineas": lineas[inicio:fin],
+                    "encabezado": lineas[
+                        indice
+                    ],
+                    "lineas": lineas[
+                        inicio:fin
+                    ],
                 }
             )
 
             rangos_usados.append(
-                (inicio, fin)
+                (
+                    inicio,
+                    fin
+                )
             )
 
     return bloques
 
-import re
 
+# =========================================================
+# CAS EN UNA LÍNEA
+# =========================================================
 
 PATRON_CAS_LINEA = re.compile(
-    r"^\s*(\d{2,7})\s*[-‐-‒–—−]\s*(\d{2})\s*[-‐-‒–—−]\s*(\d)\s*$"
+    r"^\s*"
+    r"(\d{2,7})"
+    r"\s*[-‐-‒–—−]\s*"
+    r"(\d{2})"
+    r"\s*[-‐-‒–—−]\s*"
+    r"(\d)"
+    r"\s*$"
 )
 
 
@@ -209,7 +297,8 @@ def normalizar_cas_linea(linea):
     Si una línea contiene únicamente un CAS,
     devuelve el CAS normalizado con guiones ASCII.
 
-    Si no corresponde a un CAS completo, devuelve None.
+    Si no corresponde a un CAS completo,
+    devuelve None.
     """
 
     coincidencia = PATRON_CAS_LINEA.match(
@@ -226,124 +315,199 @@ def normalizar_cas_linea(linea):
     )
 
 
+# =========================================================
+# CONCENTRACIONES
+# =========================================================
+
 def parece_concentracion(linea):
     """
     Reconoce formatos habituales de concentración.
 
     Ejemplos:
+
     >= 10 - < 20
     >= 0,0003 - < 0,0015
     15 %
     600 g/kg
+    200 g/L
     """
 
     texto = linea.strip().lower()
 
     patrones = [
-        r"^[<>=~≤≥\s]*\d+(?:[.,]\d+)?"
-        r"(?:\s*[-–]\s*[<>=~≤≥\s]*\d+(?:[.,]\d+)?)?"
-        r"\s*%?\s*(?:w/w|p/p|v/v|p/v)?$",
 
-        r"^\d+(?:[.,]\d+)?\s*"
-        r"(?:g/kg|g/l|mg/l|mg/kg|%|ppm|ppb)$",
+        # Rangos y porcentajes
+        (
+            r"^[<>=~≤≥\s]*"
+            r"\d+(?:[.,]\d+)?"
+            r"(?:"
+            r"\s*[-–]\s*"
+            r"[<>=~≤≥\s]*"
+            r"\d+(?:[.,]\d+)?"
+            r")?"
+            r"\s*%?"
+            r"\s*(?:w/w|p/p|v/v|p/v)?$"
+        ),
+
+        # Concentraciones masa / volumen
+        (
+            r"^\d+(?:[.,]\d+)?\s*"
+            r"(?:"
+            r"g/kg|g/l|gr/l|gr/litro|"
+            r"mg/l|mg/kg|"
+            r"%|ppm|ppb"
+            r")$"
+        ),
     ]
 
     return any(
-        re.match(patron, texto, re.IGNORECASE)
+        re.match(
+            patron,
+            texto,
+            re.IGNORECASE
+        )
         for patron in patrones
     )
 
 
-def extraer_componentes_sds(bloque):
+# =========================================================
+# COMPONENTES DE UNA SDS
+# =========================================================
+
+def extraer_componentes_sds(
+    bloque
+):
     """
     Extrae componentes de una Sección 3 de SDS.
 
-    Estructura esperada después de los encabezados:
+    Estructura esperada:
 
-    nombre químico
-    [continuación opcional del nombre]
-    CAS
-    concentración
+        nombre químico
+        [continuación opcional del nombre]
+        CAS
+        concentración
 
-    Devuelve una lista con:
-    - nombre
-    - CAS
-    - concentración
-    - página
+    Devuelve:
+
+        nombre
+        CAS
+        concentración
+        página
     """
 
-    lineas = bloque["lineas"]
+    lineas = bloque[
+        "lineas"
+    ]
 
-    # -------------------------------------------------
-    # Localizar el encabezado de concentración
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # Localizar encabezado de concentración
+    # -----------------------------------------------------
 
     indice_inicio = None
 
-    for indice, linea in enumerate(lineas):
+    for indice, linea in enumerate(
+        lineas
+    ):
 
         linea_normalizada = normalizar_texto(
             linea
         )
 
         if (
-            "concentracion" in linea_normalizada
+            "concentracion"
+            in linea_normalizada
             and (
-                "%" in linea
-                or "w/w" in linea_normalizada
-                or "p/p" in linea_normalizada
+                "%"
+                in linea
+                or "w/w"
+                in linea_normalizada
+                or "p/p"
+                in linea_normalizada
+                or "g/kg"
+                in linea_normalizada
+                or "g/l"
+                in linea_normalizada
             )
         ):
+
             indice_inicio = indice + 1
             break
 
     if indice_inicio is None:
         return []
 
-    datos = lineas[indice_inicio:]
+    datos = lineas[
+        indice_inicio:
+    ]
 
     componentes = []
     nombre_acumulado = []
 
     indice = 0
 
-    while indice < len(datos):
+    while indice < len(
+        datos
+    ):
 
-        linea = datos[indice].strip()
+        linea = datos[
+            indice
+        ].strip()
 
-        cas = normalizar_cas_linea(linea)
+        cas = normalizar_cas_linea(
+            linea
+        )
 
+        # -------------------------------------------------
         # Todavía estamos acumulando el nombre
+        # -------------------------------------------------
+
         if cas is None:
 
             if linea:
-                nombre_acumulado.append(linea)
+                nombre_acumulado.append(
+                    linea
+                )
 
             indice += 1
             continue
 
+        # -------------------------------------------------
         # Encontramos CAS
-        nombre = " ".join(nombre_acumulado).strip()
+        # -------------------------------------------------
+
+        nombre = " ".join(
+            nombre_acumulado
+        ).strip()
 
         nombre_acumulado = []
 
         concentracion = None
 
-        # Buscar la primera línea siguiente
-        # que tenga apariencia de concentración
+        # -------------------------------------------------
+        # Buscar concentración después del CAS
+        # -------------------------------------------------
+
         siguiente = indice + 1
 
-        while siguiente < len(datos):
+        while siguiente < len(
+            datos
+        ):
 
-            candidata = datos[siguiente].strip()
+            candidata = datos[
+                siguiente
+            ].strip()
 
-            if parece_concentracion(candidata):
+            if parece_concentracion(
+                candidata
+            ):
+
                 concentracion = candidata
                 break
 
-            # Si encontramos otro CAS antes,
-            # no asignamos concentración.
-            if normalizar_cas_linea(candidata):
+            # Si aparece otro CAS antes de concentración
+            if normalizar_cas_linea(
+                candidata
+            ):
                 break
 
             siguiente += 1
@@ -353,23 +517,33 @@ def extraer_componentes_sds(bloque):
                 "nombre": nombre,
                 "cas": cas,
                 "concentracion": concentracion,
-                "pagina": bloque["pagina"],
+                "pagina": bloque[
+                    "pagina"
+                ],
             }
         )
 
-        # Continuamos después de la concentración
         if concentracion is not None:
             indice = siguiente + 1
         else:
             indice += 1
 
     return componentes
-def extraer_ingredientes_activos_explicitos(bloques):
+
+
+# =========================================================
+# INGREDIENTES ACTIVOS EXPLÍCITOS
+# =========================================================
+
+def extraer_ingredientes_activos_explicitos(
+    bloques
+):
     """
     Busca declaraciones explícitas de ingrediente activo.
 
     Solo devuelve sustancias cuando el documento utiliza
     expresamente etiquetas como:
+
     - Ingrediente activo
     - Ingredientes activos
     - Active ingredient
@@ -390,18 +564,25 @@ def extraer_ingredientes_activos_explicitos(bloques):
 
     for bloque in bloques:
 
-        lineas = bloque["lineas"]
+        lineas = bloque[
+            "lineas"
+        ]
 
-        for indice, linea in enumerate(lineas):
+        for indice, linea in enumerate(
+            lineas
+        ):
 
-            linea_normalizada = normalizar_texto(linea)
+            linea_normalizada = normalizar_texto(
+                linea
+            )
+
             linea_limpia = limpiar_final_encabezado(
                 linea_normalizada
             )
 
-            # ---------------------------------------------
+            # -------------------------------------------------
             # ¿Es una etiqueta explícita?
-            # ---------------------------------------------
+            # -------------------------------------------------
 
             es_etiqueta = (
                 linea_limpia in etiquetas
@@ -419,65 +600,94 @@ def extraer_ingredientes_activos_explicitos(bloques):
             nombre = None
             concentracion = None
 
-            # ---------------------------------------------
-            # Caso: Ingrediente activo: Azoxystrobin
-            # ---------------------------------------------
+            # -------------------------------------------------
+            # Caso:
+            #
+            # Ingrediente activo: Azoxystrobin
+            # -------------------------------------------------
 
             if ":" in linea:
 
-                valor_misma_linea = (
-                    linea.split(":", 1)[1].strip()
-                )
+                valor_misma_linea = linea.split(
+                    ":",
+                    1
+                )[1].strip()
 
                 if valor_misma_linea:
                     nombre = valor_misma_linea
 
-            # ---------------------------------------------
+            # -------------------------------------------------
             # Caso:
+            #
             # Ingrediente activo:
             # Metsulfuron Metil
-            # ---------------------------------------------
+            #
+            # o:
+            #
+            # Ingrediente activo:
+            # Chlorantraniliprole:nombre IUPAC...
+            # -------------------------------------------------
 
             if nombre is None:
 
                 siguiente = indice + 1
 
-                while siguiente < len(lineas):
+                while siguiente < len(
+                    lineas
+                ):
 
                     candidata = lineas[
                         siguiente
                     ].strip()
-if candidata:
 
-    # Algunas fichas usan:
-    # Nombre común: nombre químico/IUPAC
-    #
-    # Ejemplo:
-    # Chlorantraniliprole:3-bromo-4'-chloro-...
+                    if candidata:
 
-    if ":" in candidata:
+                        # Algunas fichas colocan:
+                        #
+                        # Nombre común: nombre químico/IUPAC
+                        #
+                        # Ejemplo:
+                        #
+                        # Chlorantraniliprole:
+                        # 3-bromo-4'-chloro-...
 
-        posible_nombre = candidata.split(
-            ":",
-            1
-        )[0].strip()
+                        if ":" in candidata:
 
-        if posible_nombre:
-            nombre = posible_nombre
+                            posible_nombre = candidata.split(
+                                ":",
+                                1
+                            )[0].strip()
 
-    else:
-        nombre = candidata
+                            if posible_nombre:
+                                nombre = posible_nombre
 
-    break
+                        else:
+
+                            nombre = candidata
+
+                        break
 
                     siguiente += 1
 
             if not nombre:
                 continue
 
-            # ---------------------------------------------
+            # -------------------------------------------------
+            # Si el nombre obtenido en la misma línea contiene
+            # nombre común + descripción química separada por :
+            # conservar únicamente el nombre común.
+            # -------------------------------------------------
+
+            if ":" in nombre:
+
+                nombre = nombre.split(
+                    ":",
+                    1
+                )[0].strip()
+
+            # -------------------------------------------------
             # Buscar concentración cerca del ingrediente
-            # ---------------------------------------------
+            # -------------------------------------------------
 
             limite_busqueda = min(
                 len(lineas),
@@ -493,13 +703,17 @@ if candidata:
                     posicion
                 ].strip()
 
-                candidata_normalizada = (
-                    normalizar_texto(candidata)
+                candidata_normalizada = normalizar_texto(
+                    candidata
                 )
 
+                # ---------------------------------------------
                 # Ejemplo:
+                #
                 # Concentración:
                 # 600 g/kg
+                # ---------------------------------------------
+
                 if candidata_normalizada.startswith(
                     "concentracion"
                 ):
@@ -513,55 +727,78 @@ if candidata:
                         )[1].strip()
 
                         if valor:
+
                             concentracion = valor
                             break
 
                     # Valor en la siguiente línea
-                    if posicion + 1 < len(lineas):
+                    if posicion + 1 < len(
+                        lineas
+                    ):
 
                         siguiente_valor = lineas[
                             posicion + 1
                         ].strip()
 
                         if siguiente_valor:
+
                             concentracion = (
                                 siguiente_valor
                             )
+
                             break
 
             resultados.append(
                 {
                     "nombre": nombre,
                     "concentracion": concentracion,
-                    "pagina": bloque["pagina"],
+                    "pagina": bloque[
+                        "pagina"
+                    ],
                     "evidencia": linea,
                 }
             )
 
-    # -------------------------------------------------
-    # Eliminar duplicados
-    # -------------------------------------------------
+    # =====================================================
+    # ELIMINAR DUPLICADOS
+    # =====================================================
 
     unicos = {}
 
     for resultado in resultados:
 
         clave = normalizar_texto(
-            resultado["nombre"]
+            resultado[
+                "nombre"
+            ]
         )
 
         if clave not in unicos:
 
-            unicos[clave] = resultado
+            unicos[
+                clave
+            ] = resultado
 
         else:
 
             # Si una aparición tiene concentración
             # y la anterior no, conservar la más completa.
-            if (
-                not unicos[clave]["concentracion"]
-                and resultado["concentracion"]
-            ):
-                unicos[clave] = resultado
 
-    return list(unicos.values())
+            if (
+                not unicos[
+                    clave
+                ][
+                    "concentracion"
+                ]
+                and resultado[
+                    "concentracion"
+                ]
+            ):
+
+                unicos[
+                    clave
+                ] = resultado
+
+    return list(
+        unicos.values()
+    )
