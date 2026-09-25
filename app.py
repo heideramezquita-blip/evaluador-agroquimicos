@@ -95,6 +95,19 @@ div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button *{co
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover{background:#fee4e2!important;border-color:#fda29b!important}
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover *{color:#b42318!important;fill:#b42318!important}
 
+/* Uploaded-file document glyph: target Streamlit's icon container, not only the SVG */
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"]>div:first-child,
+div[data-testid="stFileUploader"] ul>li>div:first-child{
+background:#f2f4f7!important;
+color:#475467!important;
+border-radius:8px!important;
+}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"]>div:first-child *,
+div[data-testid="stFileUploader"] ul>li>div:first-child *{
+color:#475467!important;
+fill:#475467!important;
+}
+
 /* Uploaded-file row: Streamlit renders this outside the dropzone in some versions */
 div[data-testid="stFileUploader"] ul,
 div[data-testid="stFileUploader"] ul>li,
