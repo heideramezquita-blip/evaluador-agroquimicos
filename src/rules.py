@@ -1,5 +1,5 @@
 from __future__ import annotations
-from .context_classifier import ACTIVE,INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE
+from .context_classifier import ACTIVE,COMPOSITION,INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE
 from .models import Evaluation
 STATUS_NO_USE='NO UTILIZAR'; STATUS_REVIEW='REVISIÓN MANUAL'; STATUS_NO_MATCH='SIN COINCIDENCIAS CON PROHIBIDOS'
 NON_SUPPORTING={INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE}
@@ -12,7 +12,7 @@ def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):
         active=[h for h in items if h.context_class==ACTIVE]
         supporting=[h for h in items if h.context_class not in NON_SUPPORTING]
         if any(h.strength in ('validated_cas','exact_name','group_deterministic') for h in active):
-            strong.extend(active)
+            strong.extend(active + [h for h in items if h.strength=='validated_cas' and h.context_class==COMPOSITION])
         elif any(h.strength=='validated_cas' for h in items) and any(h.strength=='exact_name' and h.context_class==ACTIVE for h in items):
             strong.extend(items)
         elif supporting:
