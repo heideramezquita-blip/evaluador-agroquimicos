@@ -242,45 +242,49 @@ if archivo is not None:
                             pagina["pagina"]
                         )
 
-# -------------------------------------------------
-# Detección de zonas de composición
-# -------------------------------------------------
+            # -------------------------------------------------
+            # Detección de zonas de composición
+            # -------------------------------------------------
 
-bloques_composicion = detectar_bloques_composicion(
-    paginas
-)
-
-st.subheader("Zonas candidatas de composición")
-
-if bloques_composicion:
-
-    st.success(
-        f"Se encontraron "
-        f"{len(bloques_composicion)} zona(s) candidata(s)."
-    )
-
-    for numero_bloque, bloque in enumerate(
-        bloques_composicion,
-        start=1
-    ):
-
-        with st.expander(
-            f"Zona {numero_bloque} "
-            f"— página {bloque['pagina']} "
-            f"— {bloque['encabezado']}"
-        ):
-
-            st.text(
-                "\n".join(bloque["lineas"])
+            bloques_composicion = detectar_bloques_composicion(
+                paginas
             )
 
-else:
+            st.subheader("Zonas candidatas de composición")
 
-    st.warning(
-        "No se encontraron encabezados claros de "
-        "composición o ingrediente activo."
-    )
-            
+            if bloques_composicion:
+
+                st.success(
+                    f"Se encontraron "
+                    f"{len(bloques_composicion)} zona(s) candidata(s)."
+                )
+
+                for numero_bloque, bloque in enumerate(
+                    bloques_composicion,
+                    start=1
+                ):
+
+                    with st.expander(
+                        f"Zona {numero_bloque} "
+                        f"— página {bloque['pagina']} "
+                        f"— {bloque['encabezado']}"
+                    ):
+
+                        st.text(
+                            "\n".join(bloque["lineas"])
+                        )
+
+            else:
+
+                st.warning(
+                    "No se encontraron encabezados claros de "
+                    "composición o ingrediente activo."
+                )
+
+            # -------------------------------------------------
+            # CAS encontrados
+            # -------------------------------------------------
+
             st.subheader("Números CAS detectados")
 
             if cas_encontrados:
@@ -367,7 +371,6 @@ else:
                         st.text(
                             pagina["texto"]
                         )
-
         documento.close()
 
     except Exception as error:
