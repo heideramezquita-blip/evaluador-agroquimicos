@@ -108,6 +108,12 @@ div[data-testid="stFileUploader"] ul>li button,
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button{background:#f2f4f7!important;color:#475467!important;border:1px solid #e4e7ec!important}
 div[data-testid="stFileUploader"] ul>li button *,
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button *{color:#475467!important;fill:#475467!important}
+
+.clean-table-wrap{width:100%;overflow-x:auto;border:1px solid #dfe3e8;border-radius:12px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.04);margin:.35rem 0 1.25rem}
+.clean-table{width:100%;border-collapse:collapse;background:#fff;color:#101828;font-size:.9rem}
+.clean-table th{background:#f2f4f7;color:#344054;font-weight:750;text-align:left;padding:.72rem .75rem;border-bottom:1px solid #d0d5dd;white-space:nowrap}
+.clean-table td{background:#fff;color:#101828;padding:.72rem .75rem;border-bottom:1px solid #eaecf0;vertical-align:top}
+.clean-table tr:last-child td{border-bottom:0}.clean-table tbody tr:hover td{background:#f9fafb}
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
 </style>
@@ -132,6 +138,17 @@ def result_card(status,message):
     elif status==STATUS_DOCUMENT_REVIEW: css,icon='result-yellow','📄'
     else: css,icon='result-neutral','✓'
     st.markdown(f'<div class="result-card {css}"><h2>{icon} {escape(status)}</h2><p>{escape(message)}</p></div>',unsafe_allow_html=True)
+
+def table_html(rows):
+    if not rows:
+        return ''
+    columns=list(rows[0].keys())
+    head=''.join(f'<th>{escape(str(col))}</th>' for col in columns)
+    body=[]
+    for row in rows:
+        cells=''.join(f'<td>{escape(str(row.get(col,"")))}</td>' for col in columns)
+        body.append(f'<tr>{cells}</tr>')
+    return '<div class="clean-table-wrap"><table class="clean-table"><thead><tr>'+head+'</tr></thead><tbody>'+''.join(body)+'</tbody></table></div>'
 
 def consolidated_hits(hits):
     grouped={}
@@ -178,14 +195,14 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         c1.metric('PROHIBIDOS con CAS',result['prohibited_specific_count']);c2.metric('Grupos / CAS varios',result['prohibited_group_count']);c3.metric('CAS procesados',len(ev.cas_records))
         if result['documents']:
             st.markdown('#### Documentos')
-            st.dataframe([{'Archivo':d.file_name,'Páginas':d.page_count,'Caracteres':d.character_count,'Páginas con texto':d.pages_with_text,'Texto extraíble':'Sí' if d.processable else 'No'} for d in result['documents']],use_container_width=True,hide_index=True)
+            st.markdown(table_html([{'Archivo':d.file_name,'Páginas':d.page_count,'Caracteres':d.character_count,'Páginas con texto':d.pages_with_text,'Texto extraíble':'Sí' if d.processable else 'No'} for d in result['documents']]),unsafe_allow_html=True)
         if result['all_hits']:
             st.markdown('#### Todas las coincidencias candidatas')
-            st.dataframe([{'Entrada PROHIBIDOS':h.entry.ingredient,'CAS':h.entry.cas or 'Varios','Canal':h.channel,'Valor':h.matched_value,'Clase contextual':h.context_class,'Archivo':h.source_file,'Página':h.page or '—'} for h in result['all_hits']],use_container_width=True,hide_index=True)
+            st.markdown(table_html([{'Entrada PROHIBIDOS':h.entry.ingredient,'CAS':h.entry.cas or 'Varios','Canal':h.channel,'Valor':h.matched_value,'Clase contextual':h.context_class,'Archivo':h.source_file,'Página':h.page or '—'} for h in result['all_hits']]),unsafe_allow_html=True)
         if ev.cas_records:
             st.markdown('#### CAS válidos detectados/procesados')
-            st.dataframe([{'CAS':r.cas,'Fuentes':', '.join(sorted({o.source_file for o in r.occurrences})),'Ocurrencias':len(r.occurrences)} for r in ev.cas_records],use_container_width=True,hide_index=True)
+            st.markdown(table_html([{'CAS':r.cas,'Fuentes':', '.join(sorted({o.source_file for o in r.occurrences})),'Ocurrencias':len(r.occurrences)} for r in ev.cas_records]),unsafe_allow_html=True)
         if result['invalid_candidates']:
-            st.markdown('#### Candidatos CAS descartados por checksum');st.dataframe(result['invalid_candidates'],use_container_width=True,hide_index=True)
+            st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
 
 st.markdown('<div class="helper" style="margin-top:3rem">La evaluación se limita a la lista PROHIBIDOS y no sustituye la revisión técnica o normativa aplicable.</div>',unsafe_allow_html=True)
