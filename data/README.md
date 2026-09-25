@@ -1,14 +1,13 @@
-# Base maestra normalizada
+# Base PROHIBIDOS normalizada
 
-`master_restrictions.csv` es una normalización del archivo corporativo **Anexos. Manejo de plaguicidas.xlsx**, identificado en las hojas de Anexo 1 y Anexo 2 como `SGA.PRO.14`, versión `01`, fecha `2026-03-24`.
+`master_restrictions.csv` contiene únicamente la hoja corporativa **Listado de plaguicidas prohibidos** normalizada desde **Anexos. Manejo de plaguicidas.xlsx** (`SGA.PRO.14`, versión `01`, fecha `2026-03-24`).
 
-La normalización conserva una fila por CAS consultable. Cuando una fila del Excel contiene varios CAS, se expande a varias filas sin cambiar el nombre/criterio de origen.
+El encabezado de origen define las entradas como **Ingrediente activo o grupo**.
 
-## Interpretación de listas
+- Los registros con CAS específico se normalizan a una fila por CAS consultable.
+- Si una entrada de origen contiene varios CAS, se expande sin cambiar el nombre, uso ni criterio.
+- Los ocho registros cuyo CAS de origen es `varios`/no específico se conservan como grupos y se tratan mediante reglas explícitas y conservadoras.
 
-- `PROHIBITED`: la hoja se titula *Listado de plaguicidas prohibidos* y su encabezado dice **Ingrediente activo o grupo**. Acción operacional: `NO_UTILIZAR`, solo cuando el rol como ingrediente activo queda suficientemente confirmado.
-- `MITIGATE_RISK`: la hoja se titula *Listado de plaguicidas para mitigar riesgo*. El Excel no indica expresamente que una coincidencia en cualquier coformulante deba activar la regla. Por ello se usa `ROLE_CONFIRMATION_REQUIRED`: con rol suficientemente confirmado se informa `REQUIERE_MITIGACION`; sin esa evidencia se deriva a `REVISIÓN MANUAL`.
-- `OBSOLETE`: la hoja dice **PLAGUICIDAS OBSOLETOS (Ingrediente activo)**, pero el archivo no define por sí solo una acción equivalente a `NO_UTILIZAR`. Se conserva como `REVISAR_OBSOLETO`.
-- `CARBAMATE` y `ORGANOPHOSPHATE`: son listas nominales sin CAS en el Excel. Se conservan como información de referencia (`NAME_ONLY`) y no intervienen en el cruce CAS automático.
+No se incluyen aquí organofosforados, carbamatos, obsoletos ni la lista para mitigar riesgo porque no intervienen en el objetivo actual de la aplicación.
 
-La aplicación no interpreta la mera presencia de cualquier CAS como prohibición. Primero respeta la lista, acción y alcance normalizados de esta base.
+La mera aparición de una sustancia en un documento no se convierte automáticamente en `NO UTILIZAR`: el contexto determina si existe evidencia suficiente de ingrediente activo. Una coincidencia CAS exacta no confirmada se conserva como alarma para revisión.
