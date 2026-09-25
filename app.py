@@ -47,13 +47,18 @@ div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
 /* Streamlit theme hardening: keep native widgets readable in light UI */
 .stApp, .stApp p, .stApp label, .stApp span, .stApp div{color:#344054}
 div[data-testid="stExpander"] details{background:#fff!important}
-div[data-testid="stExpander"] summary{background:#f8fafc!important;color:#1f2937!important;border-radius:11px!important}
+div[data-testid="stExpander"] details,div[data-testid="stExpander"] details>*{background:#fff!important;color:#344054!important}
+div[data-testid="stExpander"] summary,div[data-testid="stExpander"] summary[aria-expanded="true"]{background:#f8fafc!important;color:#1f2937!important;border-radius:11px!important}
 div[data-testid="stExpander"] summary:hover{background:#f2f4f7!important}
-div[data-testid="stExpander"] summary p,div[data-testid="stExpander"] summary span{color:#1f2937!important;font-weight:700!important}
-div[data-testid="stExpander"] [data-testid="stExpanderDetails"]{background:#fff!important;color:#344054!important}
-div[data-testid="stExpander"] [data-testid="stExpanderDetails"] p,
-div[data-testid="stExpander"] [data-testid="stExpanderDetails"] label,
-div[data-testid="stExpander"] [data-testid="stExpanderDetails"] span{color:#344054!important}
+div[data-testid="stExpander"] summary p,div[data-testid="stExpander"] summary span,div[data-testid="stExpander"] summary svg{color:#1f2937!important;fill:#475467!important;font-weight:700!important}
+div[data-testid="stExpander"] details>div,div[data-testid="stExpander"] details>div>div{background:#fff!important;color:#344054!important}
+div[data-testid="stExpander"] details>div p,
+div[data-testid="stExpander"] details>div label,
+div[data-testid="stExpander"] details>div span,
+div[data-testid="stExpander"] details>div strong,
+div[data-testid="stExpander"] details>div div{color:#344054!important}
+div[data-testid="stExpander"] details>div [data-testid="stMarkdownContainer"],
+div[data-testid="stExpander"] details>div [data-testid="stMarkdownContainer"] *{color:#344054!important;background-color:transparent!important}
 div[data-testid="stTextArea"] label p{color:#344054!important;font-weight:650!important}
 div[data-testid="stTextArea"] textarea{background:#fff!important;color:#101828!important;border:1px solid #98a2b3!important}
 div[data-testid="stTextArea"] textarea::placeholder{color:#667085!important;opacity:1!important}
