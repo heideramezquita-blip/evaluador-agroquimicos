@@ -3,7 +3,7 @@ import csv,re
 from pathlib import Path
 from .cas_utils import is_valid_cas
 from .models import ProhibitedEntry
-from .text_utils import normalize_text
+from .text_utils import normalize_text,match_key
 
 GROUP_RULES={
  'arsenico y sus compuestos': {'terms':['arsenico','arsenical','arsenato','arsenito','arsonato','arseniato'], 'deterministic':False},
@@ -43,5 +43,5 @@ class ProhibitedDatabase:
                 else:self.groups.append(e)
     def aliases(self,entry):return _aliases(entry.ingredient)
     def group_rule(self,entry):
-        key=normalize_text(entry.ingredient)
+        key=match_key(entry.ingredient)
         return GROUP_RULES.get(key,{'terms':self.aliases(entry),'deterministic':False})
