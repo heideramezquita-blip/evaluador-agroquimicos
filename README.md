@@ -2,6 +2,9 @@
 
 Aplicación Streamlit para revisar fichas técnicas y fichas de datos de seguridad de agroquímicos, identificar evidencia documental del ingrediente activo y contrastarla con criterios de plaguicidas de **RSPO** e **ISCC**. Las listas de **Rainforest Alliance (RA)** se usan como base local de detección y referencia complementaria.
 
+**Aplicación web:** https://evaluador-agroquimicos.streamlit.app/
+
+
 ## Cómo funciona
 
 1. Extrae texto de uno o varios PDF.
