@@ -164,6 +164,16 @@ def result_card(status,message):
     else: css,icon='result-neutral','✓'
     st.markdown(f'<div class="result-card {css}"><h2>{icon} {escape(status)}</h2><p>{escape(message)}</p></div>',unsafe_allow_html=True)
 
+def pubchem_url(cas):
+    cas=(cas or '').strip()
+    if not cas or cas.lower()=='varios': return ''
+    return 'https://pubchem.ncbi.nlm.nih.gov/#query='+cas
+
+def cas_html(cas):
+    value=escape(str(cas or 'Varios'))
+    url=pubchem_url(cas)
+    return f'<a href="{escape(url)}" target="_blank" rel="noopener noreferrer">{value}</a>' if url else value
+
 def table_html(rows):
     if not rows:
         return ''
@@ -171,7 +181,7 @@ def table_html(rows):
     head=''.join(f'<th>{escape(str(col))}</th>' for col in columns)
     body=[]
     for row in rows:
-        cells=''.join(f'<td>{escape(str(row.get(col,"")))}</td>' for col in columns)
+        cells=''.join(f'<td>{cas_html(row.get(col,"")) if col=="CAS" else escape(str(row.get(col,"")))}</td>' for col in columns)
         body.append(f'<tr>{cells}</tr>')
     return '<div class="clean-table-wrap"><table class="clean-table"><thead><tr>'+head+'</tr></thead><tbody>'+''.join(body)+'</tbody></table></div>'
 
@@ -205,7 +215,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
         for g in consolidated_hits(ev.hits):
             pages=', '.join(map(str,sorted(g['pages']))) if g['pages'] else '—';classes=', '.join(sorted(g['classes']))
-            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(g["source_list"])} &nbsp;·&nbsp; <b>CAS:</b> {escape(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}</div></div>',unsafe_allow_html=True)
+            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(g["source_list"])} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}</div></div>',unsafe_allow_html=True)
             with st.expander(f'Ver contexto — {g["ingredient"]}'):
                 if g['usage']:st.write('**Uso principal:**',g['usage'])
                 if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
