@@ -44,6 +44,25 @@ div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
 .match-box{border:1px solid #e4e7ec;border-radius:12px;padding:1rem 1.1rem;margin:.65rem 0;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.03)}
 .match-title{font-size:1.05rem;font-weight:800;color:#101828;margin-bottom:.35rem}.match-meta{color:#475467;font-size:.92rem;line-height:1.6}.match-meta b{color:#344054;font-weight:750}
 [data-testid="stMetric"]{background:#fafafa;border:1px solid #eee;padding:.8rem;border-radius:10px}
+/* Streamlit theme hardening: keep native widgets readable in light UI */
+.stApp, .stApp p, .stApp label, .stApp span, .stApp div{color:#344054}
+div[data-testid="stExpander"] details{background:#fff!important}
+div[data-testid="stExpander"] summary{background:#f8fafc!important;color:#1f2937!important;border-radius:11px!important}
+div[data-testid="stExpander"] summary:hover{background:#f2f4f7!important}
+div[data-testid="stExpander"] summary p,div[data-testid="stExpander"] summary span{color:#1f2937!important;font-weight:700!important}
+div[data-testid="stExpander"] [data-testid="stExpanderDetails"]{background:#fff!important;color:#344054!important}
+div[data-testid="stExpander"] [data-testid="stExpanderDetails"] p,
+div[data-testid="stExpander"] [data-testid="stExpanderDetails"] label,
+div[data-testid="stExpander"] [data-testid="stExpanderDetails"] span{color:#344054!important}
+div[data-testid="stTextArea"] label p{color:#344054!important;font-weight:650!important}
+div[data-testid="stTextArea"] textarea{background:#fff!important;color:#101828!important;border:1px solid #98a2b3!important}
+div[data-testid="stTextArea"] textarea::placeholder{color:#667085!important;opacity:1!important}
+div[data-testid="stCheckbox"] label p,div[data-testid="stCheckbox"] label span{color:#344054!important}
+div[data-testid="stMetric"]{background:#f8fafc!important}
+div[data-testid="stMetric"] label,div[data-testid="stMetric"] label p{color:#475467!important}
+div[data-testid="stMetric"] [data-testid="stMetricValue"],div[data-testid="stMetric"] [data-testid="stMetricValue"] *{color:#101828!important}
+[data-testid="stDataFrame"]{color:#101828}
+h1,h2,h3,h4{color:#101828!important}
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
 </style>
