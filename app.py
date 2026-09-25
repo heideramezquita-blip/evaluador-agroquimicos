@@ -3,7 +3,7 @@ from html import escape
 from pathlib import Path
 import streamlit as st
 from src.engine import analyze
-from src.rules import STATUS_NO_USE,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW
+from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,standard_scope
 
 BASE_DIR=Path(__file__).resolve().parent
 MASTER_PATH=BASE_DIR/'data'/'master_restrictions.csv'
@@ -144,9 +144,9 @@ footer{visibility:hidden}
 </style>
 """,unsafe_allow_html=True)
 
-st.markdown('<div class="brand"><span class="brand-mark">A</span><span>Evaluador de Agroquímicos</span><span class="brand-badge">RA · RSPO · ISCC</span></div>',unsafe_allow_html=True)
+st.markdown('<div class="brand"><span class="brand-mark">A</span><span>Evaluador de Agroquímicos</span><span class="brand-badge">RSPO · ISCC · RA</span></div>',unsafe_allow_html=True)
 st.markdown("""<div class="hero"><h1>Evalúa tus documentos contra las listas de plaguicidas</h1>
-<p>Carga la ficha técnica, la ficha de datos de seguridad o ambas. El sistema consulta una copia local de las listas PROHIBIDOS, OBSOLETOS y MITIGACIÓN DE RIESGOS del Anexo al capítulo Agricultura v1.4 de Rainforest Alliance, y presenta su alcance normativo.</p></div>""",unsafe_allow_html=True)
+<p>Carga la ficha técnica, la ficha de datos de seguridad o ambas. El sistema identifica coincidencias documentales y prioriza su lectura frente a los criterios de plaguicidas de RSPO e ISCC; las listas de Rainforest Alliance se conservan como base local de detección y referencia complementaria.</p></div>""",unsafe_allow_html=True)
 
 files=st.file_uploader('Seleccionar archivos PDF',type=['pdf'],accept_multiple_files=True,help='Puede cargar varios documentos del mismo producto.')
 st.markdown('<div class="helper">Selecciona los PDF o arrástralos y suéltalos aquí · Puedes cargar FT + FDS del mismo producto</div>',unsafe_allow_html=True)
@@ -158,8 +158,8 @@ with st.expander('Introducir CAS manualmente · opcional'):
 st.markdown('</div>',unsafe_allow_html=True)
 
 def result_card(status,message):
-    if status in (STATUS_NO_USE,STATUS_OBSOLETE): css,icon='result-red','⛔'
-    elif status in (STATUS_MATCH_REVIEW,STATUS_MITIGATION): css,icon='result-orange','⚠️'
+    if status in (STATUS_NO_USE,STATUS_NO_USE_RSPO): css,icon='result-red','⛔'
+    elif status in (STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_MITIGATION): css,icon='result-orange','⚠️'
     elif status==STATUS_DOCUMENT_REVIEW: css,icon='result-yellow','📄'
     else: css,icon='result-neutral','✓'
     parts=message.split(' Resultado basado en ',1)
@@ -188,6 +188,21 @@ def table_html(rows):
         cells=''.join(f'<td>{cas_html(row.get(col,"")) if col=="CAS" else escape(str(row.get(col,"")))}</td>' for col in columns)
         body.append(f'<tr>{cells}</tr>')
     return '<div class="clean-table-wrap"><table class="clean-table"><thead><tr>'+head+'</tr></thead><tbody>'+''.join(body)+'</tbody></table></div>'
+
+def list_label(source_list):
+    return {'PROHIBITED':'RA · PROHIBIDOS','OBSOLETE':'RA · OBSOLETOS','MITIGATE_RISK':'RA · MITIGACIÓN DE RIESGOS'}.get(source_list,source_list)
+
+def scope_html(g):
+    if g['source_list']!='PROHIBITED':
+        return '<b>Lectura por estándar:</b> RA: referencia específica de la lista · RSPO/ISCC: verificar requisito aplicable'
+    class EntryView:
+        ingredient=g['ingredient']; criteria=g['criteria']
+    scope=standard_scope(EntryView())
+    rspo='criterio explícito' if scope['rspo'] else 'sin equivalencia automática'
+    iscc='criterio explícito' if scope['iscc'] else 'sin equivalencia automática'
+    if scope['rspo_basis']: rspo+=' ('+', '.join(scope['rspo_basis'])+')'
+    if scope['iscc_basis']: iscc+=' ('+', '.join(scope['iscc_basis'])+')'
+    return '<b>Lectura por estándar:</b> RSPO: '+escape(rspo)+' · ISCC: '+escape(iscc)+' · RA: prohibido'
 
 def consolidated_hits(hits):
     grouped={}
@@ -219,7 +234,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
         for g in consolidated_hits(ev.hits):
             pages=', '.join(map(str,sorted(g['pages']))) if g['pages'] else '—';classes=', '.join(sorted(g['classes']))
-            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(g["source_list"])} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}</div></div>',unsafe_allow_html=True)
+            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}<br>{scope_html(g)}</div></div>',unsafe_allow_html=True)
             with st.expander(f'Ver contexto — {g["ingredient"]}'):
                 if g['usage']:st.write('**Uso principal:**',g['usage'])
                 if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
@@ -254,14 +269,14 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         if result['invalid_candidates']:
             st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
 
-with st.expander('Fuente normativa y vigencia de las listas'):
-    st.markdown('''**Fuente de las listas:** Anexo al capítulo Agricultura v1.4 de **Rainforest Alliance** (A-07-SCRL-B-FA), en particular las tablas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**.
+with st.expander('Fuentes normativas y alcance de la evaluación'):
+    st.markdown('''**RSPO — marco principal:** Principios y Criterios RSPO 2024, versión 4.2, indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS 1A/1B; carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
 
-La aplicación **no consulta Rainforest Alliance en tiempo real**. Evalúa contra una copia local derivada del Excel incorporado al proyecto y contrastada con ese anexo. **Última carga de la base local: septiembre de 2026.**
+**ISCC — marco principal:** ISCC EU 201 v4.2 remite, para biomasa agrícola, a ISCC EU 202-2 (Principios 2–6). El requisito 2.4.1 prohíbe los productos incluidos en OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. La aplicación no amplía automáticamente ISCC a otros criterios.
 
-Fuente oficial: https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14
+**Rainforest Alliance — referencia complementaria y base local de detección:** Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
 
-Si Rainforest Alliance publica una versión posterior del anexo, la base local debe revisarse/actualizarse antes de considerar que refleja esa nueva versión.''')
+La aplicación no consulta estos estándares en tiempo real. Una coincidencia de Rainforest Alliance solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita codificada; en los demás casos se muestra para revisión, sin inferir equivalencia normativa.''')
 
 with st.expander('Cómo interpretar abreviaturas y criterios'):
     st.markdown('''**Uso principal:** A = Acaricida · Ad = Adyuvante · Fun = Fungicida · Fum = Fumigante · H = Herbicida · I = Insecticida · N = Nematicida · R = Rodenticida · Conserv. Mad. = Conservación de la madera.
@@ -270,8 +285,8 @@ with st.expander('Cómo interpretar abreviaturas y criterios'):
 
 **Convenciones internacionales:** M = Protocolo de Montreal · R = Convenio de Rotterdam · E = Convenio de Estocolmo.
 
-**Efectos graves:** criterio propio de Rainforest Alliance. En esta herramienta no se traslada por sí solo como prohibición a RSPO ni ISCC.
+**Efectos graves:** Rainforest Alliance utiliza esta marca dentro de su lista de plaguicidas prohibidos. RSPO contempla los daños graves o irreversibles dentro del concepto de plaguicidas muy peligrosos, pero una marca de Rainforest Alliance por sí sola no se trata aquí como prueba automática de prohibición RSPO. En ISCC EU 202-2, el requisito de prohibición verificado se basa en OMS 1a/1b, Estocolmo y Rotterdam; por ello, esta marca tampoco se traslada automáticamente a ISCC.
 
-**Mitigación de riesgos:** una marca ✓ identifica el tipo de medida/riesgo aplicable (EPP de nivel superior, riesgo acuático, vida silvestre, polinizadores o espectador).''')
+**Mitigación de riesgos:** una marca ✓ identifica el tipo de medida/riesgo aplicable en Rainforest Alliance (EPP de nivel superior, riesgo acuático, vida silvestre, polinizadores o espectador). Se muestra como referencia complementaria y no como prohibición automática RSPO/ISCC.''')
 
-st.markdown('<div class="helper" style="margin-top:3rem">La herramienta clasifica coincidencias documentales y no sustituye la verificación técnica de requisitos, excepciones o condiciones aplicables.</div>',unsafe_allow_html=True)
+st.markdown('<div class="helper" style="margin-top:3rem">La herramienta prioriza el tamizaje frente a RSPO e ISCC y conserva Rainforest Alliance como referencia complementaria. No sustituye la verificación de excepciones, restricciones nacionales ni condiciones específicas del estándar.</div>',unsafe_allow_html=True)
