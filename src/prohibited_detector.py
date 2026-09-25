@@ -22,7 +22,7 @@ def _name_hits(document:PdfDocument,db):
             for alias in db.aliases(entry):
                 if phrase_present(page.text,alias):
                     context=_line_context(page.text,alias); cls=classify_context(context,alias)
-                    hits.append(EvidenceHit(entry,'NAME',alias,document.file_name,page.page,context,cls,'exact_name','Coincidencia nominal exacta/normalizada con PROHIBIDOS.'))
+                    hits.append(EvidenceHit(entry,'NAME',alias,document.file_name,page.page,context,cls,'exact_name','Coincidencia nominal exacta/normalizada con una lista normativa.'))
                     break
         for entry in db.groups:
             rule=db.group_rule(entry); terms=rule['terms']
@@ -36,7 +36,7 @@ def _name_hits(document:PdfDocument,db):
                 context=_line_context(page.text,alias)
             cls=classify_context(context,alias)
             strength='group_deterministic' if rule.get('deterministic') else 'group_candidate'
-            hits.append(EvidenceHit(entry,'GROUP_NAME',alias,document.file_name,page.page,context,cls,strength,'Coincidencia dirigida con un registro de grupo/familia de PROHIBIDOS.'))
+            hits.append(EvidenceHit(entry,'GROUP_NAME',alias,document.file_name,page.page,context,cls,strength,'Coincidencia dirigida con un registro de grupo/familia de una lista normativa.'))
     return hits
 
 def detect_candidates(documents,cas_records,db):
@@ -45,7 +45,7 @@ def detect_candidates(documents,cas_records,db):
         for entry in db.by_cas.get(record.cas,[]):
             for occ in record.occurrences:
                 cls=classify_context(occ.context,record.cas)
-                hits.append(EvidenceHit(entry,'CAS',record.cas,occ.source_file,occ.page,occ.context,cls,'validated_cas','CAS válido por checksum e incluido en PROHIBIDOS.'))
+                hits.append(EvidenceHit(entry,'CAS',record.cas,occ.source_file,occ.page,occ.context,cls,'validated_cas','CAS válido por checksum e incluido en una lista normativa.'))
     for doc in documents:hits.extend(_name_hits(doc,db))
     unique=[]; seen=set()
     for h in hits:
