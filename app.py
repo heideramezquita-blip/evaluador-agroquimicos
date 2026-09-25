@@ -153,7 +153,7 @@ st.markdown('<div class="helper">Selecciona los PDF o arrástralos y suéltalos 
 
 st.markdown('<div class="secondary">',unsafe_allow_html=True)
 with st.expander('Introducir CAS manualmente · opcional'):
-    manual=st.text_area('CAS manual (uno o varios)',placeholder='Ejemplo: 153719-23-4',help='Puede separar varios CAS con espacios, comas o saltos de línea.')
+    manual=st.text_area('CAS manual (uno o varios)',placeholder='Ejemplo: 4685-14-7',help='Puede separar varios CAS con espacios, comas o saltos de línea.')
     manual_active=st.checkbox('Confirmo que los CAS manuales corresponden a ingrediente(s) activo(s)',value=False,help='Sin esta confirmación, una coincidencia con PROHIBIDOS se presenta como alerta para revisión.')
 st.markdown('</div>',unsafe_allow_html=True)
 
