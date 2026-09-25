@@ -121,7 +121,7 @@ footer{visibility:hidden}
 
 st.markdown('<div class="brand"><span class="brand-mark">A</span><span>Evaluador de Agroquímicos</span><span class="brand-badge">RA · RSPO · ISCC</span></div>',unsafe_allow_html=True)
 st.markdown("""<div class="hero"><h1>Evalúa tus documentos contra las listas de plaguicidas</h1>
-<p>Carga la ficha técnica, la ficha de datos de seguridad o ambas. El sistema busca CAS, nombres y grupos en PROHIBIDOS, OBSOLETOS y MITIGACIÓN DE RIESGOS, y presenta su alcance normativo.</p></div>""",unsafe_allow_html=True)
+<p>Carga la ficha técnica, la ficha de datos de seguridad o ambas. El sistema consulta una copia local de las listas PROHIBIDOS, OBSOLETOS y MITIGACIÓN DE RIESGOS del Anexo al capítulo Agricultura v1.4 de Rainforest Alliance, y presenta su alcance normativo.</p></div>""",unsafe_allow_html=True)
 
 files=st.file_uploader('Seleccionar archivos PDF',type=['pdf'],accept_multiple_files=True,help='Puede cargar varios documentos del mismo producto.')
 st.markdown('<div class="helper">Selecciona los PDF o arrástralos y suéltalos aquí · Puedes cargar FT + FDS del mismo producto</div>',unsafe_allow_html=True)
@@ -205,6 +205,15 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             st.markdown(table_html([{'CAS':r.cas,'Fuentes':', '.join(sorted({o.source_file for o in r.occurrences})),'Ocurrencias':len(r.occurrences)} for r in ev.cas_records]),unsafe_allow_html=True)
         if result['invalid_candidates']:
             st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
+
+with st.expander('Fuente normativa y vigencia de las listas'):
+    st.markdown('''**Fuente de las listas:** Anexo al capítulo Agricultura v1.4 de **Rainforest Alliance** (A-07-SCRL-B-FA), en particular las tablas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**.
+
+La aplicación **no consulta Rainforest Alliance en tiempo real**. Evalúa contra una copia local derivada del Excel incorporado al proyecto y contrastada con ese anexo. **Última carga de la base local: septiembre de 2026.**
+
+Fuente oficial: https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14
+
+Si Rainforest Alliance publica una versión posterior del anexo, la base local debe revisarse/actualizarse antes de considerar que refleja esa nueva versión.''')
 
 with st.expander('Cómo interpretar abreviaturas y criterios'):
     st.markdown('''**Uso principal:** A = Acaricida · Ad = Adyuvante · Fun = Fungicida · Fum = Fumigante · H = Herbicida · I = Insecticida · N = Nematicida · R = Rodenticida · Conserv. Mad. = Conservación de la madera.
