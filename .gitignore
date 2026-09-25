@@ -1,7 +1,28 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.venv/
+venv/
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
 .streamlit/
+secrets.toml
+
+# Local/private source documents and validation corpora
+corpus/
+*.pdf
+*.docx
+*.xlsx
+*.xls
+
+# Generated validation outputs
 corpus_audit_documents.csv
 corpus_audit_pairs.csv
+validation_corpus_documents.csv
+validation_corpus_pairs.csv
+
 .DS_Store
