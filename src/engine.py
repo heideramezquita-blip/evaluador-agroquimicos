@@ -26,5 +26,7 @@ def analyze(files,*,manual_cas_text='',manual_active_confirmed=False,master_path
     for h in hits:
         if h.channel=='CAS' and h.source_file=='Entrada manual' and manual_active_confirmed:h.context_class='ACTIVE'
     unprocessables=sum(not d.processable for d in documents)
+    if manual_valid and not documents:
+        warnings.append('La entrada manual de CAS solo puede descartar coincidencias por CAS específico; no excluye los registros de PROHIBIDOS definidos como grupos con CAS varios.')
     evaluation=evaluate_prohibited(records,hits,warnings,unprocessables)
     return {'evaluation':evaluation,'documents':documents,'invalid_candidates':invalid,'manual_valid':manual_valid,'manual_invalid':manual_invalid,'all_hits':hits,'prohibited_specific_count':len(db.specific),'prohibited_group_count':len(db.groups)}
