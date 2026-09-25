@@ -290,4 +290,3 @@ with st.expander('Cómo interpretar abreviaturas y criterios'):
 **Mitigación de riesgos:** una marca ✓ identifica el tipo de medida/riesgo aplicable en Rainforest Alliance (EPP de nivel superior, riesgo acuático, vida silvestre, polinizadores o espectador). Se muestra como referencia complementaria y no como prohibición automática RSPO/ISCC.''')
 
 st.markdown('<div class="helper" style="margin-top:3rem">La herramienta prioriza el tamizaje frente a RSPO e ISCC y conserva Rainforest Alliance como referencia complementaria. No sustituye la verificación de excepciones, restricciones nacionales ni condiciones específicas del estándar.</div>',unsafe_allow_html=True)
-st.markdown('<div class="helper" style="margin-top:.6rem"><a href="https://github.com/heideramezquita-blip/evaluador-agroquimicos" target="_blank" rel="noopener noreferrer">Código, metodología y documentación del proyecto · GitHub</a></div>',unsafe_allow_html=True)
