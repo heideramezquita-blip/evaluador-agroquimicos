@@ -270,9 +270,9 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
 
 with st.expander('Fuentes normativas y alcance de la evaluación'):
-    st.markdown('''**RSPO — marco principal:** Principios y Criterios RSPO 2024, versión 4.2, indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS 1A/1B; carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
+    st.markdown('''**RSPO — marco principal:** [Principios y Criterios RSPO 2024, versión 4.2](https://rspo.org/wp-content/uploads/SPA-2024-RSPO-Principles-and-Criteria-%E2%80%93-Version-4.2-spanish.pdf), indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS 1A/1B; carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
 
-**ISCC — marco principal:** ISCC EU 202-2 v1.1 (válido desde el 1 de diciembre de 2022), requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
+**ISCC — marco principal:** [ISCC EU 202-2 v1.1](https://iscc-system.org/wp-content/uploads/dlm_uploads/2026/03/ISCC-EU-202-2-Agricultural-Biomass-ISCC-Principles-2-6.pdf) (válido desde el 1 de diciembre de 2022), requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
 
 **Rainforest Alliance — referencia complementaria y base local de detección:** [Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA)](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
 
