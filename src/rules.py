@@ -8,7 +8,7 @@ STATUS_RA_SEVERE='ATENCIÓN — PROHIBIDO RA POR EFECTOS GRAVES'
 STATUS_MITIGATION='ATENCIÓN — PLAGUICIDA SUJETO A MITIGACIÓN DE RIESGOS'
 STATUS_MATCH_REVIEW='COINCIDENCIA NORMATIVA — REVISAR'
 STATUS_DOCUMENT_REVIEW='REVISIÓN DOCUMENTAL'
-STATUS_NO_MATCH='SIN COINCIDENCIAS EN LISTAS EVALUADAS'
+STATUS_NO_MATCH='SIN COINCIDENCIAS DETECTADAS EN LOS DOCUMENTOS CARGADOS'
 NON_SUPPORTING={INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE}
 
 def _strong_hits(items):
@@ -70,4 +70,4 @@ def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):
 
     if unprocessables:
         return Evaluation(STATUS_DOCUMENT_REVIEW,f'{unprocessables} documento(s) no tienen texto extraíble suficiente. No se demostró una coincidencia, pero tampoco es válido concluir su ausencia.',[],cas_records,warnings)
-    return Evaluation(STATUS_NO_MATCH,'No se encontró evidencia de coincidencia con PROHIBIDOS, OBSOLETOS o MITIGACIÓN DE RIESGOS mediante los mecanismos disponibles.',[],cas_records,warnings)
+    return Evaluation(STATUS_NO_MATCH,'No se identificó evidencia suficiente de coincidencia con PROHIBIDOS, OBSOLETOS o MITIGACIÓN DE RIESGOS a partir de la información disponible en los documentos cargados. Este resultado no confirma por sí mismo que el producto esté permitido.',[],cas_records,warnings)
