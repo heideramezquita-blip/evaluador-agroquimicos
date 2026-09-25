@@ -3,6 +3,8 @@ import re
 import fitz  # PyMuPDF
 import streamlit as st
 
+from src.pubchem import consultar_pubchem
+
 from src.ingredient_parser import (
     detectar_bloques_composicion,
     extraer_componentes_sds,
@@ -424,7 +426,115 @@ if archivo is not None:
                     "No se encontraron números CAS válidos "
                     "en el documento."
                 )
+            # -------------------------------------------------
+            # Consulta a PubChem cuando falta CAS
+            # -------------------------------------------------
 
+            if (
+                ingredientes_activos
+                and not cas_encontrados
+            ):
+
+                st.subheader(
+                    "Identificación del CAS mediante PubChem"
+                )
+
+                for ingrediente in ingredientes_activos:
+
+                    nombre_ingrediente = ingrediente[
+                        "nombre"
+                    ]
+
+                    with st.spinner(
+                        f"Consultando PubChem para "
+                        f"{nombre_ingrediente}..."
+                    ):
+
+                        resultado_pubchem = consultar_pubchem(
+                            nombre_ingrediente
+                        )
+
+                    if (
+                        resultado_pubchem["estado"]
+                        == "identificado"
+                    ):
+
+                        st.success(
+                            "CAS identificado mediante PubChem."
+                        )
+
+                        st.write(
+                            f"**Ingrediente:** "
+                            f"{nombre_ingrediente}"
+                        )
+
+                        st.write(
+                            f"**PubChem CID:** "
+                            f"{resultado_pubchem['cid']}"
+                        )
+
+                        st.write(
+                            f"**CAS:** "
+                            f"{resultado_pubchem['cas']}"
+                        )
+
+                        st.write(
+                            "**Origen del CAS:** PubChem"
+                        )
+
+                    elif (
+                        resultado_pubchem["estado"]
+                        == "ambiguo"
+                    ):
+
+                        st.warning(
+                            "REVISIÓN MANUAL: PubChem encontró "
+                            "más de un compuesto posible para "
+                            f"{nombre_ingrediente}."
+                        )
+
+                    elif (
+                        resultado_pubchem["estado"]
+                        == "varios_cas"
+                    ):
+
+                        st.warning(
+                            "REVISIÓN MANUAL: PubChem devolvió "
+                            "más de un CAS para el compuesto."
+                        )
+
+                        st.write(
+                            resultado_pubchem[
+                                "cas_candidatos"
+                            ]
+                        )
+
+                    elif (
+                        resultado_pubchem["estado"]
+                        == "sin_cas"
+                    ):
+
+                        st.warning(
+                            "REVISIÓN MANUAL: el compuesto fue "
+                            "identificado en PubChem, pero no se "
+                            "obtuvo un CAS único."
+                        )
+
+                    elif (
+                        resultado_pubchem["estado"]
+                        == "no_encontrado"
+                    ):
+
+                        st.warning(
+                            "REVISIÓN MANUAL: PubChem no encontró "
+                            f"el ingrediente {nombre_ingrediente}."
+                        )
+
+                    else:
+
+                        st.error(
+                            resultado_pubchem["mensaje"]
+                        )
             # -------------------------------------------------
             # Candidatos con formato CAS pero inválidos
             # -------------------------------------------------
