@@ -94,6 +94,20 @@ div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button{back
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button *{color:#475467!important;fill:#475467!important}
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover{background:#fee4e2!important;border-color:#fda29b!important}
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover *{color:#b42318!important;fill:#b42318!important}
+
+/* Uploaded-file row: Streamlit renders this outside the dropzone in some versions */
+div[data-testid="stFileUploader"] ul,
+div[data-testid="stFileUploader"] ul>li,
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"],
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"]>div{
+background:#fff!important;color:#344054!important;border-color:#d0d5dd!important}
+div[data-testid="stFileUploader"] ul>li{border:1px solid #d0d5dd!important;border-radius:10px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important}
+div[data-testid="stFileUploader"] ul>li *,
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] *{color:#344054!important}
+div[data-testid="stFileUploader"] ul>li button,
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button{background:#f2f4f7!important;color:#475467!important;border:1px solid #e4e7ec!important}
+div[data-testid="stFileUploader"] ul>li button *,
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button *{color:#475467!important;fill:#475467!important}
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
 </style>
