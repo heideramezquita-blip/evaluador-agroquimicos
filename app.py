@@ -3,7 +3,10 @@ import re
 import fitz
 import streamlit as st
 
-from src.ingredient_parser import detectar_bloques_composicion
+from src.ingredient_parser import (
+    detectar_bloques_composicion,
+    extraer_componentes_sds,
+)
 
 
 # -------------------------------------------------
@@ -280,7 +283,60 @@ if archivo is not None:
                     "No se encontraron encabezados claros de "
                     "composición o ingrediente activo."
                 )
+# -------------------------------------------------
+# Componentes declarados en SDS
+# -------------------------------------------------
 
+componentes_sds = []
+
+for bloque in bloques_composicion:
+
+    encabezado_normalizado = bloque[
+        "encabezado"
+    ].lower()
+
+    if (
+        "sección 3" in encabezado_normalizado
+        or "seccion 3" in encabezado_normalizado
+    ):
+
+        componentes = extraer_componentes_sds(
+            bloque
+        )
+
+        componentes_sds.extend(componentes)
+
+
+if componentes_sds:
+
+    st.subheader(
+        "Componentes declarados en la SDS"
+    )
+
+    tabla_componentes = []
+
+    for componente in componentes_sds:
+
+        tabla_componentes.append(
+            {
+                "Componente": componente["nombre"],
+                "CAS": componente["cas"],
+                "Concentración": (
+                    componente["concentracion"]
+                    or "No identificada"
+                ),
+                "Página": componente["pagina"],
+                "Tipo de evidencia": (
+                    "Componente declarado en Sección 3"
+                ),
+            }
+        )
+
+    st.dataframe(
+        tabla_componentes,
+        use_container_width=True,
+        hide_index=True,
+    )
             # -------------------------------------------------
             # CAS encontrados
             # -------------------------------------------------
