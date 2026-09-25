@@ -27,9 +27,9 @@ div[data-testid="stFileUploader"]>label{display:none}
 div[data-testid="stFileUploader"] section{min-height:210px;border:2px dashed #d0d5dd!important;border-radius:16px!important;background:#fafafa!important;padding:2.2rem 1rem!important;transition:.18s ease}
 div[data-testid="stFileUploader"] section:hover{border-color:var(--accent)!important;background:#fff8f7!important}
 div[data-testid="stFileUploader"] section button{background:var(--accent)!important;color:white!important;border:0!important;border-radius:9px!important;font-weight:750!important;padding:.65rem 1.1rem!important}
-.helper{text-align:center;color:#98a2b3;font-size:.86rem;margin:.3rem 0 1.8rem}
+.helper{text-align:center;color:#667085;font-size:.9rem;font-weight:500;margin:.3rem 0 1.8rem}
 .secondary{max-width:760px;margin:0 auto}
-div[data-testid="stExpander"]{border:1px solid var(--line);border-radius:12px;background:#fff}
+div[data-testid="stExpander"]{border:1px solid #d0d5dd;border-radius:12px;background:#fff} div[data-testid="stExpander"] summary,div[data-testid="stExpander"] summary *{color:#344054!important;font-weight:650!important;opacity:1!important} div[data-testid="stExpander"] svg{fill:#667085!important;color:#667085!important}
 div.stButton{max-width:760px;margin:1.2rem auto 0}
 div.stButton>button{min-height:3.2rem;border:0;border-radius:10px;font-size:1rem;font-weight:750;background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(229,50,45,.18)}
 div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
@@ -42,7 +42,7 @@ div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
 .result-neutral{background:#f8fafc;border-color:#94a3b8;color:#334155}
 .section-title{font-size:1.25rem;font-weight:800;color:var(--ink);margin:1.7rem 0 .8rem}
 .match-box{border:1px solid #e4e7ec;border-radius:12px;padding:1rem 1.1rem;margin:.65rem 0;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.03)}
-.match-title{font-size:1.05rem;font-weight:800;color:#101828;margin-bottom:.35rem}.match-meta{color:#667085;font-size:.9rem;line-height:1.55}
+.match-title{font-size:1.05rem;font-weight:800;color:#101828;margin-bottom:.35rem}.match-meta{color:#475467;font-size:.92rem;line-height:1.6}.match-meta b{color:#344054;font-weight:750}
 [data-testid="stMetric"]{background:#fafafa;border:1px solid #eee;padding:.8rem;border-radius:10px}
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
