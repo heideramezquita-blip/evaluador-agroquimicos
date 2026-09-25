@@ -1,29 +1,16 @@
-# Validación sobre el corpus real
+# Validación PROHIBIDOS
 
-La auditoría se ejecutó sobre el corpus suministrado para el proyecto.
+Validación offline de la arquitectura detector-first sobre el corpus real suministrado.
 
-## Resultado actual del motor CAS-first
+- 63 PDF evaluados.
+- 30 pares FT/FDS.
+- Resultado por pares: 1 `NO UTILIZAR`, 3 `REVISIÓN MANUAL`, 26 `SIN COINCIDENCIAS CON PROHIBIDOS`.
+- Engeo: `NO UTILIZAR` por Tiametoxam.
+- Mesamate: `REVISIÓN MANUAL` por evidencia de pertenencia a `Arsénico y sus compuestos`; no se permite falso negativo silencioso.
+- Domazon: `REVISIÓN MANUAL` porque FT/FDS son escaneadas y no tienen texto extraíble suficiente.
+- Mezulfuron suplementario: `REVISIÓN MANUAL` por la misma limitación documental.
+- Los hits incidentales reales (óxido de etileno, clordano, fosfina, cianuro de hidrógeno y ácido bórico en los contextos identificados) no producen `NO UTILIZAR`.
 
-- Documentos PDF evaluados: **63**.
-- Documentos con texto extraíble suficiente: **59/63 (93,7 %)**.
-- Documentos individuales con al menos un CAS válido detectado directamente: **25/63 (39,7 %)**.
-- Pares FT/FDS evaluados: **30**.
-- Pares con al menos un CAS válido detectado directamente en alguno de los dos documentos: **23/30 (76,7 %)**.
-- Pares sin CAS automático directo: **7/30 (23,3 %)**.
-- PDFs totalmente escaneados/no extraíbles dentro de esos pares: **2 pares** (Metsulfuron suplementario y Domazon).
-- Candidatos con formato CAS descartados por dígito de control: **1** en todo el corpus (un número CE `613-167-00-5` del que la regex detecta `167-00-5`; se descarta correctamente).
+En evaluación individual de los 63 PDF: 1 `NO UTILIZAR`, 6 `REVISIÓN MANUAL` y 56 `SIN COINCIDENCIAS CON PROHIBIDOS`.
 
-## Resultados de reglas sobre los 30 pares
-
-- `NO UTILIZAR`: **1** — Engeo, por CAS `153719-23-4` (Tiametoxam) en la lista de prohibidos.
-- `REQUIERE MITIGACIÓN`: **3** — DeltaPoint, Malathion 57 EC y Numetrin EC.
-- `SIN COINCIDENCIAS RESTRICTIVAS EN LAS LISTAS EVALUADAS`: **19**.
-- `NO FUE POSIBLE DETERMINAR UN CAS AUTOMÁTICAMENTE`: **7**.
-
-En Engeo también se detecta `91465-08-6` en la lista de mitigación; prevalece el resultado `NO UTILIZAR` por existir una coincidencia prohibida confirmada.
-
-## Alcance de estas métricas
-
-Estas cifras miden la extracción directa desde PDF y el cruce determinístico con la base. No incluyen el incremento potencial del fallback por PubChem, porque la auditoría del corpus se ejecutó sin depender de red externa. La entrada manual de CAS está cubierta por pruebas unitarias.
-
-Los archivos CSV de esta carpeta conservan el detalle por documento y por pareja FT/FDS.
+Los fixtures sintéticos se mantienen en los tests y no se mezclan con las métricas del corpus.
