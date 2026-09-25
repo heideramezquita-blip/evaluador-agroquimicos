@@ -463,7 +463,7 @@ def extraer_ingredientes_activos_explicitos(bloques):
 
             limite_busqueda = min(
                 len(lineas),
-                indice + 8
+                indice + 20
             )
 
             for posicion in range(
