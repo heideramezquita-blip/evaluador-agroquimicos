@@ -3,7 +3,7 @@ from html import escape
 from pathlib import Path
 import streamlit as st
 from src.engine import analyze
-from src.rules import STATUS_NO_USE,STATUS_OBSOLETE,STATUS_RA_SEVERE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW
+from src.rules import STATUS_NO_USE,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW
 
 BASE_DIR=Path(__file__).resolve().parent
 MASTER_PATH=BASE_DIR/'data'/'master_restrictions.csv'
@@ -159,7 +159,7 @@ st.markdown('</div>',unsafe_allow_html=True)
 
 def result_card(status,message):
     if status in (STATUS_NO_USE,STATUS_OBSOLETE): css,icon='result-red','⛔'
-    elif status in (STATUS_MATCH_REVIEW,STATUS_RA_SEVERE,STATUS_MITIGATION): css,icon='result-orange','⚠️'
+    elif status in (STATUS_MATCH_REVIEW,STATUS_MITIGATION): css,icon='result-orange','⚠️'
     elif status==STATUS_DOCUMENT_REVIEW: css,icon='result-yellow','📄'
     else: css,icon='result-neutral','✓'
     parts=message.split(' Resultado basado en ',1)
