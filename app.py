@@ -104,6 +104,18 @@ background:#fff!important;color:#344054!important;border-color:#d0d5dd!important
 div[data-testid="stFileUploader"] ul>li{border:1px solid #d0d5dd!important;border-radius:10px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important}
 div[data-testid="stFileUploader"] ul>li *,
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] *{color:#344054!important}
+
+/* Uploaded document icon: Streamlit/BaseWeb may keep a dark theme background */
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] svg,
+div[data-testid="stFileUploader"] ul>li svg{
+color:#475467!important;
+fill:#475467!important;
+}
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] svg:first-of-type,
+div[data-testid="stFileUploader"] ul>li svg:first-of-type{
+background:#f2f4f7!important;
+border-radius:8px!important;
+}
 div[data-testid="stFileUploader"] ul>li button,
 div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button{background:#f2f4f7!important;color:#475467!important;border:1px solid #e4e7ec!important}
 div[data-testid="stFileUploader"] ul>li button *,
