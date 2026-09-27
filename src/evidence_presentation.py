@@ -134,7 +134,6 @@ def consolidate_evidence_hits(hits):
                 "criteria": entry.criteria,
                 "source_list": entry.source_list.strip(),
                 "source_version": entry.source_version,
-                "contexts": [],
                 "hit_items": [],
                 "_criterion_values": [],
                 "_usage_values": [],
@@ -145,8 +144,6 @@ def consolidate_evidence_hits(hits):
         if hit.page:
             group["pages"].add(hit.page)
         group["classes"].add(hit.context_class)
-        if hit.context and hit.context not in group["contexts"]:
-            group["contexts"].append(hit.context)
         group["hit_items"].append(hit)
 
         for field, value in (

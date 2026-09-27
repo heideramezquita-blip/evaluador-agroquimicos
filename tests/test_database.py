@@ -6,7 +6,7 @@ MASTER=Path(__file__).resolve().parents[1]/'data'/'master_restrictions.csv'
 class DatabaseTests(unittest.TestCase):
  def test_three_normative_lists_loaded(self):
   db=ProhibitedDatabase(MASTER)
-  self.assertGreater(len(db.prohibited),150);self.assertEqual(len(db.obsolete),24);self.assertGreater(len(db.mitigation),160)
+  self.assertEqual(len(db.prohibited),165);self.assertEqual(len(db.obsolete),24);self.assertEqual(len(db.mitigation),168)
  def test_prohibited_groups_preserved(self):
   db=ProhibitedDatabase(MASTER); groups=[e for e in db.groups if e.source_list=='PROHIBITED']
   self.assertEqual(len(groups),8); names={e.ingredient for e in groups}

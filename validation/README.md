@@ -14,3 +14,6 @@ Base histórica de validación antes de las pruebas externas adicionales:
 Los fixtures sintéticos permanecen en los tests y no se mezclan con las métricas del corpus real.
 
 Nota: la interfaz actual separa una **coincidencia real con PROHIBIDOS** de una **limitación documental**, por lo que las etiquetas actuales son más específicas que las usadas en la primera auditoría histórica.
+
+
+Los estados anteriores documentan el benchmark histórico y no deben usarse como contrato de salida de la versión actual. La suite en `tests/` contiene las regresiones vigentes que protegen esos casos y las correcciones posteriores del motor.

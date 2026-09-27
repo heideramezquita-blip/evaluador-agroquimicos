@@ -15,6 +15,22 @@ Aplicación Streamlit para revisar fichas técnicas y fichas de datos de segurid
 
 La evaluación es local y determinística. No consulta servicios externos para decidir el resultado.
 
+## Arquitectura
+
+La estructura se mantiene deliberadamente pequeña y separa responsabilidades sin introducir capas innecesarias:
+
+- `app.py`: interfaz Streamlit y renderizado.
+- `src/pdf_reader.py`: extracción de texto y diagnóstico de documentos sin texto suficiente.
+- `src/cas_utils.py` y `src/cas_extractor.py`: normalización, validación y extracción de CAS.
+- `src/context_classifier.py`: clasificación contextual de las coincidencias.
+- `src/prohibited_database.py`: carga de las tres bases locales y metadatos de búsqueda.
+- `src/prohibited_detector.py`: detección por CAS, nombre y reglas de grupo.
+- `src/rules.py`: decisión final y correspondencias explícitas entre RA, RSPO e ISCC.
+- `src/criteria_presentation.py`: interpretación estructurada de criterios y explicaciones mostradas al usuario.
+- `src/evidence_presentation.py`: consolidación y presentación de evidencia sin alterar la decisión normativa.
+
+La lógica normativa no depende de servicios externos y los componentes de presentación no modifican el resultado del motor.
+
 ## Criterios considerados
 
 ### RSPO
