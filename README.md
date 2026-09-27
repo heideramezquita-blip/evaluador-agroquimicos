@@ -147,7 +147,7 @@ La aplicación separa **coincidencias normativas confirmadas**, **alertas que re
 | `COINCIDENCIA NORMATIVA — REVISAR` | Se encontró una coincidencia real por CAS, nombre o grupo, pero no se confirmó automáticamente que corresponda al ingrediente activo o que la pertenencia normativa sea concluyente. |
 | `REVISIÓN DOCUMENTAL` | El documento no pudo evaluarse con suficiente confiabilidad, por ejemplo porque carece de texto extraíble o no pudo leerse. No debe interpretarse como ausencia de riesgo. |
 | `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA` | El PDF tiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo. Un encabezado de composición sin contenido químico extraíble no basta para sostener un resultado negativo. No debe interpretarse como que el producto está fuera de las listas. |
-| `SIN COINCIDENCIAS DETECTADAS` | Sí existe información química utilizable para el tamizaje —por ejemplo, un CAS válido en contexto de ingrediente/composición, una referencia explícita a ingrediente activo/composición o un CAS manual válido— y no se identificaron coincidencias con las listas y reglas implementadas. |
+| `SIN COINCIDENCIAS DETECTADAS` | Sí existe información química utilizable para el tamizaje —por ejemplo, un CAS válido en contexto de ingrediente/composición, una referencia explícita a ingrediente activo o un CAS manual válido— y no se identificaron coincidencias con las listas y reglas implementadas. |
 
 Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingrediente activo; una mera mención incidental, una referencia bibliográfica, una negación o un producto de descomposición no debe producir por sí sola una decisión fuerte.
 
