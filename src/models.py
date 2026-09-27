@@ -18,6 +18,15 @@ class PdfDocument:
     warnings: list[str] = field(default_factory=list)
 
 @dataclass
+class ActiveIngredientEvidence:
+    name: str
+    source_file: str
+    page: int
+    concentration: str = ""
+    cas: str = ""
+    context: str = ""
+
+@dataclass
 class CasOccurrence:
     cas: str
     source_file: str
