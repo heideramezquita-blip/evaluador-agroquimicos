@@ -66,6 +66,13 @@ class BenchmarkContextPatternsTests(unittest.TestCase):
         )
         self.assertEqual(classify_context(context, "Ametrina"), ACTIVE)
 
+    def test_coalesced_toxicology_and_active_labels_prefer_explicit_active(self):
+        context = (
+            "INFORMACIÓN TOXICOLÓGICA INFORMACIÓN TÉCNICA "
+            "Ingrediente activo Ametrina 480 g/L"
+        )
+        self.assertEqual(classify_context(context, "Ametrina"), ACTIVE)
+
     def test_reference_remains_reference_when_it_is_local_to_match(self):
         context = "INFORMACIÓN TOXICOLÓGICA | Ametrina | DL50 oral"
         self.assertEqual(classify_context(context, "Ametrina"), REFERENCE)
