@@ -190,7 +190,40 @@ def table_html(rows):
     return '<div class="clean-table-wrap"><table class="clean-table"><thead><tr>'+head+'</tr></thead><tbody>'+''.join(body)+'</tbody></table></div>'
 
 def list_label(source_list):
-    return {'PROHIBITED':'RA · PROHIBIDOS','OBSOLETE':'RA · OBSOLETOS','MITIGATE_RISK':'RA · MITIGACIÓN DE RIESGOS'}.get(source_list,source_list)
+    return {'PROHIBITED':'RA · Prohibidos','OBSOLETE':'RA · Obsoletos','MITIGATE_RISK':'RA · Mitigación de riesgos'}.get(source_list,source_list)
+
+CONTEXT_LABELS={
+    'ACTIVE':'Ingrediente activo',
+    'COMPOSITION':'Composición del producto',
+    'INCIDENTAL':'Mención incidental',
+    'NEGATED':'Mención negada',
+    'DECOMPOSITION_COMBUSTION':'Descomposición / combustión',
+    'REFERENCE_TOXICOLOGY':'Referencia toxicológica',
+    'UNCERTAIN':'Papel en el producto por confirmar',
+}
+CHANNEL_LABELS={'CAS':'CAS','NAME':'Nombre'}
+USAGE_LABELS={'A':'Acaricida','Ad':'Adyuvante','Fun':'Fungicida','Fum':'Fumigante','H':'Herbicida','I':'Insecticida','N':'Nematicida','R':'Rodenticida','Conserv. Mad.':'Conservación de la madera'}
+
+def context_label(value):
+    return CONTEXT_LABELS.get(value,value.replace('_',' ').title())
+
+def channel_label(value):
+    return CHANNEL_LABELS.get(value,value)
+
+def usage_label(value):
+    if not value:return ''
+    return ' · '.join(USAGE_LABELS.get(x.strip(),x.strip()) for x in value.split(',') if x.strip())
+
+def evidence_pages(g):
+    priority={'ACTIVE':0,'COMPOSITION':1,'UNCERTAIN':2,'INCIDENTAL':3,'NEGATED':4,'REFERENCE_TOXICOLOGY':5,'DECOMPOSITION_COMBUSTION':6}
+    ranked=[]
+    for h in g.get('hit_items',[]):
+        if h.page:
+            ranked.append((priority.get(h.context_class,9),h.page))
+    if not ranked:return '—'
+    best=min(x[0] for x in ranked)
+    pages=sorted({p for rank,p in ranked if rank==best})
+    return ', '.join(map(str,pages))
 
 def scope_html(g):
     if g['source_list']!='PROHIBITED':
@@ -208,10 +241,11 @@ def consolidated_hits(hits):
     grouped={}
     for h in hits:
         key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file,h.channel)
-        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'channel':h.channel,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'source_list':h.entry.source_list,'source_version':h.entry.source_version,'contexts':[]})
+        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'channel':h.channel,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'source_list':h.entry.source_list,'source_version':h.entry.source_version,'contexts':[],'hit_items':[]})
         if h.page:g['pages'].add(h.page)
         g['classes'].add(h.context_class)
         if h.context and h.context not in g['contexts']:g['contexts'].append(h.context)
+        g['hit_items'].append(h)
     return list(grouped.values())
 
 if st.button('Evaluar documentos',type='primary',use_container_width=True):
@@ -233,10 +267,11 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     if ev.hits:
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
         for g in consolidated_hits(ev.hits):
-            pages=', '.join(map(str,sorted(g['pages']))) if g['pages'] else '—';classes=', '.join(sorted(g['classes']))
-            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])} &nbsp;·&nbsp; <b>Canal:</b> {escape(g["channel"])}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s):</b> {escape(pages)}<br><b>Contexto:</b> {escape(classes)}<br>{scope_html(g)}</div></div>',unsafe_allow_html=True)
-            with st.expander(f'Ver contexto — {g["ingredient"]}'):
-                if g['usage']:st.write('**Uso principal:**',g['usage'])
+            pages=evidence_pages(g); classes=' · '.join(context_label(x) for x in sorted(g['classes']))
+            usage=usage_label(g['usage'])
+            usage_html=f'<br><b>Uso principal:</b> {escape(usage)}' if usage else ''
+            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div></div>',unsafe_allow_html=True)
+            with st.expander(f'Ver evidencia documental — {g["ingredient"]}'):
                 if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
                 st.write('**Fuente:**',f'{g["source_list"]} · versión {g["source_version"]}')
                 for i,context in enumerate(g['contexts'][:5],1):
@@ -255,16 +290,15 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     for w in ev.warnings:st.info(w)
 
     with st.expander('Detalles técnicos y trazabilidad'):
-        c1,c2,c3,c4=st.columns(4)
-        c1.metric('PROHIBIDOS',result['prohibited_specific_count']+result['prohibited_group_count']);c2.metric('OBSOLETOS',result['obsolete_count']);c3.metric('MITIGACIÓN',result['mitigation_count']);c4.metric('CAS procesados',len(ev.cas_records))
+        st.caption('Información de auditoría del análisis. No modifica el resultado mostrado arriba.')
         if result['documents']:
             st.markdown('#### Documentos')
             st.markdown(table_html([{'Archivo':d.file_name,'Páginas':d.page_count,'Caracteres':d.character_count,'Páginas con texto':d.pages_with_text,'Texto extraíble':'Sí' if d.processable else 'No'} for d in result['documents']]),unsafe_allow_html=True)
         if result['all_hits']:
-            st.markdown('#### Todas las coincidencias candidatas')
-            st.markdown(table_html([{'Lista':h.entry.source_list,'Entrada':h.entry.ingredient,'CAS':h.entry.cas or 'Varios','Canal':h.channel,'Valor':h.matched_value,'Clase contextual':h.context_class,'Archivo':h.source_file,'Página':h.page or '—'} for h in result['all_hits']]),unsafe_allow_html=True)
+            st.markdown('#### Coincidencias candidatas evaluadas')
+            st.markdown(table_html([{'Lista':list_label(h.entry.source_list),'Sustancia':h.entry.ingredient,'CAS':h.entry.cas or 'Varios','Detección':channel_label(h.channel),'Evidencia':context_label(h.context_class),'Archivo':h.source_file,'Página':h.page or '—'} for h in result['all_hits']]),unsafe_allow_html=True)
         if ev.cas_records:
-            st.markdown('#### CAS válidos detectados/procesados')
+            st.markdown('#### CAS válidos detectados')
             st.markdown(table_html([{'CAS':r.cas,'Fuentes':', '.join(sorted({o.source_file for o in r.occurrences})),'Ocurrencias':len(r.occurrences)} for r in ev.cas_records]),unsafe_allow_html=True)
         if result['invalid_candidates']:
             st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
@@ -279,9 +313,7 @@ with st.expander('Fuentes normativas y alcance de la evaluación'):
 La aplicación no consulta estos estándares en tiempo real. Una coincidencia de Rainforest Alliance solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita codificada; en los demás casos se muestra para revisión, sin inferir equivalencia normativa.''')
 
 with st.expander('Cómo interpretar abreviaturas y criterios'):
-    st.markdown('''**Uso principal:** A = Acaricida · Ad = Adyuvante · Fun = Fungicida · Fum = Fumigante · H = Herbicida · I = Insecticida · N = Nematicida · R = Rodenticida · Conserv. Mad. = Conservación de la madera.
-
-**Toxicidad aguda:** 1A = extremadamente peligroso y 1B = altamente peligroso según la clasificación OMS usada por el anexo.
+    st.markdown('''**Toxicidad aguda:** 1A = extremadamente peligroso y 1B = altamente peligroso según la clasificación OMS usada por el anexo.
 
 **Convenciones internacionales:** M = Protocolo de Montreal · R = Convenio de Rotterdam · E = Convenio de Estocolmo.
 
