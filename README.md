@@ -146,12 +146,12 @@ La aplicación separa **coincidencias normativas confirmadas**, **alertas que re
 | `ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA` | Rainforest Alliance incluye el ingrediente en su lista de mitigación de riesgos. Su uso requiere las medidas adicionales que correspondan al criterio identificado; la alerta no se convierte automáticamente en una prohibición RSPO o ISCC. |
 | `COINCIDENCIA NORMATIVA — REVISAR` | Se encontró una coincidencia real por CAS, nombre o grupo, pero no se confirmó automáticamente que corresponda al ingrediente activo o que la pertenencia normativa sea concluyente. |
 | `REVISIÓN DOCUMENTAL` | El documento no pudo evaluarse con suficiente confiabilidad, por ejemplo porque carece de texto extraíble o no pudo leerse. No debe interpretarse como ausencia de riesgo. |
-| `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA` | El PDF tiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo/composición. No debe interpretarse como que el producto está fuera de las listas. |
+| `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA` | El PDF tiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo. Un encabezado de composición sin contenido químico extraíble no basta para sostener un resultado negativo. No debe interpretarse como que el producto está fuera de las listas. |
 | `SIN COINCIDENCIAS DETECTADAS` | Sí existe información química utilizable para el tamizaje —por ejemplo, un CAS válido en contexto de ingrediente/composición, una referencia explícita a ingrediente activo/composición o un CAS manual válido— y no se identificaron coincidencias con las listas y reglas implementadas. |
 
 Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingrediente activo; una mera mención incidental, una referencia bibliográfica, una negación o un producto de descomposición no debe producir por sí sola una decisión fuerte.
 
-`SIN COINCIDENCIAS DETECTADAS` solo se usa cuando el sistema encontró alguna señal química utilizable para efectuar el tamizaje. Si el PDF es legible pero no aporta esa señal, se muestra `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA`. Ninguno de estos estados constituye una autorización regulatoria del producto.
+`SIN COINCIDENCIAS DETECTADAS` solo se usa cuando el sistema encontró alguna señal química utilizable para efectuar el tamizaje: por ejemplo, un CAS válido en contexto de ingrediente/composición, una referencia explícita a ingrediente activo o un CAS manual válido. Si el PDF es legible pero no aporta esa señal, se muestra `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA`. Ninguno de estos estados constituye una autorización regulatoria del producto.
 
 
 ## Evidencia y trazabilidad
