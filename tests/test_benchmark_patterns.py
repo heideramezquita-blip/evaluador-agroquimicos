@@ -9,6 +9,7 @@ from src.context_classifier import (
     ACTIVE,
     COMPOSITION,
     DECOMPOSITION,
+    INCIDENTAL,
     NEGATED,
     REFERENCE,
     classify_context,
@@ -87,6 +88,13 @@ class BenchmarkContextPatternsTests(unittest.TestCase):
             classify_context(context, "monóxido de carbono"),
             DECOMPOSITION,
         )
+
+    def test_web_catalog_product_name_is_incidental_not_product_identity(self):
+        context = (
+            "NOSOTROS PRODUCTOS CONTÁCTANOS | Ziram 76 | Trecatol WP | "
+            "HERBICIDAS HERBICIDAS | Descripción"
+        )
+        self.assertEqual(classify_context(context, "Ziram"), INCIDENTAL)
 
     def test_plain_sds_composition_is_not_promoted_to_active(self):
         context = (
