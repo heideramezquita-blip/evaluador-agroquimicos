@@ -15,6 +15,7 @@ from src.evidence_presentation import (
 )
 from src.normative_sources import reference_blocks_markdown
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_IDENTITY_REVIEW,standard_scope
+from src.text_utils import match_key
 
 BASE_DIR=Path(__file__).resolve().parent
 MASTER_PATH=BASE_DIR/'data'/'master_restrictions.csv'
@@ -252,8 +253,19 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
                 st.caption('La clasificación describe el criterio de la lista. El papel de la sustancia se evalúa aparte con la evidencia del documento; la concentración solo se confirma si el PDF la especifica.')
                 st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
 
-    if result['active_ingredients']:
+    active_items=result['active_ingredients']
+    active_names={match_key(item.name) for item in active_items if match_key(item.name)}
+    active_cas={item.cas for item in active_items if item.cas}
+    composition_items=[
+        item for item in result.get('composition_components',[])
+        if (not item.cas or item.cas not in active_cas)
+        and match_key(item.name) not in active_names
+    ]
+
+    if active_items or composition_items:
         st.markdown('<div class="section-title">Identidad documental detectada</div>',unsafe_allow_html=True)
+
+    if active_items:
         st.markdown(
             table_html([
                 {
@@ -263,14 +275,39 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
                     'Archivo': item.source_file,
                     'Página': item.page,
                 }
-                for item in result['active_ingredients']
+                for item in active_items
             ]),
             unsafe_allow_html=True,
         )
         st.caption(
-            'Esta sección muestra los ingredientes activos que el documento identifica explícitamente, '
-            'aunque no coincidan con una lista normativa. La ausencia de CAS asociado no impide mostrar '
-            'el ingrediente; solo indica que no se confirmó un CAS junto a esa evidencia documental.'
+            'Ingredientes activos que el documento identifica explícitamente. La ausencia de CAS '
+            'asociado no impide mostrar el ingrediente; solo indica que no se confirmó un CAS junto '
+            'a esa evidencia documental.'
+        )
+
+    if composition_items:
+        st.markdown('#### Componentes de composición detectados')
+        st.markdown(
+            table_html([
+                {
+                    'Componente': item.name,
+                    'Concentración declarada': (
+                        (item.concentration + ' %') if item.concentration else 'No extraída'
+                    ),
+                    'CAS': item.cas or 'No reconstruido',
+                    'Archivo': item.source_file,
+                    'Página': item.page,
+                }
+                for item in composition_items
+            ]),
+            unsafe_allow_html=True,
+        )
+        st.caption(
+            'Estos nombres proceden de una tabla de composición de la FDS. Se muestran como identidad '
+            'química documental, pero no se convierten automáticamente en ingredientes activos: una '
+            'mezcla puede incluir solventes, sales, neutralizantes u otros componentes. Si una FT u '
+            'otra evidencia explícita confirma el ingrediente activo, esa identidad se presenta arriba '
+            'y puede enriquecerse con el CAS de la composición.'
         )
 
     if result['manual_invalid']:st.warning('CAS manuales descartados por formato/checksum: '+', '.join(result['manual_invalid']))
