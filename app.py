@@ -352,7 +352,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
                 st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
                 st.write('**Tipo de evidencia:**',classes)
                 st.write('**Página(s) más relevante(s):**',pages)
-                st.caption('La clasificación describe el criterio registrado en la lista de referencia; no confirma por sí sola la concentración ni la función de la sustancia en el producto.')
+                st.caption('La clasificación describe el criterio de la lista. El papel de la sustancia se evalúa aparte con la evidencia del documento; la concentración solo se confirma si el PDF la especifica.')
                 st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
 
     if result['manual_invalid']:st.warning('CAS manuales descartados por formato/checksum: '+', '.join(result['manual_invalid']))
