@@ -4,6 +4,7 @@ import re
 import unicodedata
 
 from .cas_utils import CAS_PATTERN, canonicalize_groups, is_valid_cas
+from .context_classifier import has_active_marker
 from .models import ActiveIngredientEvidence, PdfDocument, PdfTextBlock
 from .text_utils import match_key, normalize_text
 
