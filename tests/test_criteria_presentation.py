@@ -107,6 +107,28 @@ class CriteriaPresentationTests(unittest.TestCase):
         self.assertIn("from src.criteria_presentation import interpret_criteria", app)
         self.assertIn("signals=interpret_criteria(g.get('criteria',''),g['source_list'])", app)
 
+    def test_severe_effects_has_short_rainforest_alliance_definition(self):
+        item = interpret_criterion("Efectos graves: ✓")
+        self.assertEqual(item.label, "Efectos graves")
+        self.assertIn("alta incidencia", item.explanation)
+        self.assertIn("irreversibles", item.explanation)
+        self.assertTrue(item.ra_hhp_criterion)
+
+    def test_severe_effects_definition_is_in_criteria_glossary(self):
+        app = (ROOT / "app.py").read_text(encoding="utf-8")
+        self.assertIn("**Efectos graves (Rainforest Alliance):** alta incidencia", app)
+
+    def test_evidence_cards_are_consolidated_across_detection_channels(self):
+        app = (ROOT / "app.py").read_text(encoding="utf-8")
+        self.assertIn(
+            "key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file)",
+            app,
+        )
+        self.assertNotIn(
+            "key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file,h.channel)",
+            app,
+        )
+
     def test_presentation_module_has_no_network_dependencies(self):
         source = (ROOT / "src" / "criteria_presentation.py").read_text(encoding="utf-8")
         tree = ast.parse(source)
