@@ -49,12 +49,25 @@ def audit_document(path: Path) -> dict:
     return {
         "file": str(path),
         "status": evaluation.status,
-        "processable": all(document.processable for document in result["documents"]),
+        "processable": bool(result["documents"])
+        and all(document.processable for document in result["documents"]),
         "valid_cas": ";".join(record.cas for record in evaluation.cas_records),
         "hits": " || ".join(
             f"{hit.entry.ingredient}|{hit.channel}|{hit.context_class}|p{hit.page}"
             for hit in result["all_hits"]
         ),
+    }
+
+
+def _pdf_map(directory: Path) -> dict[str, Path]:
+    if not directory.exists():
+        return {}
+    return {
+        product_id(path.name): path
+        for path in directory.iterdir()
+        if path.is_file()
+        and path.suffix.lower() == ".pdf"
+        and product_id(path.name)
     }
 
 
@@ -64,20 +77,8 @@ def pair_specs(corpus: Path):
         ("FT", "HS", "principal"),
         ("SFT", "SHS", "suplementario"),
     ):
-        ft_files = {
-            product_id(path.name): path
-            for path in (corpus / ft_dir).iterdir()
-            if path.is_file()
-            and path.suffix.lower() == ".pdf"
-            and product_id(path.name)
-        }
-        hs_files = {
-            product_id(path.name): path
-            for path in (corpus / hs_dir).iterdir()
-            if path.is_file()
-            and path.suffix.lower() == ".pdf"
-            and product_id(path.name)
-        }
+        ft_files = _pdf_map(corpus / ft_dir)
+        hs_files = _pdf_map(corpus / hs_dir)
         shared_ids = sorted(
             set(ft_files) & set(hs_files),
             key=lambda value: tuple(map(int, value.split("."))),
