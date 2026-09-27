@@ -1,19 +1,40 @@
 # Evaluador de Agroquímicos
 
-Aplicación Streamlit para revisar fichas técnicas y fichas de datos de seguridad de agroquímicos, identificar evidencia documental del ingrediente activo y contrastarla con criterios de plaguicidas de **RSPO** e **ISCC**. Las listas de **Rainforest Alliance (RA)** se usan como base local de detección y referencia complementaria.
+Aplicación Streamlit para realizar un **tamizaje documental de agroquímicos** frente a criterios de plaguicidas de **RSPO** e **ISCC**, utilizando las listas de **Rainforest Alliance (RA)** como base local de detección y referencia complementaria.
+
+La aplicación detecta números CAS, coincidencias por nombre y determinadas reglas de grupo en los documentos cargados, clasifica el contexto de esas coincidencias y muestra la evidencia que sustenta el resultado. **No es un extractor químico universal ni sustituye una evaluación regulatoria completa.**
 
 **Aplicación web:** https://evaluador-agroquimicos.streamlit.app/
 
 
+## Entradas admitidas
+
+La interfaz acepta:
+
+- uno o varios archivos **PDF**;
+- ficha técnica (FT), ficha de datos/hoja de seguridad (FDS/HS) o ambas para el mismo producto;
+- opcionalmente, uno o varios números CAS introducidos manualmente.
+
+El ejemplo mostrado en la entrada manual es `4685-14-7` y se utiliza únicamente como ejemplo de formato.
+
+Cuando se introduce un CAS manual, la interfaz permite confirmar explícitamente que corresponde a un **ingrediente activo**. Sin esa confirmación, una coincidencia normativa por CAS no se convierte automáticamente en una decisión fuerte y se presenta para revisión.
+
+La aplicación no incorpora OCR. Si un PDF está escaneado o no contiene texto extraíble suficiente, el resultado es `REVISIÓN DOCUMENTAL`; no se interpreta como ausencia de coincidencias.
+
+
 ## Cómo funciona
 
-1. Extrae texto de uno o varios PDF.
-2. Detecta y valida números CAS.
-3. Cruza CAS, nombres y grupos contra las listas locales.
-4. Clasifica el contexto de cada coincidencia para distinguir ingrediente activo de menciones incidentales, negadas, de descomposición o de referencia.
-5. Muestra la evidencia encontrada y su lectura frente a RSPO, ISCC y RA.
+1. Extrae el texto disponible de uno o varios PDF.
+2. Detecta números CAS y valida su checksum.
+3. Cruza CAS, nombres normalizados y determinadas reglas de grupo contra las tres bases locales.
+4. Clasifica el contexto de cada coincidencia para distinguir, entre otros casos, ingrediente activo, composición, menciones incidentales, negadas, de descomposición/combustión o de referencia toxicológica.
+5. Aplica las reglas de decisión y las correspondencias explícitas implementadas para RSPO, ISCC y RA.
+6. Consolida la evidencia encontrada para evitar tarjetas duplicadas cuando una misma sustancia se detecta por más de un mecanismo.
 
-La evaluación es local y determinística. No consulta servicios externos para decidir el resultado.
+La evaluación es **determinística** y utiliza bases incluidas en el proyecto. No consulta servicios externos para decidir el resultado.
+
+La identificación no pretende reconocer cualquier sustancia química existente. Las coincidencias por nombre y grupo se realizan contra los registros y reglas incluidos en las bases locales. Un CAS válido que aparezca en una parte incidental del documento tampoco se trata automáticamente como ingrediente activo.
+
 
 ## Arquitectura
 
@@ -31,12 +52,15 @@ La estructura se mantiene deliberadamente pequeña y separa responsabilidades si
 
 La lógica normativa no depende de servicios externos y los componentes de presentación no modifican el resultado del motor.
 
+
 ## Criterios considerados
 
 ### RSPO
+
 Fuente oficial: [RSPO Principles and Criteria 2024 v4.2 — español](https://rspo.org/wp-content/uploads/SPA-2024-RSPO-Principles-and-Criteria-%E2%80%93-Version-4.2-spanish.pdf)
 
 Mapeo basado en RSPO P&C 2024 v4.2, indicador 7.1.2 (C):
+
 - OMS Ia / Ib (también expresado como 1A / 1B en el documento).
 - Carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A / 1B.
 - Convenios de Estocolmo o Rotterdam.
@@ -45,14 +69,31 @@ Mapeo basado en RSPO P&C 2024 v4.2, indicador 7.1.2 (C):
 Las restricciones o prohibiciones nacionales deben verificarse aparte.
 
 ### ISCC
+
 Fuente oficial: [ISCC EU 202-2 Agricultural Biomass: ISCC Principles 2-6](https://iscc-system.org/wp-content/uploads/dlm_uploads/2026/03/ISCC-EU-202-2-Agricultural-Biomass-ISCC-Principles-2-6.pdf)
 
 Mapeo basado en **ISCC EU 202-2 v1.1** (válido desde el 1 de diciembre de 2022), requisito 2.4.1:
+
 - OMS Ia / Ib.
 - Convenio de Estocolmo.
 - Anexo III del Convenio de Rotterdam.
 
 La aplicación no traslada automáticamente a ISCC otros criterios de Rainforest Alliance.
+
+### Rainforest Alliance
+
+Fuente oficial: [Anexo al capítulo Agricultura v1.4](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14)
+
+Las listas locales se utilizan como base de detección y referencia complementaria:
+
+- **PROHIBIDOS**.
+- **OBSOLETOS**.
+- **MITIGACIÓN DE RIESGOS**.
+
+**Última carga de la base local: septiembre de 2026.**
+
+Una clasificación de RA solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita implementada. Pertenecer a una lista de RA no equivale automáticamente a una prohibición en RSPO o ISCC.
+
 
 ## OMS y convenios internacionales
 
@@ -62,6 +103,9 @@ La publicación [*The WHO Recommended Classification of Pesticides by Hazard and
 
 La clasificación OMS es distinta del **SGA**: usa categorías OMS para la peligrosidad aguda de plaguicidas, mientras que las categorías SGA se interpretan dentro de cada clase de peligro. La OMS Ia/Ib no constituye por sí sola una prohibición legal ni una autorización regulatoria del producto.
 
+### Protocolo de Montreal
+
+El [Protocolo de Montreal sobre Sustancias que Agotan la Capa de Ozono](https://ozone.unep.org/treaties/montreal-protocol) controla sustancias que agotan la capa de ozono. En la aplicación, el marcador de Montreal se interpreta como un criterio de la fuente RA cuando está documentado en la base local; **no se convierte automáticamente en una prohibición RSPO o ISCC**.
 
 ### Convenio de Rotterdam
 
@@ -73,19 +117,25 @@ El [listado oficial de contaminantes orgánicos persistentes (POP)](https://chm.
 
 Estos enlaces son referencias documentales. La aplicación **no consulta las páginas en tiempo real, no importa automáticamente esas listas y no crea prohibiciones a partir de ellas**. Solo presenta una correspondencia de RSPO o ISCC cuando el criterio consta en la base local y esa equivalencia está expresamente implementada; las referencias no determinan por sí solas una prohibición legal nacional.
 
-### Rainforest Alliance
-Fuente oficial: [Anexo al capítulo Agricultura v1.4](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14)
 
-Se conservan como referencia complementaria las listas locales de:
-- PROHIBIDOS.
-- OBSOLETOS.
-- MITIGACIÓN DE RIESGOS.
+## Cómo interpretar los criterios de las listas
 
-Una clasificación de RA solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita implementada.
+La interfaz utiliza las siguientes lecturas:
+
+- **OMS Ia/Ib:** peligrosidad aguda para la salud humana; Ia significa extremadamente peligroso e Ib, altamente peligroso. Es un sistema distinto del SGA.
+- **SGA 1A/1B:** la categoría debe leerse junto con la clase de peligro. Cuando están documentadas, la aplicación muestra las clases CMR: carcinogenicidad, mutagenicidad y toxicidad reproductiva.
+- **Protocolo de Montreal:** trata sustancias que agotan la capa de ozono.
+- **Rotterdam:** somete determinadas sustancias del Anexo III al procedimiento PIC en el comercio internacional; no significa una prohibición universal.
+- **Estocolmo:** regula contaminantes orgánicos persistentes mediante eliminación (anexo A), restricción (anexo B) o reducción de liberaciones no intencionales (anexo C), según las condiciones y excepciones aplicables.
+- **Efectos graves:** criterio de Rainforest Alliance por alta incidencia de efectos adversos graves o irreversibles sobre la salud humana o el ambiente.
+- **Mitigación de riesgos:** Rainforest Alliance identifica plaguicidas cuyo uso requiere medidas adicionales para reducir riesgos específicos, por ejemplo para las personas, organismos acuáticos, vida silvestre o polinizadores. Su inclusión en esta lista no significa por sí sola que el plaguicida esté prohibido.
+
+Rainforest Alliance se mantiene como referencia complementaria: su inclusión no equivale automáticamente a una prohibición de RSPO o ISCC.
+
 
 ## Cómo interpretar los resultados
 
-La aplicación separa **coincidencias normativas confirmadas**, **alertas que requieren revisión** y **limitaciones documentales**. El estado mostrado depende de la identidad del ingrediente, el contexto en que aparece en los PDF y la correspondencia explícita implementada para cada estándar.
+La aplicación separa **coincidencias normativas confirmadas**, **alertas que requieren revisión** y **limitaciones documentales**. El estado mostrado depende de la identidad de la sustancia, el contexto en que aparece en los PDF y la correspondencia explícita implementada para cada estándar.
 
 | Resultado | Qué significa |
 | --- | --- |
@@ -93,15 +143,31 @@ La aplicación separa **coincidencias normativas confirmadas**, **alertas que re
 | `NO UTILIZAR — RSPO` | Existe evidencia suficiente y el criterio está prohibido explícitamente por RSPO. La aplicación no afirma automáticamente que también esté prohibido por ISCC. |
 | `ATENCIÓN — PROHIBIDO EN RA; REVISAR RSPO / ISCC` | Rainforest Alliance incluye el ingrediente en su lista de prohibidos, pero el criterio detectado no basta por sí solo para afirmar una prohibición equivalente en RSPO o ISCC. Requiere revisión específica. |
 | `ATENCIÓN — PLAGUICIDA OBSOLETO SEGÚN RA` | Rainforest Alliance clasifica el ingrediente como obsoleto. Se conserva como alerta complementaria y debe revisarse frente al estándar aplicable y la normativa nacional. |
-| `ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA` | Rainforest Alliance exige medidas de mitigación para ese ingrediente. La alerta no se convierte automáticamente en una prohibición RSPO o ISCC. |
+| `ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA` | Rainforest Alliance incluye el ingrediente en su lista de mitigación de riesgos. Su uso requiere las medidas adicionales que correspondan al criterio identificado; la alerta no se convierte automáticamente en una prohibición RSPO o ISCC. |
 | `COINCIDENCIA NORMATIVA — REVISAR` | Se encontró una coincidencia real por CAS, nombre o grupo, pero no se confirmó automáticamente que corresponda al ingrediente activo o que la pertenencia normativa sea concluyente. |
-| `REVISIÓN DOCUMENTAL` | El documento no pudo evaluarse con suficiente confiabilidad, por ejemplo porque carece de texto extraíble. No debe interpretarse como ausencia de riesgo. |
+| `REVISIÓN DOCUMENTAL` | El documento no pudo evaluarse con suficiente confiabilidad, por ejemplo porque carece de texto extraíble o no pudo leerse. No debe interpretarse como ausencia de riesgo. |
 | `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA` | El PDF tiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo/composición. No debe interpretarse como que el producto está fuera de las listas. |
 | `SIN COINCIDENCIAS DETECTADAS` | Sí existe información química utilizable para el tamizaje —por ejemplo, un CAS válido en contexto de ingrediente/composición, una referencia explícita a ingrediente activo/composición o un CAS manual válido— y no se identificaron coincidencias con las listas y reglas implementadas. |
 
 Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingrediente activo; una mera mención incidental, una referencia bibliográfica, una negación o un producto de descomposición no debe producir por sí sola una decisión fuerte.
 
 `SIN COINCIDENCIAS DETECTADAS` solo se usa cuando el sistema encontró alguna señal química utilizable para efectuar el tamizaje. Si el PDF es legible pero no aporta esa señal, se muestra `REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA`. Ninguno de estos estados constituye una autorización regulatoria del producto.
+
+
+## Evidencia y trazabilidad
+
+Cuando existe una coincidencia relevante, la aplicación muestra la sustancia, lista, CAS, uso cuando está disponible, tipo de evidencia, documento, páginas más relevantes, criterio identificado y lectura por estándar.
+
+La sección **Detalles técnicos y trazabilidad** conserva información de auditoría, entre ella:
+
+- tamaño de las tres bases locales;
+- CAS válidos detectados;
+- documentos analizados y si contienen texto extraíble;
+- coincidencias candidatas evaluadas;
+- candidatos CAS descartados por checksum cuando existen.
+
+Una misma sustancia detectada por CAS y por nombre se consolida en una sola tarjeta de evidencia por lista, sustancia, CAS y documento.
+
 
 ## Datos locales
 
@@ -111,9 +177,22 @@ Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingredie
 
 Las reglas de correspondencia entre estándares están en `src/rules.py`.
 
+
 ## PubChem
 
 Los CAS visibles pueden abrir PubChem como referencia manual. PubChem no participa en la evaluación ni modifica el resultado.
+
+
+## Limitaciones
+
+- Solo se aceptan archivos PDF desde el cargador de la interfaz.
+- No hay OCR integrado para documentos escaneados sin texto extraíble.
+- La detección por nombre y grupo depende de las sustancias y reglas incluidas en las bases locales; no es un reconocimiento químico abierto o universal.
+- Las bases normativas son locales y deben actualizarse deliberadamente cuando cambien las fuentes.
+- Las referencias oficiales enlazadas son informativas y no se consultan en tiempo real para tomar decisiones.
+- Las restricciones nacionales, excepciones y condiciones específicas del estándar requieren verificación aparte.
+- El resultado apoya el tamizaje y la trazabilidad documental; no constituye por sí solo una autorización regulatoria del producto.
+
 
 ## Ejecución local
 
@@ -122,10 +201,11 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+
 ## Pruebas
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-La herramienta apoya el tamizaje documental y la trazabilidad. La decisión final debe considerar el estándar aplicable, la normativa nacional y cualquier excepción vigente.
+La suite incluye regresiones del motor, clasificación contextual, interpretación de criterios, presentación de evidencia, coherencia documental y un smoke test de Streamlit en CI.

@@ -5,6 +5,7 @@ from src.normative_sources import (
     WHO_EN,
     WHO_ES,
     WHO_PDF,
+    MONTREAL_PROTOCOL,
     ROTTERDAM_ANNEX_III,
     ROTTERDAM_PIC,
     STOCKHOLM_POP_LIST,
@@ -20,7 +21,7 @@ class NormativeSourcesTests(unittest.TestCase):
     def test_streamlit_reference_blocks_include_each_official_link_once(self):
         blocks = reference_blocks_markdown()
         for url in (
-            WHO_EN, WHO_ES, WHO_PDF, ROTTERDAM_ANNEX_III, ROTTERDAM_PIC,
+            WHO_EN, WHO_ES, WHO_PDF, MONTREAL_PROTOCOL, ROTTERDAM_ANNEX_III, ROTTERDAM_PIC,
             STOCKHOLM_POP_LIST, STOCKHOLM_ANNEX_A, STOCKHOLM_ANNEX_B,
         ):
             with self.subTest(url=url):
@@ -28,6 +29,7 @@ class NormativeSourcesTests(unittest.TestCase):
         for required in (
             "2019 edition", "publicada en 2020", "peligrosidad aguda",
             "Ia, Ib, II, III y U", "distinta del SGA",
+            "Protocolo de Montreal", "agotan la capa de ozono",
             "no equivale a una prohibición universal", "anexos A, B y C",
         ):
             with self.subTest(text=required):
@@ -60,7 +62,7 @@ class NormativeSourcesTests(unittest.TestCase):
     def test_readme_contains_each_official_link_once_and_explains_no_live_import(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         for url in (
-            WHO_EN, WHO_ES, WHO_PDF, ROTTERDAM_ANNEX_III, ROTTERDAM_PIC,
+            WHO_EN, WHO_ES, WHO_PDF, MONTREAL_PROTOCOL, ROTTERDAM_ANNEX_III, ROTTERDAM_PIC,
             STOCKHOLM_POP_LIST, STOCKHOLM_ANNEX_A, STOCKHOLM_ANNEX_B,
         ):
             with self.subTest(url=url):
