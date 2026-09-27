@@ -221,12 +221,13 @@ def classify_context(context: str, matched_value: str = "") -> str:
     specs = (
         (NEGATED, 2, 0),
         (DECOMPOSITION, 2, 0),
+        # Reaction/precursor language remains non-supporting even when the
+        # surrounding sentence also uses the words "ingrediente activo".
+        (INCIDENTAL, 2, 0),
         # An explicit active-ingredient label on the same semantic line is
-        # stronger product-role evidence than a section heading that happens
-        # to share that line after PDF layout reconstruction.
+        # stronger than a coalesced toxicology/reference section heading.
         (ACTIVE, 5, 1),
         (REFERENCE, 2, 2),
-        (INCIDENTAL, 2, 2),
         (COMPOSITION, 12, 3),
     )
     candidates = []
