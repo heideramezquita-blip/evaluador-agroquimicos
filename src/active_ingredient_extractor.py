@@ -133,6 +133,8 @@ def _extract_concentration(line: str) -> str:
 
 def _strip_concentration(line: str) -> str:
     value = _CONCENTRATION.sub(" ", line or "")
+    value = CAS_PATTERN.sub(" ", value)
+    value = re.sub(r"(?i)\b(?:n[uú]mero\s+)?cas\b\s*[:#-]?", " ", value)
     value = re.sub(r"(?i)\(\s*formulaci[oó]n[^)]*\)", " ", value)
     value = re.sub(r"\s*[/|;,]+\s*$", " ", value)
     return re.sub(r"\s+", " ", value).strip(" :-/|;,.")
