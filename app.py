@@ -3,6 +3,7 @@ from html import escape
 from pathlib import Path
 import streamlit as st
 from src.engine import analyze
+from src.cas_utils import is_valid_cas
 from src.criteria_presentation import interpret_criteria
 from src.evidence_presentation import consolidate_evidence_hits
 from src.evidence_presentation import (
@@ -180,7 +181,7 @@ def result_card(status,message):
 
 def pubchem_url(cas):
     cas=(cas or '').strip()
-    if not cas or cas.lower()=='varios': return ''
+    if not cas or not is_valid_cas(cas): return ''
     return 'https://pubchem.ncbi.nlm.nih.gov/#query='+cas
 
 def cas_html(cas):
@@ -236,6 +237,27 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         st.caption('No existe una coincidencia demostrada. La revisión se solicita porque el documento no pudo evaluarse de forma suficiente.')
     elif ev.status==STATUS_IDENTITY_REVIEW:
         st.caption('El PDF es legible, pero no se encontró una identidad química suficientemente clara para sostener un resultado negativo contra las listas.')
+
+    if result['active_ingredients']:
+        st.markdown('<div class="section-title">Identidad documental detectada</div>',unsafe_allow_html=True)
+        st.markdown(
+            table_html([
+                {
+                    'Ingrediente activo': item.name,
+                    'Concentración': item.concentration or 'No extraída',
+                    'CAS': item.cas or 'No detectado junto al ingrediente',
+                    'Archivo': item.source_file,
+                    'Página': item.page,
+                }
+                for item in result['active_ingredients']
+            ]),
+            unsafe_allow_html=True,
+        )
+        st.caption(
+            'Esta sección muestra los ingredientes activos que el documento identifica explícitamente, '
+            'aunque no coincidan con una lista normativa. La ausencia de CAS asociado no impide mostrar '
+            'el ingrediente; solo indica que no se confirmó un CAS junto a esa evidencia documental.'
+        )
 
     if ev.hits:
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
