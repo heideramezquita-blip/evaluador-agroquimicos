@@ -4,6 +4,7 @@ import fitz
 
 from src.cas_extractor import _role
 from src.cas_utils import extract_cas_candidates
+from src.engine import _identity_basis
 from src.context_classifier import (
     ACTIVE,
     COMPOSITION,
@@ -15,6 +16,7 @@ from src.context_classifier import (
     has_composition_marker,
     has_identity_marker,
 )
+from src.models import PdfDocument, PdfPage
 from src.pdf_reader import read_pdf
 from src.prohibited_database import _aliases
 from src.text_utils import match_key
@@ -95,6 +97,34 @@ class BenchmarkCasPatternsTests(unittest.TestCase):
     def test_normal_cas_is_still_detected(self):
         text = "CAS: 91465-08-6"
         self.assertEqual(extract_cas_candidates(text), ["91465-08-6"])
+
+
+
+class BenchmarkIdentityBasisTests(unittest.TestCase):
+    def _document(self, text):
+        return PdfDocument(
+            file_name="test.pdf",
+            pages=[PdfPage(page=1, text=text)],
+            page_count=1,
+            character_count=len(text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+    def test_bare_composition_heading_does_not_support_clean_no_match(self):
+        document = self._document(
+            "3. COMPOSICIÓN, INFORMACIÓN SOBRE COMPONENTES | "
+            "4. MEDIDAS DE PRIMEROS AUXILIOS"
+        )
+        self.assertEqual(_identity_basis([document], []), [])
+
+    def test_explicit_active_label_supports_identity_basis(self):
+        document = self._document("Ingrediente activo: Sustancia Ejemplo 200 g/L")
+        self.assertEqual(
+            _identity_basis([document], []),
+            ["referencia explícita a ingrediente activo"],
+        )
 
 
 class BenchmarkAliasPatternsTests(unittest.TestCase):
