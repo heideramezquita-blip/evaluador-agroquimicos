@@ -129,6 +129,63 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
             [("Bifentrina", "360 g/L"), ("Fipronil", "120 g/L")],
         )
 
+    def test_touchdown_table_metadata_does_not_become_fake_ingredients(self):
+        page = PdfPage(
+            page=2,
+            text=(
+                "2. Composición: Información sobre los Ingredientes\n"
+                "Ingrediente activo(s)\n"
+                "Glifosato Potasio\n"
+                "No. CAS\nNombre\nSímbolo de Peligro\n"
+                "Riesgos Especiales\nConcentración\n"
+                "39600-42-5 Glifosato Potasio\nN\nR51/53\n44.7% W/W"
+            ),
+            blocks=[
+                PdfTextBlock(
+                    72,
+                    179,
+                    306,
+                    263,
+                    "2. Composición: Información sobre los Ingredientes\n"
+                    "Característica química\n"
+                    "Tipo de formulación\nConcentrado soluble\n"
+                    "Uso\nHerbicida\n"
+                    "Ingrediente activo(s)\n"
+                    "Glifosato Potasio\n",
+                ),
+                PdfTextBlock(
+                    72,
+                    263,
+                    542,
+                    437,
+                    "No. CAS\n"
+                    "Nombre\n"
+                    "Símbolo de Peligro\n"
+                    "Riesgos Especiales\n"
+                    "Concentración\n"
+                    "39600-42-5 Glifosato Potasio\n"
+                    "N\nR51/53\n44.7% W/W\n"
+                    "3. Identificación de Peligros\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="HS Touchdown.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "Glifosato Potasio")
+        self.assertEqual(items[0].concentration, "44.7% W/W")
+        self.assertEqual(items[0].cas, "39600-42-5")
+
     def test_ninkha_split_nombre_quimico_is_not_promoted_to_active_identity(self):
         page = PdfPage(
             page=2,
