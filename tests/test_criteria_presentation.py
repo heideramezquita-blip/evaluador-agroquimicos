@@ -2,7 +2,7 @@ import ast
 import unittest
 from pathlib import Path
 
-from src.criteria_presentation import interpret_criterion, interpret_criteria
+from src.criteria_presentation import convention_codes, interpret_criterion, interpret_criteria
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -73,6 +73,12 @@ class CriteriaPresentationTests(unittest.TestCase):
         self.assertEqual(
             [item.label for item in items],
             ["Consentimiento fundamentado previo · Convenio de Rotterdam", "Contaminante orgánico persistente · Convenio de Estocolmo"],
+        )
+
+    def test_convention_codes_are_shared_semantics(self):
+        self.assertEqual(
+            convention_codes("Convenciones internacionales: R, E; Efectos graves: ✓"),
+            ("R", "E"),
         )
 
     def test_montreal_is_labeled_as_ozone_layer_criterion(self):

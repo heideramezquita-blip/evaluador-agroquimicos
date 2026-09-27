@@ -38,6 +38,11 @@ class ProhibitedEngineTests(unittest.TestCase):
   with patch('src.engine.read_pdf',return_value=PdfDocument('scan.pdf',[PdfPage(1,'')],1,0,0,False,['sin texto'])):
    r=analyze([('scan.pdf',b'x')],master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_DOCUMENT_REVIEW)
+ def test_pdf_read_failure_is_document_review(self):
+  with patch('src.engine.read_pdf',side_effect=ValueError('archivo dañado')):
+   r=analyze([('broken.pdf',b'x')],master_path=MASTER)
+  self.assertEqual(r['evaluation'].status,STATUS_DOCUMENT_REVIEW)
+  self.assertTrue(any('No fue posible leer broken.pdf' in warning for warning in r['evaluation'].warnings))
  def test_readable_pdf_without_chemical_identity_requires_identity_review(self):
   r=run_text('Documento técnico legible sobre almacenamiento, transporte y recomendaciones generales del producto. No presenta una sección de composición ni identificadores químicos utilizables.')
   self.assertEqual(r['evaluation'].status,STATUS_IDENTITY_REVIEW)
@@ -88,3 +93,23 @@ class ProhibitedEngineTests(unittest.TestCase):
  def test_ra_severe_only_does_not_auto_map_to_rspo_or_iscc(self):
   r=analyze([],manual_cas_text='34256-82-1',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
+
+
+class ResultContractTests(unittest.TestCase):
+ def test_status_labels_remain_stable(self):
+  self.assertEqual(STATUS_NO_USE,'NO UTILIZAR — RSPO E ISCC')
+  self.assertEqual(STATUS_NO_USE_RSPO,'NO UTILIZAR — RSPO')
+  self.assertEqual(STATUS_RA_PROHIBITED,'ATENCIÓN — PROHIBIDO EN RA; REVISAR RSPO / ISCC')
+  self.assertEqual(STATUS_MITIGATION,'ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA')
+  self.assertEqual(STATUS_OBSOLETE,'ATENCIÓN — PLAGUICIDA OBSOLETO SEGÚN RA')
+  self.assertEqual(STATUS_MATCH_REVIEW,'COINCIDENCIA NORMATIVA — REVISAR')
+  self.assertEqual(STATUS_DOCUMENT_REVIEW,'REVISIÓN DOCUMENTAL')
+  self.assertEqual(STATUS_IDENTITY_REVIEW,'REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA')
+  self.assertEqual(STATUS_NO_MATCH,'SIN COINCIDENCIAS DETECTADAS')
+
+ def test_ra_prohibited_message_remains_stable(self):
+  r=analyze([],manual_cas_text='34256-82-1',manual_active_confirmed=True,master_path=MASTER)
+  self.assertEqual(
+   r['evaluation'].message,
+   'Rainforest Alliance incluye el/los ingrediente(s) en su lista PROHIBIDOS: Acetoclor. El criterio detectado no se trata como equivalencia automática de prohibición en RSPO o ISCC; revise el requisito aplicable antes de decidir su uso.'
+  )

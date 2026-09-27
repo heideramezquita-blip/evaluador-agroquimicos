@@ -10,9 +10,14 @@ from .pdf_reader import read_pdf
 from .prohibited_database import ProhibitedDatabase
 from .prohibited_detector import detect_candidates
 from .rules import evaluate_prohibited
-def _identity_basis(documents, records):
+
+
+DEFAULT_MASTER_PATH = Path(__file__).resolve().parents[1] / "data" / "master_restrictions.csv"
+
+
+def _identity_basis(documents, records) -> list[str]:
     """Describe whether there was enough chemical identity to support a clean no-match."""
-    basis = []
+    basis: list[str] = []
 
     contextual_document_cas = any(
         occurrence.source == "document"
@@ -43,61 +48,63 @@ def _identity_basis(documents, records):
     return basis
 
 
+def _manual_records(valid_cas: list[str], active_confirmed: bool) -> list[CasRecord]:
+    role = "active_explicit" if active_confirmed else "unknown"
+    return [
+        CasRecord(
+            cas,
+            [
+                CasOccurrence(
+                    cas,
+                    "Entrada manual",
+                    None,
+                    "manual",
+                    role,
+                    "CAS introducido manualmente.",
+                )
+            ],
+        )
+        for cas in valid_cas
+    ]
+
+
 def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_path=None):
-    if master_path is None:
-        master_path = Path(__file__).resolve().parents[1] / "data" / "master_restrictions.csv"
+    master_path = Path(master_path) if master_path is not None else DEFAULT_MASTER_PATH
+    database = ProhibitedDatabase(master_path)
 
-    db = ProhibitedDatabase(master_path)
     documents = []
-    groups = []
-    invalid = []
+    record_groups = []
+    invalid_candidates = []
     warnings = []
+    read_failures = 0
 
-    for name, payload in files:
+    for file_name, payload in files:
         try:
-            doc = read_pdf(payload, name)
+            document = read_pdf(payload, file_name)
         except Exception as exc:
-            warnings.append(f"No fue posible leer {name}: {exc}")
+            read_failures += 1
+            warnings.append(f"No fue posible leer {file_name}: {exc}")
             continue
-        documents.append(doc)
-        warnings.extend(doc.warnings)
-        recs, bad = extract_document_cas(doc)
-        groups.append(recs)
-        invalid.extend(bad)
+
+        documents.append(document)
+        warnings.extend(document.warnings)
+        records, invalid = extract_document_cas(document)
+        record_groups.append(records)
+        invalid_candidates.extend(invalid)
 
     manual_valid, manual_invalid = parse_manual_cas(manual_cas_text)
-    manual_records = []
-    for cas in manual_valid:
-        role = "active_explicit" if manual_active_confirmed else "unknown"
-        manual_records.append(
-            CasRecord(
-                cas,
-                [
-                    CasOccurrence(
-                        cas,
-                        "Entrada manual",
-                        None,
-                        "manual",
-                        role,
-                        "CAS introducido manualmente.",
-                    )
-                ],
-            )
-        )
+    record_groups.append(_manual_records(manual_valid, manual_active_confirmed))
+    records = merge_cas_records(record_groups)
 
-    groups.append(manual_records)
-    records = merge_cas_records(groups)
-    hits = detect_candidates(documents, records, db)
+    hits = detect_candidates(documents, records, database)
+    if manual_active_confirmed:
+        for hit in hits:
+            if hit.channel == "CAS" and hit.source_file == "Entrada manual":
+                hit.context_class = ACTIVE
 
-    for hit in hits:
-        if (
-            hit.channel == "CAS"
-            and hit.source_file == "Entrada manual"
-            and manual_active_confirmed
-        ):
-            hit.context_class = "ACTIVE"
-
-    unprocessables = sum(not document.processable for document in documents)
+    unprocessables = read_failures + sum(
+        not document.processable for document in documents
+    )
     if manual_valid and not documents:
         warnings.append(
             "La entrada manual de CAS solo evalúa coincidencias por CAS específico; "
@@ -116,13 +123,13 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
     return {
         "evaluation": evaluation,
         "documents": documents,
-        "invalid_candidates": invalid,
+        "invalid_candidates": invalid_candidates,
         "manual_valid": manual_valid,
         "manual_invalid": manual_invalid,
         "all_hits": hits,
         "identity_basis": identity_basis,
-        "prohibited_specific_count": sum(bool(entry.cas) for entry in db.prohibited),
-        "prohibited_group_count": sum(not bool(entry.cas) for entry in db.prohibited),
-        "obsolete_count": len(db.obsolete),
-        "mitigation_count": len(db.mitigation),
+        "prohibited_specific_count": sum(bool(entry.cas) for entry in database.prohibited),
+        "prohibited_group_count": sum(not bool(entry.cas) for entry in database.prohibited),
+        "obsolete_count": len(database.obsolete),
+        "mitigation_count": len(database.mitigation),
     }

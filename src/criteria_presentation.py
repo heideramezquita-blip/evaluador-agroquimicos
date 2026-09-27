@@ -1,7 +1,7 @@
-"""Presentation-only interpretation of criteria recorded in the local pesticide lists.
+"""Interpret criteria recorded in the normalized local pesticide lists.
 
-This module does not classify chemicals or change evaluation rules. It only renders
-class and category context that is explicitly present in the normalized source data.
+Structured criterion metadata is shared by the evaluation rules and the UI so both
+layers read the same source semantics. Explanatory strings remain presentation-only.
 """
 from __future__ import annotations
 
@@ -232,14 +232,28 @@ def _explain_ra_marker(item: str, source_list: str) -> CriterionExplanation | No
     )
 
 
-def _explain_convention(item: str) -> list[CriterionExplanation]:
+def _convention_codes_from_item(item: str) -> tuple[str, ...]:
     label, separator, value = item.partition(":")
     if not separator or "convenciones internacionales" not in _fold(label):
-        return []
+        return ()
     codes = re.findall(r"(?<![A-Z])([MRE])(?![A-Z])", value.upper())
+    return tuple(dict.fromkeys(codes))
+
+
+def convention_codes(criteria: str | None) -> tuple[str, ...]:
+    """Return unique convention markers in source order."""
+    codes: list[str] = []
+    for item in _split_items(criteria):
+        for code in _convention_codes_from_item(item):
+            if code not in codes:
+                codes.append(code)
+    return tuple(codes)
+
+
+def _explain_convention(item: str) -> list[CriterionExplanation]:
     return [
         CriterionExplanation(_CONVENTIONS[code][0], _CONVENTIONS[code][1], "Convenio")
-        for code in dict.fromkeys(codes)
+        for code in _convention_codes_from_item(item)
     ]
 
 
@@ -290,19 +304,17 @@ def interpret_criteria(criteria: str | None, source_list: str = "PROHIBITED") ->
                 results.append(mapped)
                 continue
 
-        if "convenciones internacionales" in _fold(item):
-            _, _, value = item.partition(":")
-            codes = re.findall(r"(?<![A-Z])([MRE])(?![A-Z])", value.upper())
-            if codes:
-                results.extend(
-                    CriterionExplanation(
-                        _CONVENTIONS[code][0],
-                        _CONVENTIONS[code][1],
-                        "Convenio",
-                    )
-                    for code in dict.fromkeys(codes)
+        codes = _convention_codes_from_item(item)
+        if codes:
+            results.extend(
+                CriterionExplanation(
+                    _CONVENTIONS[code][0],
+                    _CONVENTIONS[code][1],
+                    "Convenio",
                 )
-                continue
+                for code in codes
+            )
+            continue
 
         results.append(interpret_criterion(item, source_list))
     return results
