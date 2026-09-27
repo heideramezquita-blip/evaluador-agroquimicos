@@ -1,0 +1,148 @@
+import unittest
+
+import fitz
+
+from src.cas_extractor import _role
+from src.context_classifier import (
+    ACTIVE,
+    COMPOSITION,
+    DECOMPOSITION,
+    NEGATED,
+    REFERENCE,
+    classify_context,
+    has_active_marker,
+    has_composition_marker,
+    has_identity_marker,
+)
+from src.pdf_reader import read_pdf
+from src.prohibited_database import _aliases
+from src.text_utils import match_key
+
+
+class BenchmarkContextPatternsTests(unittest.TestCase):
+    def test_parenthesized_active_label_is_recognized(self):
+        text = "Ingrediente(s) Activo(s) | Paraquat 200 g/L"
+        self.assertTrue(has_active_marker(text))
+        self.assertEqual(classify_context(text, "Paraquat"), ACTIVE)
+
+    def test_singular_parenthesized_active_label_is_recognized(self):
+        text = "Ingrediente activo(s) | Glifosato 480 g/L"
+        self.assertTrue(has_active_marker(text))
+        self.assertEqual(classify_context(text, "Glifosato"), ACTIVE)
+
+    def test_iupac_ia_label_is_active_evidence(self):
+        text = "Nombre IUPAC (I.A): | Ametrina | 834-12-8"
+        self.assertTrue(has_active_marker(text))
+        self.assertEqual(_role(text), "active_explicit")
+        self.assertEqual(classify_context(text, "Ametrina"), ACTIVE)
+
+    def test_bare_ia_letters_are_not_active_evidence(self):
+        self.assertFalse(has_active_marker("Guía de seguridad para aplicación"))
+        self.assertEqual(_role("Guía de seguridad para aplicación"), "unknown")
+
+    def test_composition_heading_punctuation_variants_are_recognized(self):
+        variants = (
+            "COMPOSICIÓN, INFORMACIÓN SOBRE COMPONENTES",
+            "COMPOSICIÓN: INFORMACIÓN SOBRE LOS COMPONENTES",
+            "Composición: Información sobre los Ingredientes",
+            "COMPOSICIÓN / INFORMACIÓN SOBRE LOS INGREDIENTES",
+            "COMPOSICIÓN/INFORMACIÓN DE LOS COMPONENTES",
+            "3. Composición",
+            "COMPOSICIÓN PORCENTUAL/ANÁLISIS GARANTIZADO",
+            "COMPOSICIÓN GARANTIZADA",
+        )
+        for text in variants:
+            with self.subTest(text=text):
+                self.assertTrue(has_composition_marker(text))
+                self.assertTrue(has_identity_marker(text))
+
+    def test_nearby_toxicology_heading_does_not_override_closer_active_label(self):
+        context = (
+            "INFORMACIÓN TOXICOLÓGICA | Datos generales | Advertencias | "
+            "INFORMACIÓN TÉCNICA | Ingrediente activo | Ametrina 480 g/L"
+        )
+        self.assertEqual(classify_context(context, "Ametrina"), ACTIVE)
+
+    def test_reference_remains_reference_when_it_is_local_to_match(self):
+        context = "INFORMACIÓN TOXICOLÓGICA | Ametrina | DL50 oral"
+        self.assertEqual(classify_context(context, "Ametrina"), REFERENCE)
+
+    def test_negation_same_line_remains_non_supporting(self):
+        context = "El producto no contiene Paraquat"
+        self.assertEqual(classify_context(context, "Paraquat"), NEGATED)
+
+    def test_decomposition_same_line_remains_non_supporting(self):
+        context = "Productos de descomposición: monóxido de carbono"
+        self.assertEqual(
+            classify_context(context, "monóxido de carbono"),
+            DECOMPOSITION,
+        )
+
+    def test_plain_sds_composition_is_not_promoted_to_active(self):
+        context = (
+            "3. COMPOSICIÓN | Nombre químico | Fipronil | 120068-37-3 | 12 %"
+        )
+        self.assertEqual(classify_context(context, "Fipronil"), COMPOSITION)
+
+
+class BenchmarkAliasPatternsTests(unittest.TestCase):
+    def _keys(self, name):
+        return {match_key(alias) for alias in _aliases(name)}
+
+    def test_positional_qualifier_can_precede_substance(self):
+        keys = self._keys("Cihalotrina, lambda")
+        self.assertIn("lambda cihalotrina", keys)
+        self.assertIn("lambdacihalotrina", keys)
+
+    def test_benzoate_salt_word_order_is_normalized(self):
+        keys = self._keys("Benzoato de emamectina")
+        self.assertIn("emamectina benzoato", keys)
+
+    def test_hydrochloride_salt_word_order_is_normalized(self):
+        keys = self._keys("Clorhidrato de propamocarb")
+        self.assertIn("propamocarb clorhidrato", keys)
+
+    def test_paraquat_dichloride_word_order_is_normalized(self):
+        keys = self._keys("Dicloruro de paraquat")
+        self.assertIn("paraquat dicloruro", keys)
+
+    def test_unrelated_comma_synonym_is_not_reversed_generically(self):
+        keys = self._keys("Óxido de propileno, Oxirano")
+        self.assertNotIn("oxirano oxido de propileno", keys)
+
+
+class BenchmarkPdfReaderPatternsTests(unittest.TestCase):
+    def test_visual_order_is_used_for_pdf_text(self):
+        doc = fitz.open()
+        page = doc.new_page()
+        # Insert in reverse logical order but place the heading visually above.
+        page.insert_text((72, 200), "Paraquat 200 g/L")
+        page.insert_text((72, 100), "Ingredientes Activos")
+        payload = doc.tobytes()
+        doc.close()
+
+        result = read_pdf(payload, "visual-order.pdf")
+        text = result.pages[0].text
+        self.assertLess(text.index("Ingredientes Activos"), text.index("Paraquat 200 g/L"))
+
+    def test_repeated_footer_only_document_is_unprocessable(self):
+        footer = (
+            "EMPRESA EJEMPLO S.A.S. | contacto@example.com | "
+            "Documento generado para información del producto"
+        )
+        doc = fitz.open()
+        for _ in range(3):
+            page = doc.new_page()
+            page.insert_text((72, 700), footer)
+        payload = doc.tobytes()
+        doc.close()
+
+        result = read_pdf(payload, "scan-with-footer.pdf")
+        self.assertFalse(result.processable)
+        self.assertTrue(
+            any("texto repetido" in warning for warning in result.warnings)
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
