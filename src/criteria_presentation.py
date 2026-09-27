@@ -199,6 +199,20 @@ def _explain_ra_marker(item: str, source_list: str) -> CriterionExplanation | No
     label, separator, value = item.partition(":")
     if not separator:
         return None
+    if (
+        source_list == "PROHIBITED"
+        and _fold(label) == "efectos graves"
+        and value.strip() in {"✓", "✔", "SI", "Sí", "X", "x"}
+    ):
+        return CriterionExplanation(
+            "Efectos graves",
+            "Rainforest Alliance usa esta marca para plaguicidas con alta incidencia "
+            "de efectos adversos graves o irreversibles en la salud humana o el ambiente.",
+            "Rainforest Alliance",
+            "Efectos graves",
+            None,
+            True,
+        )
     hazard_class = _criterion_class(label)
     if not hazard_class or value.strip() not in {"✓", "✔", "SI", "Sí", "X", "x"}:
         return None
