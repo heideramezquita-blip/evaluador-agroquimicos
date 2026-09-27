@@ -221,9 +221,12 @@ def classify_context(context: str, matched_value: str = "") -> str:
     specs = (
         (NEGATED, 2, 0),
         (DECOMPOSITION, 2, 0),
-        (REFERENCE, 2, 1),
-        (INCIDENTAL, 2, 1),
-        (ACTIVE, 5, 2),
+        # An explicit active-ingredient label on the same semantic line is
+        # stronger product-role evidence than a section heading that happens
+        # to share that line after PDF layout reconstruction.
+        (ACTIVE, 5, 1),
+        (REFERENCE, 2, 2),
+        (INCIDENTAL, 2, 2),
         (COMPOSITION, 12, 3),
     )
     candidates = []
