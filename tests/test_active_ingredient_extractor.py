@@ -1,7 +1,7 @@
 import unittest
 
 from src.active_ingredient_extractor import extract_active_ingredients
-from src.models import PdfDocument, PdfPage
+from src.models import PdfDocument, PdfPage, PdfTextBlock
 
 
 def document(text, name="test.pdf"):
@@ -65,6 +65,78 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
                 ("Tiametoxam", "141 g/L"),
             ],
         )
+
+    def test_two_column_kadabra_layout_uses_aligned_identity_blocks_only(self):
+        page = PdfPage(
+            page=1,
+            text=(
+                "Modo de Acción:                         Ingrediente activo:\n"
+                "Bifentrina: Insecticida...             Bifentrina (360 g/L) +\n"
+                "Fipronil: Insecticida...               Fipronil (120 g/L)\n"
+                "Generalidades: KADABRA es un insecticida a base de los "
+                "ingredientes activos Bifentrina y Fipronil."
+            ),
+            blocks=[
+                PdfTextBlock(452, 428, 555, 442, "Ingrediente activo:\n"),
+                PdfTextBlock(67, 449, 158, 463, "Modo de Acción:\n"),
+                PdfTextBlock(
+                    452,
+                    445,
+                    538,
+                    467,
+                    "Bifentrina (360 g/L) +\nFipronil (120 g/L)\n",
+                ),
+                PdfTextBlock(
+                    67,
+                    465,
+                    428,
+                    521,
+                    "Bifentrina: Insecticida de contacto con acción estomacal.\n"
+                    "Fipronil: Insecticida que actúa por contacto e ingestión.\n",
+                ),
+                PdfTextBlock(
+                    452,
+                    482,
+                    529,
+                    531,
+                    "Categoría toxicológica:\nII – Moderadamente Peligroso.\n",
+                ),
+                PdfTextBlock(
+                    67,
+                    626,
+                    429,
+                    717,
+                    "Generalidades:\nKADABRA 480 SC es un insecticida a base de los "
+                    "ingredientes activos Bifentrina y Fipronil.\n"
+                    "Bifentrina es un piretroide de cuarta generación.\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="FT Kadabra.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Bifentrina", "360 g/L"), ("Fipronil", "120 g/L")],
+        )
+
+    def test_narrative_mention_of_ingredients_activos_does_not_open_identity_block(self):
+        text = (
+            "Generalidades:\n"
+            "KADABRA es un insecticida a base de los ingredientes activos "
+            "Bifentrina y Fipronil.\n"
+            "Bifentrina es un piretroide de cuarta generación.\n"
+        )
+        self.assertEqual(extract_active_ingredients(document(text)), [])
 
     def test_additives_are_not_promoted_to_active_ingredients(self):
         text = (
