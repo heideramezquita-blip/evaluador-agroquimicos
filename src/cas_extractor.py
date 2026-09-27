@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from .cas_utils import CAS_PATTERN, canonicalize_groups, is_valid_cas
 from .context_classifier import has_active_marker
 from .models import CasOccurrence, CasRecord, PdfDocument
@@ -15,6 +17,75 @@ def _local_context(text: str, start: int, end: int, radius: int = 350) -> str:
 
 def _role(context: str) -> str:
     return "active_explicit" if has_active_marker(context) else "unknown"
+
+
+_CAS_PREFIX = re.compile(r"(?<!\d)(\d{2,7})\s*-\s*(\d{2})\s*-\s*$")
+
+
+def _split_block_cas_occurrences(document: PdfDocument, page) -> list[CasOccurrence]:
+    """Recover CAS numbers split into separate PDF text blocks.
+
+    A common table-extraction pattern leaves the final CAS checksum digit in a
+    tiny neighbouring block (for example 104098-48- plus 8). Recovery is only
+    accepted when the reconstructed CAS passes checksum validation.
+    """
+    occurrences: list[CasOccurrence] = []
+    blocks = page.blocks or []
+
+    for block in blocks:
+        lines = [line.strip() for line in (block.text or "").splitlines() if line.strip()]
+        prefix_match = None
+        for line in reversed(lines):
+            match = _CAS_PREFIX.search(line)
+            if match:
+                prefix_match = match
+                break
+        if not prefix_match:
+            continue
+
+        for candidate in blocks:
+            if candidate is block:
+                continue
+            candidate_text = " ".join(
+                line.strip()
+                for line in (candidate.text or "").splitlines()
+                if line.strip()
+            )
+            if not re.fullmatch(r"\d", candidate_text):
+                continue
+            if candidate.y0 < block.y0 - 3 or candidate.y0 > block.y1 + 25:
+                continue
+            if candidate.x0 < block.x0 - 10 or candidate.x0 > block.x1 + 20:
+                continue
+
+            cas = (
+                f"{prefix_match.group(1)}-"
+                f"{prefix_match.group(2)}-{candidate_text}"
+            )
+            if not is_valid_cas(cas):
+                continue
+
+            nearby = [
+                neighbour.text
+                for neighbour in blocks
+                if neighbour.y0 >= max(0.0, block.y0 - 120)
+                and neighbour.y0 <= block.y1 + 120
+            ]
+            context = _recompact("\n".join(nearby))
+            occurrences.append(
+                CasOccurrence(
+                    cas,
+                    document.file_name,
+                    page.page,
+                    "document",
+                    _role(context),
+                    context,
+                    "CAS reconstruido a partir de bloques contiguos del PDF.",
+                )
+            )
+            break
+
+    return occurrences
 
 
 def extract_document_cas(document: PdfDocument):
@@ -47,6 +118,17 @@ def extract_document_cas(document: PdfDocument):
                 context,
             )
             by_cas.setdefault(cas, CasRecord(cas)).occurrences.append(occurrence)
+
+        for occurrence in _split_block_cas_occurrences(document, page):
+            target = by_cas.setdefault(occurrence.cas, CasRecord(occurrence.cas))
+            duplicate = any(
+                existing.source_file == occurrence.source_file
+                and existing.page == occurrence.page
+                and existing.context == occurrence.context
+                for existing in target.occurrences
+            )
+            if not duplicate:
+                target.occurrences.append(occurrence)
 
     return list(by_cas.values()), invalid
 
