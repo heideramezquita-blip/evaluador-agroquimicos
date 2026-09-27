@@ -24,10 +24,10 @@ La aplicación no incorpora OCR. Si un PDF está escaneado o no contiene texto e
 
 ## Cómo funciona
 
-1. Extrae el texto disponible de uno o varios PDF.
-2. Detecta números CAS y valida su checksum.
+1. Extrae el texto disponible de uno o varios PDF, priorizando el orden visual/espacial del contenido para reducir desorden en tablas y bloques maquetados.
+2. Detecta números CAS y valida su checksum; evita interpretar como CAS fragmentos de identificadores químicos más largos, como determinados números INDEX.
 3. Cruza CAS, nombres normalizados y determinadas reglas de grupo contra las tres bases locales.
-4. Clasifica el contexto de cada coincidencia para distinguir, entre otros casos, ingrediente activo, composición, menciones incidentales, negadas, de descomposición/combustión o de referencia toxicológica.
+4. Clasifica el contexto de cada coincidencia para distinguir, entre otros casos, ingrediente activo, composición, menciones incidentales, negadas, de descomposición/combustión o de referencia toxicológica. La clasificación admite variantes frecuentes de encabezados de FT/FDS y pondera la proximidad entre el nombre/CAS encontrado y el encabezado que le da contexto.
 5. Aplica las reglas de decisión y las correspondencias explícitas implementadas para RSPO, ISCC y RA.
 6. Consolida la evidencia encontrada para evitar tarjetas duplicadas cuando una misma sustancia se detecta por más de un mecanismo.
 
@@ -41,9 +41,9 @@ La identificación no pretende reconocer cualquier sustancia química existente.
 La estructura se mantiene deliberadamente pequeña y separa responsabilidades sin introducir capas innecesarias:
 
 - `app.py`: interfaz Streamlit y renderizado.
-- `src/pdf_reader.py`: extracción de texto y diagnóstico de documentos sin texto suficiente.
+- `src/pdf_reader.py`: extracción de texto en orden visual/espacial y diagnóstico de documentos sin contenido principal extraíble, incluidos archivos que solo exponen encabezados o pies repetidos.
 - `src/cas_utils.py` y `src/cas_extractor.py`: normalización, validación y extracción de CAS.
-- `src/context_classifier.py`: clasificación contextual de las coincidencias.
+- `src/context_classifier.py`: clasificación contextual por proximidad y normalización de variantes frecuentes de encabezados de ingrediente activo y composición.
 - `src/prohibited_database.py`: carga de las tres bases locales y metadatos de búsqueda.
 - `src/prohibited_detector.py`: detección por CAS, nombre y reglas de grupo.
 - `src/rules.py`: decisión final y correspondencias explícitas entre RA, RSPO e ISCC.
@@ -186,7 +186,7 @@ Los CAS visibles pueden abrir PubChem como referencia manual. PubChem no partici
 ## Limitaciones
 
 - Solo se aceptan archivos PDF desde el cargador de la interfaz.
-- No hay OCR integrado para documentos escaneados sin texto extraíble.
+- No hay OCR integrado para documentos escaneados sin texto extraíble. Los PDF que solo permiten extraer el mismo encabezado o pie repetido, sin el contenido principal de las páginas, se tratan como documentación insuficiente y pasan a revisión documental.
 - La detección por nombre y grupo depende de las sustancias y reglas incluidas en las bases locales; no es un reconocimiento químico abierto o universal.
 - Las bases normativas son locales y deben actualizarse deliberadamente cuando cambien las fuentes.
 - Las referencias oficiales enlazadas son informativas y no se consultan en tiempo real para tomar decisiones.
