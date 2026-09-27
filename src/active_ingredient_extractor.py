@@ -25,7 +25,8 @@ _ACTIVE_LABEL_PATTERNS = (
 
 _CONCENTRATION = re.compile(
     r"(?i)(\d+(?:[.,]\d+)?\s*"
-    r"(?:%|g\s*/\s*(?:litros?|kg|l)|mg\s*/\s*(?:litros?|kg|l)|"
+    r"(?:%(?:\s*(?:w/w|w/v|v/v|p/p|p/v))?|"
+    r"g\s*/\s*(?:litros?|kg|l)|mg\s*/\s*(?:litros?|kg|l)|"
     r"kg\s*/\s*(?:l|ha)|g\s+l-?1|g\s+kg-?1))"
 )
 
@@ -161,6 +162,30 @@ def _is_field_line(line: str) -> bool:
     return any(key.startswith(prefix) for prefix in _FIELD_PREFIXES)
 
 
+_COMPOSITION_TABLE_HEADERS = (
+    "no cas",
+    "numero cas",
+    "cas",
+    "nombre",
+    "simbolo de peligro",
+    "riesgos especiales",
+    "concentracion",
+)
+
+
+def _looks_like_composition_table(lines: list[str]) -> bool:
+    """Recognize a table header following an explicit active-ingredient label."""
+    keys = [match_key(line) for line in lines[:8]]
+    header_hits = {
+        header
+        for header in _COMPOSITION_TABLE_HEADERS
+        if any(key == header or key.startswith(header + " ") for key in keys)
+    }
+    return len(header_hits) >= 2 and any(
+        header in header_hits for header in ("cas", "no cas", "numero cas")
+    )
+
+
 def _starts_structural_field(lines: list[str]) -> bool:
     """Detect field labels split by PDF extraction across adjacent lines.
 
@@ -175,7 +200,12 @@ def _starts_structural_field(lines: list[str]) -> bool:
     if not lines:
         return False
 
-    prefixes = _FIELD_PREFIXES + _STOP_PREFIXES + _NAME_VALUE_PREFIXES
+    prefixes = (
+        _FIELD_PREFIXES
+        + _STOP_PREFIXES
+        + _NAME_VALUE_PREFIXES
+        + _COMPOSITION_TABLE_HEADERS
+    )
     for size in range(1, min(3, len(lines)) + 1):
         combined = match_key(" ".join(lines[:size]))
         if any(
@@ -318,7 +348,10 @@ def _split_candidate_line(line: str) -> list[str]:
     return parts or ([cleaned] if cleaned else [])
 
 
-def _candidate_tuples(lines: list[str]) -> list[tuple[str, str, str]]:
+def _candidate_tuples(
+    lines: list[str],
+    metadata_text: str = "",
+) -> list[tuple[str, str, str]]:
     candidates: list[tuple[str, str, str]] = []
 
     for line in lines:
@@ -348,6 +381,8 @@ def _candidate_tuples(lines: list[str]) -> list[tuple[str, str, str]]:
     if len(candidates) == 1:
         name, concentration, cas = candidates[0]
         block_text = " | ".join(lines)
+        if metadata_text:
+            block_text = f"{block_text} | {metadata_text}"
         if not concentration:
             concentration = _extract_concentration(block_text)
         if not cas:
@@ -371,7 +406,10 @@ def _same_column(label: PdfTextBlock, candidate: PdfTextBlock) -> bool:
     )
 
 
-def _block_window(blocks: list[PdfTextBlock], label_index: int) -> tuple[list[str], str]:
+def _block_window(
+    blocks: list[PdfTextBlock],
+    label_index: int,
+) -> tuple[list[str], str, str]:
     label = blocks[label_index]
     label_lines = _semantic_lines(label.text)
     payload: list[str] = []
@@ -390,6 +428,7 @@ def _block_window(blocks: list[PdfTextBlock], label_index: int) -> tuple[list[st
     # label. This prevents a two-column FT from mixing the active-ingredient
     # sidebar with "Modo de Acción" or other prose from the main column.
     aligned_texts = [label.text]
+    metadata_text = ""
     max_bottom = label.y1 + 150
     for candidate in blocks[label_index + 1 :]:
         if candidate.y0 > max_bottom:
@@ -405,6 +444,8 @@ def _block_window(blocks: list[PdfTextBlock], label_index: int) -> tuple[list[st
 
         if _is_stop(lines[0]) or _starts_structural_field(lines):
             aligned_texts.append(candidate.text)
+            if _looks_like_composition_table(lines):
+                metadata_text = _clean_visible_text(candidate.text)
             break
 
         # Another explicit active label starts a separate block, not a
@@ -420,7 +461,11 @@ def _block_window(blocks: list[PdfTextBlock], label_index: int) -> tuple[list[st
         # handled by the stop logic above.
         max_bottom = max(max_bottom, candidate.y1 + 70)
 
-    return payload, " | ".join(_clean_visible_text(x) for x in aligned_texts)
+    return (
+        payload,
+        " | ".join(_clean_visible_text(x) for x in aligned_texts),
+        metadata_text,
+    )
 
 
 def _evidence_from_candidates(
@@ -463,10 +508,10 @@ def _extract_from_blocks(
         if not any(_active_label_tail(line) is not None for line in lines):
             continue
 
-        payload, context = _block_window(blocks, block_index)
+        payload, context, metadata_text = _block_window(blocks, block_index)
         evidence.extend(
             _evidence_from_candidates(
-                _candidate_tuples(payload),
+                _candidate_tuples(payload, metadata_text=metadata_text),
                 source_file=source_file,
                 page_number=page_number,
                 context=context,
