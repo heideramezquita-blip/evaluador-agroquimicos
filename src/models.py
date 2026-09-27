@@ -37,6 +37,16 @@ class ActiveIngredientEvidence:
     context: str = ""
 
 @dataclass
+class CompositionComponentEvidence:
+    name: str
+    source_file: str
+    page: int
+    concentration: str = ""
+    cas: str = ""
+    context: str = ""
+
+
+@dataclass
 class CasOccurrence:
     cas: str
     source_file: str
