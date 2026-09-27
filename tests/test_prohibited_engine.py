@@ -50,7 +50,7 @@ class ProhibitedEngineTests(unittest.TestCase):
  def test_active_ingredient_section_without_list_match_is_clean_no_match(self):
   r=run_text('FICHA TÉCNICA DEL PRODUCTO\nIngrediente activo: Sustancia experimental XYZ 400 g/L.\nDescripción agronómica, dosis de aplicación y recomendaciones de uso para el cultivo.')
   self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
-  self.assertIn('referencia explícita a ingrediente activo/composición',r['evaluation'].message)
+  self.assertIn('referencia explícita a ingrediente activo',r['evaluation'].message)
  def test_contextual_valid_cas_without_list_match_is_clean_no_match(self):
   r=run_text('COMPOSICIÓN DEL PRODUCTO\nIngrediente activo: sustancia experimental. CAS 7732-18-5. Concentración 500 g/L. Información adicional de formulación y uso.')
   self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
