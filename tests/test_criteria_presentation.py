@@ -8,58 +8,63 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CriteriaPresentationTests(unittest.TestCase):
-    def test_oms_ia_is_acute_toxicity_not_ghs(self):
+    def test_oms_ia_is_acute_toxicity_not_sga(self):
         item = interpret_criterion("Toxicidad aguda: 1A")
         self.assertEqual(item.label, "Toxicidad aguda · OMS Ia")
         self.assertIn("extremadamente peligroso", item.explanation)
-        self.assertNotIn("GHS", item.label)
+        self.assertNotIn("SGA", item.label)
         self.assertTrue(item.ra_hhp_criterion)
 
-    def test_oms_ib_is_acute_toxicity_not_ghs(self):
+    def test_oms_ib_is_acute_toxicity_not_sga(self):
         item = interpret_criterion("Toxicidad aguda: 1B")
         self.assertEqual(item.label, "Toxicidad aguda · OMS Ib")
         self.assertIn("altamente peligroso", item.explanation)
-        self.assertNotIn("GHS", item.label)
+        self.assertNotIn("SGA", item.label)
         self.assertTrue(item.ra_hhp_criterion)
 
-    def test_ghs_carcinogenicity_1b_keeps_hazard_class(self):
+    def test_sga_carcinogenicity_1b_keeps_hazard_class(self):
         item = interpret_criterion("Carcinogenicidad: GHS 1B")
-        self.assertEqual(item.label, "Carcinogenicidad · GHS 1B")
+        self.assertEqual(item.label, "Carcinogenicidad · SGA 1B")
         self.assertIn("Se presume que causa cáncer", item.explanation)
         self.assertTrue(item.ra_hhp_criterion)
 
-    def test_ghs_reproductive_toxicity_1b_keeps_hazard_class(self):
+    def test_sga_reproductive_toxicity_1b_keeps_hazard_class(self):
         item = interpret_criterion("Toxicidad reproductiva: GHS 1B")
-        self.assertEqual(item.label, "Toxicidad reproductiva · GHS 1B")
+        self.assertEqual(item.label, "Toxicidad reproductiva · SGA 1B")
         self.assertIn("Se presume que es tóxico para la reproducción", item.explanation)
         self.assertTrue(item.ra_hhp_criterion)
 
-    def test_ghs_mutagenicity_1b_keeps_hazard_class(self):
+    def test_sga_mutagenicity_1b_keeps_hazard_class(self):
         item = interpret_criterion("Mutagenicidad: GHS 1B")
-        self.assertEqual(item.label, "Mutagenicidad · GHS 1B")
+        self.assertEqual(item.label, "Mutagenicidad · SGA 1B")
         self.assertIn("mutaciones hereditarias", item.explanation)
         self.assertTrue(item.ra_hhp_criterion)
 
-    def test_other_ghs_hazard_class_is_not_mapped_to_ra_cmr(self):
+    def test_other_sga_hazard_class_is_not_mapped_to_ra_cmr(self):
         item = interpret_criterion("Sensibilización cutánea: GHS 1A")
-        self.assertEqual(item.label, "Sensibilización cutánea · GHS 1A")
+        self.assertEqual(item.label, "Sensibilización cutánea · SGA 1A")
         self.assertFalse(item.ra_hhp_criterion)
         self.assertIn("no se interpreta como carcinogenicidad", item.explanation)
 
-    def test_ghs_category_without_hazard_class_stays_unresolved(self):
+    def test_sga_category_without_hazard_class_stays_unresolved(self):
         item = interpret_criterion("GHS 1B")
-        self.assertEqual(item.label, "GHS 1B · clase de peligro no indicada")
+        self.assertEqual(item.label, "SGA 1B · clase de peligro no indicada")
         self.assertIsNone(item.hazard_class)
         self.assertFalse(item.ra_hhp_criterion)
         self.assertIn("no infiere esa clase", item.explanation)
 
-    def test_source_marker_does_not_invent_exact_ghs_subcategory(self):
+    def test_source_marker_does_not_invent_exact_sga_subcategory(self):
         item = interpret_criterion("Toxicidad reproductiva: ✓")
-        self.assertEqual(item.label, "Toxicidad reproductiva · GHS 1A/1B")
+        self.assertEqual(item.label, "Toxicidad reproductiva · SGA 1A/1B")
         self.assertEqual(item.category, "1A/1B")
         self.assertIn("no especifica", item.explanation)
 
-    def test_non_ra_ghs_category_does_not_become_ra_criterion(self):
+    def test_sga_input_is_displayed_as_sga(self):
+        item = interpret_criterion("Carcinogenicidad: SGA 1B")
+        self.assertEqual(item.label, "Carcinogenicidad · SGA 1B")
+        self.assertEqual(item.system, "SGA")
+
+    def test_non_ra_sga_category_does_not_become_ra_criterion(self):
         item = interpret_criterion("Carcinogenicidad: GHS 1B", source_list="MITIGATE_RISK")
         self.assertFalse(item.ra_hhp_criterion)
 
@@ -67,7 +72,7 @@ class CriteriaPresentationTests(unittest.TestCase):
         items = interpret_criteria("Convenciones internacionales: R, E")
         self.assertEqual(
             [item.label for item in items],
-            ["Referencia a Convenio de Rotterdam", "Referencia a Convenio de Estocolmo"],
+            ["Convenio de Rotterdam · consentimiento fundamentado previo", "Convenio de Estocolmo · contaminantes orgánicos persistentes"],
         )
 
     def test_mitigation_markers_are_human_readable(self):
@@ -99,8 +104,8 @@ class CriteriaPresentationTests(unittest.TestCase):
         with (ROOT / "data" / "master_restrictions.csv").open(encoding="utf-8", newline="") as source:
             row = next(item for item in csv.DictReader(source) if item["ingredient"] == "Clorpirifos")
         item = interpret_criteria(row["criteria"], row["source_list"])[0]
-        self.assertEqual(item.label, "Toxicidad reproductiva · GHS 1A/1B")
-        self.assertNotIn("GHS 1B", item.label)
+        self.assertEqual(item.label, "Toxicidad reproductiva · SGA 1A/1B")
+        self.assertNotIn("SGA 1B", item.label)
 
     def test_app_uses_presentation_layer_for_evidence(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
@@ -114,9 +119,11 @@ class CriteriaPresentationTests(unittest.TestCase):
         self.assertIn("irreversibles", item.explanation)
         self.assertTrue(item.ra_hhp_criterion)
 
-    def test_severe_effects_definition_is_in_criteria_glossary(self):
+    def test_severe_effects_interpretation_is_shown_with_each_evidence_card(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
-        self.assertIn("**Efectos graves (Rainforest Alliance):** alta incidencia", app)
+        self.assertIn("criterion_summary_html(g)", app)
+        self.assertNotIn("Cómo interpretar los criterios de las listas", app)
+        self.assertIn("alta incidencia", (ROOT / "src" / "criteria_presentation.py").read_text(encoding="utf-8"))
 
     def test_evidence_cards_are_consolidated_across_detection_channels(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
