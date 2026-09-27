@@ -129,6 +129,182 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
             [("Bifentrina", "360 g/L"), ("Fipronil", "120 g/L")],
         )
 
+    def test_poliniza_two_panel_table_prefers_concentration_bearing_identity_row(self):
+        page = PdfPage(
+            page=1,
+            text=(
+                "COMPOSICIÓN GARANTIZADA: PROPIEDADES DEL PRODUCTO FORMULADO:\n"
+                "INGREDIENTE ACTIVO CONCENTRACIÓN (g/Kg)\n"
+                "Aspecto: Polvo blanco\n"
+                "Ácido 1-naftalenacético (ANA) 60 g/kg\n"
+                "2-naphthalen-1-ylacetic acid\n"
+                "Ingredientes aditivos c.s.p. 1 kg"
+            ),
+            blocks=[
+                PdfTextBlock(
+                    23.5, 416.8, 531.3, 460.9,
+                    "COMPOSICIÓN GARANTIZADA:\n"
+                    "PROPIEDADES DEL PRODUCTO\nFORMULADO:\n"
+                    "INGREDIENTE ACTIVO\nCONCENTRACIÓN (g/Kg)\n",
+                ),
+                PdfTextBlock(447.0, 458.9, 502.5, 471.0, "Polvo blanco\n"),
+                PdfTextBlock(353.6, 458.3, 362.2, 472.6, "o:\n"),
+                PdfTextBlock(
+                    26.6, 458.3, 353.8, 489.3,
+                    "Aspect\nÁcido 1-naftalenacético (ANA)\n60 g/kg\n",
+                ),
+                PdfTextBlock(
+                    26.6, 522.8, 150.5, 536.7,
+                    "Ingredientes aditivos c.s.p.\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="FT Poliniza.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Ácido 1-naftalenacético (ANA)", "60 g/kg")],
+        )
+
+    def test_sart_colon_identity_row_beats_additive_csp_block(self):
+        page = PdfPage(
+            page=1,
+            text=(
+                "COMPOSICIÓN GARANTIZADA:\n"
+                "Ingredientes activos:\n"
+                "Teflubenzuron: 150 g/L 1-(3,5-dichloro-2,4-difluorophenyl)-"
+                "3-(2,6-difluorobenzoyl) urea, formulación a 20°C.\n"
+                "C.s.p 1 L\nIngredientes aditivos:"
+            ),
+            blocks=[
+                PdfTextBlock(67.9, 496.4, 256.7, 516.8, "COMPOSICIÓN GARANTIZADA:\n"),
+                PdfTextBlock(67.9, 524.8, 176.6, 543.8, "Ingredientes activos:\n"),
+                PdfTextBlock(
+                    67.9, 542.8, 504.5, 558.0,
+                    "Teflubenzuron: 150 g/L "
+                    "1-(3,5-dichloro-2,4-difluorophenyl)-"
+                    "3-(2,6-difluorobenzoyl) urea, formulación a 20°C.\n",
+                ),
+                PdfTextBlock(
+                    67.9, 565.6, 179.9, 598.8,
+                    "C.s.p 1 L\nIngredientes aditivos:\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="FT Sart.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Teflubenzuron", "150 g/L")],
+        )
+
+    def test_touchdown_inline_identity_stops_before_warning_prose(self):
+        page = PdfPage(
+            page=2,
+            text=(
+                "Uso: Herbicida Agrícola\n"
+                "Ingredientes activos: Glifosato Ácido 500 g/l\n"
+                "Nombre Químico: N-(fosfonometil)glicina.\n"
+                "LEA CUIDADOSAMENTE LA ETIQUETA Y LA HOJA INFORMATIVA "
+                "ANTES DE USAR ESTE PRODUCTO"
+            ),
+            blocks=[
+                PdfTextBlock(
+                    95.6, 125.6, 315.1, 185.9,
+                    "Uso: Herbicida Agrícola\n"
+                    "Tipo de formulación: Concentrado Soluble (SL)\n"
+                    "Registro Nacional ICA No.: 140\n"
+                    "Ingredientes activos: Glifosato Ácido 500 g/l\n"
+                    "Nombre Químico: N-(fosfonometil)glicina.\n",
+                ),
+                PdfTextBlock(
+                    90.0, 183.6, 523.5, 255.4,
+                    "LEA CUIDADOSAMENTE LA ETIQUETA Y LA HOJA INFORMATIVA "
+                    "ANTES DE USAR ESTE\nPRODUCTO\n"
+                    "PRECAUCIONES Y ADVERTENCIAS DE USO Y APLICACIÓN\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="FT Touchdown.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Glifosato Ácido", "500 g/l")],
+        )
+
+    def test_vantacor_web_catalog_does_not_enter_active_identity(self):
+        page = PdfPage(
+            page=3,
+            text=(
+                "INSECTICIDAS\nPresipel\nPirestar 38 EC\n"
+                "Ingrediente(s) Activo(s)\nChlorantraniliprole\n"
+                "Concentración\n600 g/L\n"
+                "Categoría Toxicológica\nIV Ligeramente Peligroso"
+            ),
+            blocks=[
+                PdfTextBlock(
+                    124.1, 615.1, 453.0, 633.1,
+                    "Ingrediente(s) Activo(s)\nChlorantraniliprole\n",
+                ),
+                PdfTextBlock(378.9, 624.2, 435.5, 646.6, "Presipel\n"),
+                PdfTextBlock(153.9, 623.9, 260.9, 648.7, "Pirestar® 38 EC\n"),
+                PdfTextBlock(
+                    147.7, 645.1, 424.0, 663.1,
+                    "Concentración\n600 g/L\n",
+                ),
+                PdfTextBlock(
+                    125.6, 705.1, 469.0, 723.1,
+                    "Categoría Toxicológica\nIV Ligeramente Peligroso\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="FT Vantacor.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Chlorantraniliprole", "600 g/L")],
+        )
+
     def test_touchdown_table_metadata_does_not_become_fake_ingredients(self):
         page = PdfPage(
             page=2,
