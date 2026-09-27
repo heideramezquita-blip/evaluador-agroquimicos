@@ -84,6 +84,28 @@ _NAME_VALUE_PREFIXES = (
 )
 
 
+_NARRATIVE_ACTIVE_PATTERNS = (
+    re.compile(
+        r"(?i)\btiene\s+como\s+ingrediente\s+activo\s+"
+        r"(?P<name>[a-záéíóúüñ0-9][a-záéíóúüñ0-9 .,'’()/-]{1,120}?)"
+        r"(?=\s+en\s+forma\s+de\b|\s+en\s+una\s+concentraci[oó]n\b|"
+        r"\s+a\s+una\s+concentraci[oó]n\b|[.;]|$)"
+    ),
+    re.compile(
+        r"(?i)\bel\s+ingrediente\s+activo\s+es\s+"
+        r"(?P<name>[a-záéíóúüñ0-9][a-záéíóúüñ0-9 .,'’()/-]{1,120}?)"
+        r"(?=\s+en\s+forma\s+de\b|\s+en\s+una\s+concentraci[oó]n\b|"
+        r"\s+a\s+una\s+concentraci[oó]n\b|[.;]|$)"
+    ),
+)
+
+_NARRATIVE_CONCENTRATION = re.compile(
+    r"(?i)\b(?:en|a)\s+una\s+concentraci[oó]n\s+de\s+"
+    r"(\d+(?:[.,]\d+)?\s*(?:%|g\s*/\s*(?:litros?|kg|l)|"
+    r"mg\s*/\s*(?:litros?|kg|l)|kg\s*/\s*(?:l|ha)))"
+)
+
+
 def _clean_visible_text(value: str) -> str:
     value = unicodedata.normalize("NFKC", value or "")
     value = "".join(
@@ -219,6 +241,61 @@ def _looks_like_name(line: str) -> bool:
     if any(marker in normalized for marker in prose_markers):
         return False
     return True
+
+
+def _extract_narrative_active_identity(
+    text: str,
+    source_file: str,
+    page_number: int,
+) -> list[ActiveIngredientEvidence]:
+    """Extract only high-confidence declarative active-ingredient sentences.
+
+    Some technical sheets do not use an "Ingrediente activo:" field. They
+    instead make a direct statement such as "tiene como ingrediente activo
+    glifosato ...". These declarations are stronger than a generic narrative
+    mention and can support documentary identity without opening a broad prose
+    window.
+    """
+    cleaned = _clean_visible_text(text)
+    evidence: list[ActiveIngredientEvidence] = []
+    seen: set[str] = set()
+
+    for pattern in _NARRATIVE_ACTIVE_PATTERNS:
+        for match in pattern.finditer(cleaned):
+            name = _strip_concentration(match.group("name"))
+            key = match_key(name)
+            if not key or key in seen or not _looks_like_name(name):
+                continue
+
+            tail = cleaned[match.end() : match.end() + 180]
+            concentration_match = _NARRATIVE_CONCENTRATION.search(tail)
+            concentration = (
+                concentration_match.group(1).strip()
+                if concentration_match
+                else ""
+            )
+            cas_values = _valid_cas_in_text(
+                cleaned[max(0, match.start() - 80) : match.end() + 220]
+            )
+            cas = cas_values[0] if len(cas_values) == 1 else ""
+
+            seen.add(key)
+            evidence.append(
+                ActiveIngredientEvidence(
+                    name=name,
+                    source_file=source_file,
+                    page=page_number,
+                    concentration=concentration,
+                    cas=cas,
+                    context=cleaned[
+                        max(0, match.start() - 80) : min(
+                            len(cleaned), match.end() + 220
+                        )
+                    ],
+                )
+            )
+
+    return evidence
 
 
 def _valid_cas_in_text(text: str) -> list[str]:
@@ -450,6 +527,17 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
             evidence.extend(
                 _extract_from_lines(page.text or "", document.file_name, page.page)
             )
+
+        # Some FT files declare the active ingredient in a direct sentence
+        # rather than a field/table. This path is deliberately narrow and only
+        # accepts explicit declarative phrasing.
+        evidence.extend(
+            _extract_narrative_active_identity(
+                page.text or "",
+                document.file_name,
+                page.page,
+            )
+        )
 
     # Deduplicate repeated product headers/blocks while preserving the strongest
     # concentration/CAS and the first page where identity was explicitly shown.
