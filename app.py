@@ -241,8 +241,8 @@ def scope_html(g):
 def consolidated_hits(hits):
     grouped={}
     for h in hits:
-        key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file,h.channel)
-        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'channel':h.channel,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'source_list':h.entry.source_list,'source_version':h.entry.source_version,'contexts':[],'hit_items':[]})
+        key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file)
+        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'source_list':h.entry.source_list,'source_version':h.entry.source_version,'contexts':[],'hit_items':[]})
         if h.page:g['pages'].add(h.page)
         g['classes'].add(h.context_class)
         if h.context and h.context not in g['contexts']:g['contexts'].append(h.context)
@@ -334,6 +334,8 @@ with st.expander('Cómo interpretar los criterios de las listas'):
 **Criterios SGA 1A/1B:** se refieren a peligros como carcinogenicidad, mutagenicidad o toxicidad para la reproducción. Si la fila local solo marca el criterio, la aplicación no atribuye una subcategoría concreta.
 
 **Convenios internacionales:** Montreal aborda sustancias que agotan la capa de ozono; Rotterdam aplica el consentimiento fundamentado previo al comercio internacional de ciertos químicos y plaguicidas; Estocolmo controla contaminantes orgánicos persistentes. La inclusión en una lista no significa que los tres convenios impongan la misma medida.
+
+**Efectos graves (Rainforest Alliance):** alta incidencia de efectos adversos graves o irreversibles en la salud humana o el ambiente.
 
 **Rainforest Alliance:** sus listas de prohibidos y de mitigación son referencias complementarias. La aplicación solo refleja una equivalencia con RSPO o ISCC cuando la regla correspondiente está codificada; una señal de mitigación o un criterio distinto no se convierte automáticamente en una prohibición de esos estándares.''')
 
