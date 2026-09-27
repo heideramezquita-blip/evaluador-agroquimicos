@@ -4,6 +4,7 @@ from pathlib import Path
 import streamlit as st
 from src.engine import analyze
 from src.criteria_presentation import interpret_criteria
+from src.evidence_presentation import consolidate_evidence_hits
 from src.normative_sources import reference_blocks_markdown
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,standard_scope
 
@@ -237,17 +238,6 @@ def scope_html(g):
     iscc='criterio explícito aplicable' if scope['iscc'] else 'sin equivalencia automática'
     return '<b>Lectura por estándar:</b> RSPO: '+escape(rspo)+' · ISCC: '+escape(iscc)+' · RA: prohibido'
 
-def consolidated_hits(hits):
-    grouped={}
-    for h in hits:
-        key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file)
-        g=grouped.setdefault(key,{'ingredient':h.entry.ingredient,'cas':h.entry.cas or 'Varios','file':h.source_file,'pages':set(),'classes':set(),'usage':h.entry.usage,'criteria':h.entry.criteria,'source_list':h.entry.source_list,'source_version':h.entry.source_version,'contexts':[],'hit_items':[]})
-        if h.page:g['pages'].add(h.page)
-        g['classes'].add(h.context_class)
-        if h.context and h.context not in g['contexts']:g['contexts'].append(h.context)
-        g['hit_items'].append(h)
-    return list(grouped.values())
-
 def criterion_summary_html(g):
     signals=interpret_criteria(g.get('criteria',''),g['source_list'])
     if not signals:
@@ -276,7 +266,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
 
     if ev.hits:
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
-        for g in consolidated_hits(ev.hits):
+        for g in consolidate_evidence_hits(ev.hits):
             pages=evidence_pages(g); classes=' · '.join(context_label(x) for x in sorted(g['classes']))
             usage=usage_label(g['usage'])
             usage_html=f'<br><b>Uso principal:</b> {escape(usage)}' if usage else ''

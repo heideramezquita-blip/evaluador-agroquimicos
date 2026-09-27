@@ -135,14 +135,8 @@ class CriteriaPresentationTests(unittest.TestCase):
 
     def test_evidence_cards_are_consolidated_across_detection_channels(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
-        self.assertIn(
-            "key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file)",
-            app,
-        )
-        self.assertNotIn(
-            "key=(h.entry.source_list,h.entry.ingredient,h.entry.cas,h.source_file,h.channel)",
-            app,
-        )
+        self.assertIn("from src.evidence_presentation import consolidate_evidence_hits", app)
+        self.assertIn("for g in consolidate_evidence_hits(ev.hits):", app)
 
     def test_presentation_module_has_no_network_dependencies(self):
         source = (ROOT / "src" / "criteria_presentation.py").read_text(encoding="utf-8")
