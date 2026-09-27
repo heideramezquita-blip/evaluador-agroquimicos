@@ -4,7 +4,7 @@ from pathlib import Path
 
 from .cas_extractor import extract_document_cas, merge_cas_records
 from .cas_utils import parse_manual_cas
-from .context_classifier import ACTIVE, COMPOSITION, classify_context, has_identity_marker
+from .context_classifier import ACTIVE, COMPOSITION, classify_context, has_active_marker
 from .models import CasOccurrence, CasRecord
 from .pdf_reader import read_pdf
 from .prohibited_database import ProhibitedDatabase
@@ -28,14 +28,19 @@ def _identity_basis(documents, records) -> list[str]:
     if contextual_document_cas:
         basis.append("CAS válido en contexto de ingrediente activo/composición")
 
-    explicit_identity_section = any(
-        has_identity_marker(page.text or "")
+    # A bare composition heading is not enough to support a clean no-match:
+    # several real SDS files in the benchmark expose "3. COMPOSICIÓN" while
+    # the actual component table is image-based or missing from extracted
+    # text. Require either a contextual validated CAS (above) or an explicit
+    # active-ingredient label.
+    explicit_active_section = any(
+        has_active_marker(page.text or "")
         for document in documents
         if document.processable
         for page in document.pages
     )
-    if explicit_identity_section:
-        basis.append("referencia explícita a ingrediente activo/composición")
+    if explicit_active_section:
+        basis.append("referencia explícita a ingrediente activo")
 
     manual_cas = any(
         occurrence.source == "manual"
