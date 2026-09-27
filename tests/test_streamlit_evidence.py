@@ -45,6 +45,14 @@ class StreamlitEvidenceTests(unittest.TestCase):
             item.value for item in app.markdown
             if '<div class="match-title">Deltametrina</div>' in item.value
         ]
+        identity_tables = [
+            item.value for item in app.markdown
+            if "Ingrediente activo" in item.value and "Deltametrina" in item.value
+        ]
+        self.assertTrue(identity_tables)
+        self.assertTrue(
+            any("52918-63-5" in value for value in identity_tables)
+        )
         self.assertEqual(len(cards), 1)
         self.assertEqual(
             [item.label for item in app.expander if item.label.startswith("Ver evidencia documental")],
