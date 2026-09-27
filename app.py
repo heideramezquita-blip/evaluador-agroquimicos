@@ -1,5 +1,6 @@
 from __future__ import annotations
 from html import escape
+import re
 from pathlib import Path
 import streamlit as st
 from src.engine import analyze
@@ -248,6 +249,81 @@ def consolidated_hits(hits):
         g['hit_items'].append(h)
     return list(grouped.values())
 
+CONVENTION_EXPLANATIONS={
+    'M':('Protocolo de Montreal','Controla y elimina gradualmente sustancias que agotan la capa de ozono.'),
+    'R':('Convenio de Rotterdam','Establece un procedimiento de consentimiento fundamentado previo para ciertos químicos y plaguicidas en el comercio internacional; no equivale por sí solo a una prohibición general.'),
+    'E':('Convenio de Estocolmo','Busca proteger la salud y el ambiente frente a contaminantes orgánicos persistentes; las medidas dependen del anexo aplicable.'),
+}
+
+MITIGATION_LABELS={
+    'EPP':'Protección personal de nivel superior (EPP)',
+    'Riesgo acuático':'Riesgo para organismos acuáticos',
+    'Vida silvestre':'Riesgo para la vida silvestre',
+    'Polinizadores':'Riesgo para polinizadores',
+    'Espectador':'Riesgo de exposición para personas presentes en las inmediaciones',
+}
+
+def criterion_items(criteria):
+    return [item.strip() for item in (criteria or '').split(';') if item.strip()]
+
+def convention_codes(value):
+    normalized=value.upper().replace('Y',' ').replace(',',' ').replace('/',' ')
+    return [code for code in ('M','R','E') if re.search(r'\b'+code+r'\b',normalized)]
+
+def criterion_explanation(item):
+    if ':' not in item:
+        return None
+    label,value=[part.strip() for part in item.split(':',1)]
+    key=label.casefold()
+    if 'toxicidad aguda' in key:
+        match=re.search(r'1[AB]',value.upper())
+        if not match:
+            return ('Toxicidad aguda (OMS)', 'La lista señala una categoría de toxicidad aguda de la OMS.')
+        level=match.group(0)
+        meaning={'1A':'extremadamente peligroso','1B':'altamente peligroso'}.get(level,'')
+        return (f'Toxicidad aguda (OMS) · {level}',f'La clasificación OMS describe el peligro para la salud por exposiciones agudas; {level} significa “{meaning}”. No es una categoría del SGA.')
+    if 'carcinogenicidad' in key or 'mutagenicidad' in key or 'toxicidad reproductiva' in key:
+        dimension={'carcinogenicidad':'carcinogenicidad','mutagenicidad':'mutagenicidad','toxicidad reproductiva':'toxicidad para la reproducción'}.get(key,label.lower())
+        return (label, f'La lista identifica {dimension} como criterio SGA de categoría 1A o 1B. El registro local no especifica cuál de las dos subcategorías.')
+    if 'efectos graves' in key:
+        return (label, 'Rainforest Alliance usa esta señal para efectos adversos graves o irreversibles en la salud o el ambiente. La marca no identifica por sí sola cuál es el efecto concreto.')
+    if 'convenciones internacionales' in key:
+        codes=convention_codes(value)
+        if codes:
+            names=[CONVENTION_EXPLANATIONS[code][0] for code in codes]
+            details=' '.join(CONVENTION_EXPLANATIONS[code][1] for code in codes)
+            return ('Referencia a '+', '.join(names),details)
+        return (label, 'La fila identifica una convención internacional como criterio de referencia.')
+    return None
+
+def render_list_interpretation(g):
+    items=criterion_items(g.get('criteria',''))
+    if g['source_list']=='MITIGATE_RISK':
+        labels=[MITIGATION_LABELS.get(item,item) for item in items]
+        if labels:
+            st.markdown('**La lista señala**')
+            st.markdown(' · '.join(escape(label) for label in labels))
+            st.markdown('**En sencillo**')
+            st.write('Rainforest Alliance incluye esta sustancia en su lista sujeta a mitigación de riesgos. Si se utiliza, deben aplicarse las medidas indicadas por el estándar. Esta referencia, por sí sola, no equivale a una prohibición de RSPO o ISCC.')
+        elif g.get('criteria'):
+            st.markdown('**Criterio registrado**')
+            st.write(g['criteria'])
+    elif g['source_list']=='PROHIBITED':
+        explanations=[criterion_explanation(item) for item in items]
+        explanations=[item for item in explanations if item]
+        if explanations:
+            st.markdown('**Qué señala la lista y cómo leerlo**')
+            for title,description in explanations:
+                st.markdown(f'**{escape(title)}**  \n{escape(description)}')
+        if len(explanations)<len(items):
+            unknown=[item for item in items if not criterion_explanation(item)]
+            if unknown:
+                st.markdown('**Criterio registrado en la fuente**')
+                st.write(' · '.join(unknown))
+    elif g.get('criteria'):
+        st.markdown('**Criterio / riesgo registrado**')
+        st.write(g['criteria'])
+
 if st.button('Evaluar documentos',type='primary',use_container_width=True):
     items=[(f.name,f.getvalue()) for f in (files or [])]
     if not items and not manual.strip():
@@ -272,10 +348,11 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             usage_html=f'<br><b>Uso principal:</b> {escape(usage)}' if usage else ''
             st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div></div>',unsafe_allow_html=True)
             with st.expander(f'Ver evidencia documental — {g["ingredient"]}'):
-                if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
+                render_list_interpretation(g)
                 st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
                 st.write('**Tipo de evidencia:**',classes)
                 st.write('**Página(s) más relevante(s):**',pages)
+                st.caption('La clasificación describe el criterio registrado en la lista de referencia; no confirma por sí sola la concentración ni la función de la sustancia en el producto.')
                 st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
 
     if result['manual_invalid']:st.warning('CAS manuales descartados por formato/checksum: '+', '.join(result['manual_invalid']))
@@ -310,13 +387,13 @@ with st.expander('Fuentes normativas y alcance de la evaluación'):
 
 La aplicación no consulta estos estándares en tiempo real. Una coincidencia de Rainforest Alliance solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita codificada; en los demás casos se muestra para revisión, sin inferir equivalencia normativa.''')
 
-with st.expander('Cómo interpretar abreviaturas y criterios'):
-    st.markdown('''**Toxicidad aguda:** 1A = extremadamente peligroso y 1B = altamente peligroso según la clasificación OMS usada por el anexo.
+with st.expander('Cómo interpretar los criterios de las listas'):
+    st.markdown('''**OMS 1A/1B:** clasificación de peligrosidad aguda para la salud. 1A significa extremadamente peligroso y 1B altamente peligroso. Es un sistema distinto del SGA.
 
-**Convenciones internacionales:** M = Protocolo de Montreal · R = Convenio de Rotterdam · E = Convenio de Estocolmo.
+**Criterios SGA 1A/1B:** se refieren a peligros como carcinogenicidad, mutagenicidad o toxicidad para la reproducción. Si la fila local solo marca el criterio, la aplicación no atribuye una subcategoría concreta.
 
-**Efectos graves:** Rainforest Alliance utiliza esta marca dentro de su lista de plaguicidas prohibidos. RSPO contempla los daños graves o irreversibles dentro del concepto de plaguicidas muy peligrosos, pero una marca de Rainforest Alliance por sí sola no se trata aquí como prueba automática de prohibición RSPO. En ISCC EU 202-2, el requisito de prohibición verificado se basa en OMS 1a/1b, Estocolmo y Rotterdam; por ello, esta marca tampoco se traslada automáticamente a ISCC.
+**Convenios internacionales:** Montreal aborda sustancias que agotan la capa de ozono; Rotterdam aplica el consentimiento fundamentado previo al comercio internacional de ciertos químicos y plaguicidas; Estocolmo controla contaminantes orgánicos persistentes. La inclusión en una lista no significa que los tres convenios impongan la misma medida.
 
-**Mitigación de riesgos:** una marca ✓ identifica el tipo de medida/riesgo aplicable en Rainforest Alliance (EPP de nivel superior, riesgo acuático, vida silvestre, polinizadores o espectador). Se muestra como referencia complementaria y no como prohibición automática RSPO/ISCC.''')
+**Rainforest Alliance:** sus listas de prohibidos y de mitigación son referencias complementarias. La aplicación solo refleja una equivalencia con RSPO o ISCC cuando la regla correspondiente está codificada; una señal de mitigación o un criterio distinto no se convierte automáticamente en una prohibición de esos estándares.''')
 
 st.markdown('<div class="helper" style="margin-top:3rem">La herramienta prioriza el tamizaje frente a RSPO e ISCC y conserva Rainforest Alliance como referencia complementaria. No sustituye la verificación de excepciones, restricciones nacionales ni condiciones específicas del estándar.</div>',unsafe_allow_html=True)
