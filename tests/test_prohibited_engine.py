@@ -29,6 +29,29 @@ class ProhibitedEngineTests(unittest.TestCase):
   self.assertIn(('PROHIBITED','Fipronil'),visible)
   self.assertIn(('MITIGATE_RISK','Bifentrina'),visible)
 
+ def test_single_component_atrazine_sds_is_decisive_ra_prohibited(self):
+  text=(
+   'SECCIÓN 1. Identificación de la sustancia o la mezcla y de la sociedad o la empresa\n'
+   '1.1. Identificador del producto\n'
+   'Nombre comercial\nAtrazine\nNúmero CAS\n1912-24-9\n'
+   'SECCIÓN 3. Composición/información sobre los componentes\n'
+   '3.2. Mezclas\n'
+   'Nombre químico Nº CAS Concentración Clasificación\n'
+   'atrazina (ISO) 1912-24-9 100% Skin Sens. 1, Aquatic Acute 1\n'
+   'SECCIÓN 14. Información relativa al transporte\n'
+   'IATA\n9\nPeligro para el medio ambiente\n'
+  )
+  r=run_text(text)
+  self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
+  self.assertEqual(len(r['active_ingredients']),1)
+  self.assertEqual(r['active_ingredients'][0].cas,'1912-24-9')
+  self.assertTrue(any(
+   h.entry.ingredient=='Atrazina'
+   and h.channel=='ACTIVE_IDENTITY'
+   and h.context_class=='ACTIVE'
+   for h in r['display_hits']
+  ))
+
  def test_specific_prohibited_cas_uncertain_is_orange_review(self):
   r=run_text('Ficha de seguridad de sustancia química. Identificador CAS 153719-23-4. Información general del producto y propiedades.')
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
