@@ -129,6 +129,48 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
             [("Bifentrina", "360 g/L"), ("Fipronil", "120 g/L")],
         )
 
+    def test_ninkha_split_nombre_quimico_is_not_promoted_to_active_identity(self):
+        page = PdfPage(
+            page=2,
+            text=(
+                "COMPOSICIÓN GARANTIZADA:\n"
+                "Ingrediente activo:\n"
+                "Flubendiamide 480 g/L\n"
+                "Nombre\n"
+                "químico:\n"
+                "3-iodo-N'-(2-mesyl-1,1-dimethylethyl)-N-{4-[...]}phthalamide"
+            ),
+            blocks=[
+                PdfTextBlock(72, 590, 256, 603, "COMPOSICIÓN GARANTIZADA:\n"),
+                PdfTextBlock(72, 619, 166, 631, "Ingrediente activo:\n"),
+                PdfTextBlock(72, 645, 185, 657, "Flubendiamide 480 g/L\n"),
+                PdfTextBlock(
+                    72,
+                    672,
+                    540,
+                    699,
+                    "Nombre\nquímico:\n"
+                    "3-iodo-N'-(2-mesyl-1,1-dimethylethyl)-N-{4-[...]}phthalamide\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="FT Ninkha.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Flubendiamide", "480 g/L")],
+        )
+
     def test_narrative_mention_of_ingredients_activos_does_not_open_identity_block(self):
         text = (
             "Generalidades:\n"
