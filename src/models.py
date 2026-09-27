@@ -3,9 +3,19 @@ from dataclasses import dataclass, field, asdict
 from typing import Any
 
 @dataclass
+class PdfTextBlock:
+    x0: float
+    y0: float
+    x1: float
+    y1: float
+    text: str
+
+
+@dataclass
 class PdfPage:
     page: int
     text: str
+    blocks: list[PdfTextBlock] = field(default_factory=list)
 
 @dataclass
 class PdfDocument:
