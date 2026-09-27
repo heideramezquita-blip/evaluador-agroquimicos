@@ -193,6 +193,132 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
         self.assertEqual(items[0].cas, "1912-24-9")
         self.assertEqual(items[0].page, 3)
 
+    def test_nombre_iupac_ia_field_exposes_cane_identity_and_cas(self):
+        text = (
+            "1. IDENTIFICACIÓN DEL PRODUCTO Y DE LA EMPRESA\n"
+            "Nombre del producto: CANE 500 SC\n"
+            "Nombre IUPAC (I.A): Ametrina, N2-etil-N4-isopropil-6-metiltio-1,3,5-triazina-2,4-diamina\n"
+            "No CAS: 834-12-8\n"
+            "Fórmula molecular: C9H17N5S\n"
+        )
+        items = extract_active_ingredients(document(text, "HS Cane.pdf"))
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "Ametrina")
+        self.assertEqual(items[0].cas, "834-12-8")
+
+    def test_nombre_iupac_ia_field_exposes_ruklen_identity_and_cas(self):
+        text = (
+            "1. IDENTIFICACIÓN DEL PRODUCTO Y DE LA EMPRESA\n"
+            "Nombre del producto: RUKLEN 200 SC\n"
+            "Nombre IUPAC (I.A):\n"
+            "Chlorantraniliprole, 3-bromo-4'-chloro-1-(3-chloro-2-pyridyl)-\n"
+            "2'-methyl-6'-(methylcarbamoyl)pyrazole-5-carboxanilide\n"
+            "No CAS:\n500008-45-7\n"
+        )
+        items = extract_active_ingredients(document(text, "HS Ruklen.pdf"))
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "Chlorantraniliprole")
+        self.assertEqual(items[0].cas, "500008-45-7")
+
+    def test_flumyzin_active_table_joins_name_cas_and_percent_cells(self):
+        page = PdfPage(
+            page=2,
+            text=(
+                "3. COMPOSICIÓN/INFORMACIÓN DE LOS COMPONENTES\n"
+                "3.1 Sustancia\n"
+                "INGREDIENTE ACTIVO - NOMBRE IDENTIFICADOR DEL PRODUCTO PORCENTAJE\n"
+                "Flumioxazin (2-[7-fluoro-3,4-dihydro-3-oxo-4-(2-propynyl)-"
+                "2H-1,4-benzoxazin-6-yl]-4,5,6,7-tetrahydro-1H-isoindole-1,3(2H)-dione) "
+                "*(103361-09-7).\n"
+                "103361-09-7 (CAS)\n"
+                "51%p\n"
+            ),
+            blocks=[
+                PdfTextBlock(
+                    98.1, 271.4, 510.9, 283.3,
+                    "INGREDIENTE ACTIVO - NOMBRE IDENTIFICADOR DEL PRODUCTO PORCENTAJE\n",
+                ),
+                PdfTextBlock(468.7, 289.8, 490.5, 301.3, "51%p\n"),
+                PdfTextBlock(308.4, 293.8, 381.1, 317.3, "103361-09-7 (CAS)\n600-425-7 (EC)\n"),
+                PdfTextBlock(
+                    73.1, 291.8, 181.2, 375.3,
+                    "Flumioxazin (2-[7-fluoro-3,4-dihydro-3-oxo-4-\n"
+                    "(2-propynyl)-2H-1,4-benzoxazin-6-yl]-4,5,6,7-\n"
+                    "tetrahydro-1H-isoindole-1,3(2H)-dione) *\n"
+                    "(103361-09-7).\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="HS Flumyzin.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+        items = extract_active_ingredients(doc)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "Flumioxazin")
+        self.assertEqual(items[0].concentration, "51%p")
+        self.assertEqual(items[0].cas, "103361-09-7")
+
+    def test_other_identification_accepts_only_short_chemical_salt_identity(self):
+        text = (
+            "1. IDENTIFICACIÓN DEL PRODUCTO Y DE LA COMPAÑÍA\n"
+            "1.1 Identificador SGA del producto: Panzer 747 WG\n"
+            "1.2 Otros medios de identificación: sal amonio de glifosato.\n"
+            "1.3 Uso recomendado del producto químico y restricciones: herbicida no selectivo\n"
+        )
+        items = extract_active_ingredients(document(text, "HS Panzer.pdf"))
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "sal amonio de glifosato")
+        self.assertEqual(items[0].cas, "")
+
+    def test_other_identification_does_not_promote_generic_synonym_prose(self):
+        text = (
+            "1. IDENTIFICACIÓN DEL PRODUCTO\n"
+            "1.2 Otros medios de identificación: mezcla comercial para investigación y desarrollo.\n"
+        )
+        self.assertEqual(extract_active_ingredients(document(text)), [])
+
+    def test_carbofuran_single_component_table_can_have_cas_before_name_row(self):
+        p1 = PdfPage(
+            page=1,
+            text=(
+                "Section 1. Identification of the Substance/Mixture and of the Company/Undertaking\n"
+                "Product Name: Carbofuran\n"
+            ),
+        )
+        p2 = PdfPage(
+            page=2,
+            text=(
+                "Section 3. Composition/Information on Ingredients\n"
+                "CAS # / RTECS #\n"
+                "Hazardous Components (Chemical Name)/ REACH Registration No.\n"
+                "Concentration\n"
+                "1563-66-2\n"
+                "FB9450000\n"
+                "Carbofuran 100.0 %\n"
+                "216-353-0\n"
+            ),
+        )
+        doc = PdfDocument(
+            file_name="HS Cabofuran 2.pdf",
+            pages=[p1, p2],
+            page_count=2,
+            character_count=len(p1.text) + len(p2.text),
+            pages_with_text=2,
+            processable=True,
+            warnings=[],
+        )
+        items = extract_active_ingredients(doc)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "Carbofuran")
+        self.assertEqual(items[0].concentration, "100.0 %")
+        self.assertEqual(items[0].cas, "1563-66-2")
+
     def test_poliniza_two_panel_table_prefers_concentration_bearing_identity_row(self):
         page = PdfPage(
             page=1,
