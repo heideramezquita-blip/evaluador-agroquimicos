@@ -1,9 +1,9 @@
 from __future__ import annotations
 from html import escape
-import re
 from pathlib import Path
 import streamlit as st
 from src.engine import analyze
+from src.criteria_presentation import interpret_criteria
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,standard_scope
 
 BASE_DIR=Path(__file__).resolve().parent
@@ -249,80 +249,21 @@ def consolidated_hits(hits):
         g['hit_items'].append(h)
     return list(grouped.values())
 
-CONVENTION_EXPLANATIONS={
-    'M':('Protocolo de Montreal','Controla y elimina gradualmente sustancias que agotan la capa de ozono.'),
-    'R':('Convenio de Rotterdam','Establece un procedimiento de consentimiento fundamentado previo para ciertos químicos y plaguicidas en el comercio internacional; no equivale por sí solo a una prohibición general.'),
-    'E':('Convenio de Estocolmo','Busca proteger la salud y el ambiente frente a contaminantes orgánicos persistentes; las medidas dependen del anexo aplicable.'),
-}
-
-MITIGATION_LABELS={
-    'EPP':'Protección personal de nivel superior (EPP)',
-    'Riesgo acuático':'Riesgo para organismos acuáticos',
-    'Vida silvestre':'Riesgo para la vida silvestre',
-    'Polinizadores':'Riesgo para polinizadores',
-    'Espectador':'Riesgo de exposición para personas presentes en las inmediaciones',
-}
-
-def criterion_items(criteria):
-    return [item.strip() for item in (criteria or '').split(';') if item.strip()]
-
-def convention_codes(value):
-    normalized=value.upper().replace('Y',' ').replace(',',' ').replace('/',' ')
-    return [code for code in ('M','R','E') if re.search(r'\b'+code+r'\b',normalized)]
-
-def criterion_explanation(item):
-    if ':' not in item:
-        return None
-    label,value=[part.strip() for part in item.split(':',1)]
-    key=label.casefold()
-    if 'toxicidad aguda' in key:
-        match=re.search(r'1[AB]',value.upper())
-        if not match:
-            return ('Toxicidad aguda (OMS)', 'La lista señala una categoría de toxicidad aguda de la OMS.')
-        level=match.group(0)
-        meaning={'1A':'extremadamente peligroso','1B':'altamente peligroso'}.get(level,'')
-        return (f'Toxicidad aguda (OMS) · {level}',f'La clasificación OMS describe el peligro para la salud por exposiciones agudas; {level} significa “{meaning}”. No es una categoría del SGA.')
-    if 'carcinogenicidad' in key or 'mutagenicidad' in key or 'toxicidad reproductiva' in key:
-        dimension={'carcinogenicidad':'carcinogenicidad','mutagenicidad':'mutagenicidad','toxicidad reproductiva':'toxicidad para la reproducción'}.get(key,label.lower())
-        return (label, f'La lista identifica {dimension} como criterio SGA de categoría 1A o 1B. El registro local no especifica cuál de las dos subcategorías.')
-    if 'efectos graves' in key:
-        return (label, 'Rainforest Alliance usa esta señal para efectos adversos graves o irreversibles en la salud o el ambiente. La marca no identifica por sí sola cuál es el efecto concreto.')
-    if 'convenciones internacionales' in key:
-        codes=convention_codes(value)
-        if codes:
-            names=[CONVENTION_EXPLANATIONS[code][0] for code in codes]
-            details=' '.join(CONVENTION_EXPLANATIONS[code][1] for code in codes)
-            return ('Referencia a '+', '.join(names),details)
-        return (label, 'La fila identifica una convención internacional como criterio de referencia.')
-    return None
-
 def render_list_interpretation(g):
-    items=criterion_items(g.get('criteria',''))
+    signals=interpret_criteria(g.get('criteria',''),g['source_list'])
+    if not signals:
+        return
     if g['source_list']=='MITIGATE_RISK':
-        labels=[MITIGATION_LABELS.get(item,item) for item in items]
-        if labels:
-            st.markdown('**La lista señala**')
-            st.markdown(' · '.join(escape(label) for label in labels))
-            st.markdown('**En sencillo**')
-            st.write('Rainforest Alliance incluye esta sustancia en su lista sujeta a mitigación de riesgos. Si se utiliza, deben aplicarse las medidas indicadas por el estándar. Esta referencia, por sí sola, no equivale a una prohibición de RSPO o ISCC.')
-        elif g.get('criteria'):
-            st.markdown('**Criterio registrado**')
-            st.write(g['criteria'])
-    elif g['source_list']=='PROHIBITED':
-        explanations=[criterion_explanation(item) for item in items]
-        explanations=[item for item in explanations if item]
-        if explanations:
-            st.markdown('**Qué señala la lista y cómo leerlo**')
-            for title,description in explanations:
-                st.markdown(f'**{escape(title)}**  \n{escape(description)}')
-        if len(explanations)<len(items):
-            unknown=[item for item in items if not criterion_explanation(item)]
-            if unknown:
-                st.markdown('**Criterio registrado en la fuente**')
-                st.write(' · '.join(unknown))
-    elif g.get('criteria'):
-        st.markdown('**Criterio / riesgo registrado**')
-        st.write(g['criteria'])
+        st.markdown('**La lista señala**')
+        st.markdown(' · '.join(escape(signal.label) for signal in signals))
+        st.markdown('**En sencillo**')
+        st.write('Rainforest Alliance incluye esta sustancia en su lista sujeta a mitigación de riesgos. Si se utiliza, deben aplicarse las medidas indicadas por el estándar. Esta referencia, por sí sola, no equivale a una prohibición de RSPO o ISCC.')
+        return
+
+    st.markdown('**Criterio identificado**')
+    for signal in signals:
+        st.markdown(f'**{escape(signal.label)}**')
+        st.write(signal.explanation)
 
 if st.button('Evaluar documentos',type='primary',use_container_width=True):
     items=[(f.name,f.getvalue()) for f in (files or [])]
