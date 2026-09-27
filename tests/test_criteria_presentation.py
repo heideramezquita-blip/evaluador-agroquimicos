@@ -87,6 +87,26 @@ class CriteriaPresentationTests(unittest.TestCase):
         self.assertIn("c2.metric('OBSOLETOS',result['obsolete_count'])", app)
         self.assertIn("c3.metric('MITIGACIÓN',result['mitigation_count'])", app)
 
+    def test_actual_master_displays_acute_who_context(self):
+        import csv
+        with (ROOT / "data" / "master_restrictions.csv").open(encoding="utf-8", newline="") as source:
+            row = next(item for item in csv.DictReader(source) if item["ingredient"] == "Abamectina")
+        item = interpret_criteria(row["criteria"], row["source_list"])[0]
+        self.assertEqual(item.label, "Toxicidad aguda · OMS Ib")
+
+    def test_actual_master_cmr_marker_does_not_claim_exact_subcategory(self):
+        import csv
+        with (ROOT / "data" / "master_restrictions.csv").open(encoding="utf-8", newline="") as source:
+            row = next(item for item in csv.DictReader(source) if item["ingredient"] == "Clorpirifos")
+        item = interpret_criteria(row["criteria"], row["source_list"])[0]
+        self.assertEqual(item.label, "Toxicidad reproductiva · GHS 1A/1B")
+        self.assertNotIn("GHS 1B", item.label)
+
+    def test_app_uses_presentation_layer_for_evidence(self):
+        app = (ROOT / "app.py").read_text(encoding="utf-8")
+        self.assertIn("from src.criteria_presentation import interpret_criteria", app)
+        self.assertIn("signals=interpret_criteria(g.get('criteria',''),g['source_list'])", app)
+
     def test_presentation_module_has_no_network_dependencies(self):
         source = (ROOT / "src" / "criteria_presentation.py").read_text(encoding="utf-8")
         tree = ast.parse(source)
