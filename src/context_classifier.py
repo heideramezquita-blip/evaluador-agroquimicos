@@ -61,6 +61,13 @@ _INCIDENTAL_MARKERS = (
     "condensacion con",
     "condensacion del",
     "obtenidos mediante la condensacion",
+    # Printed/saved web pages can contain product catalogs and navigation
+    # surrounding the actual technical card. Names in those menus are not
+    # ingredients of the product being evaluated.
+    "nosotros productos contactanos",
+    "inicio nosotros productos contactanos",
+    "buscar producto",
+    "categorias",
 )
 
 
