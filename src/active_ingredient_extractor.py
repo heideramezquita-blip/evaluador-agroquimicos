@@ -25,7 +25,7 @@ _IA_LABEL = re.compile(r"(?i)\bi\s*\.?\s*a\s*\.?\s*:?\s*(.*)$")
 
 _CONCENTRATION = re.compile(
     r"(?i)(\d+(?:[.,]\d+)?\s*"
-    r"(?:%|g\s*/\s*(?:l|litro|kg)|mg\s*/\s*(?:l|kg)|"
+    r"(?:%|g\s*/\s*(?:litros?|kg|l)|mg\s*/\s*(?:litros?|kg|l)|"
     r"kg\s*/\s*(?:l|ha)|g\s+l-?1|g\s+kg-?1))"
 )
 
