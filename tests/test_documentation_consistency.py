@@ -106,7 +106,7 @@ class DocumentationConsistencyTests(unittest.TestCase):
         self.assertIn("no se consultan en tiempo real", README)
 
     def test_pubchem_is_documented_as_non_decision_reference(self):
-        self.assertIn("PubChem", APP)
+        self.assertIn("pubchem.ncbi.nlm.nih.gov", APP)
         self.assertIn("PubChem", README)
         self.assertIn("no participa en la evaluación", README)
 
