@@ -273,23 +273,21 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div></div>',unsafe_allow_html=True)
             with st.expander(f'Ver evidencia documental — {g["ingredient"]}'):
                 if g['criteria']:st.write('**Criterio / riesgo:**',g['criteria'])
-                st.write('**Fuente:**',f'{g["source_list"]} · versión {g["source_version"]}')
-                for i,context in enumerate(g['contexts'][:5],1):
-                    st.caption(f'Ocurrencia {i}')
-                    # Convert valid CAS visible inside evidence context into reference links.
-                    import re
-                    parts=[]; last=0
-                    for m in re.finditer(r'(?<!\\d)(\\d{2,7}-\\d{2}-\\d)(?!\\d)',context):
-                        parts.append(escape(context[last:m.start()]))
-                        parts.append(cas_html(m.group(1)))
-                        last=m.end()
-                    parts.append(escape(context[last:]))
-                    st.markdown(''.join(parts),unsafe_allow_html=True)
+                st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
+                st.write('**Tipo de evidencia:**',classes)
+                st.write('**Página(s) más relevante(s):**',pages)
+                st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
 
     if result['manual_invalid']:st.warning('CAS manuales descartados por formato/checksum: '+', '.join(result['manual_invalid']))
     for w in ev.warnings:st.info(w)
 
     with st.expander('Detalles técnicos y trazabilidad'):
+        st.markdown('#### Base de referencia evaluada')
+        c1,c2,c3,c4=st.columns(4)
+        c1.metric('PROHIBIDOS',result['prohibited_specific_count']+result['prohibited_group_count'])
+        c2.metric('OBSOLETOS',result['obsolete_count'])
+        c3.metric('MITIGACIÓN',result['mitigation_count'])
+        c4.metric('CAS válidos detectados',len(ev.cas_records))
         st.caption('Información de auditoría del análisis. No modifica el resultado mostrado arriba.')
         if result['documents']:
             st.markdown('#### Documentos')
