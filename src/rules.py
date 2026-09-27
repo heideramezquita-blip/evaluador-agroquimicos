@@ -78,6 +78,21 @@ def _strong_hits_by_source(hits) -> dict[str, list]:
     return strong_by_source
 
 
+def relevant_supporting_hits(hits) -> list:
+    """Return all strong documentary matches across local reference lists.
+
+    The final status keeps its severity/priority rules, but the evidence panel
+    should not hide a lower-priority strong match (for example, a mitigation
+    ingredient) merely because another ingredient in the same product triggers
+    a prohibited-list status.
+    """
+    strong_by_source = _strong_hits_by_source(hits)
+    relevant = []
+    for source in (SOURCE_PROHIBITED, SOURCE_OBSOLETE, SOURCE_MITIGATION):
+        relevant.extend(strong_by_source.get(source, []))
+    return relevant
+
+
 def standard_scope(entry):
     """Map an RA prohibited entry to criteria explicitly shared by RSPO/ISCC.
 
