@@ -41,6 +41,16 @@ class StreamlitEvidenceTests(unittest.TestCase):
             next(button for button in app.button if button.label == "Evaluar documentos").click().run()
 
         self.assertEqual(len(app.exception), 0)
+        rendered = [item.value for item in app.markdown]
+        evidence_index = next(
+            i for i, value in enumerate(rendered)
+            if "Evidencia relevante" in value
+        )
+        identity_index = next(
+            i for i, value in enumerate(rendered)
+            if "Identidad documental detectada" in value
+        )
+        self.assertLess(evidence_index, identity_index)
         cards = [
             item.value for item in app.markdown
             if '<div class="match-title">Deltametrina</div>' in item.value
