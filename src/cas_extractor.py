@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from .cas_utils import CAS_PATTERN, canonicalize_groups, is_valid_cas
+from .context_classifier import has_active_marker
 from .models import CasOccurrence, CasRecord, PdfDocument
-from .text_utils import normalize_text
 
 
 def _recompact(value: str) -> str:
@@ -14,15 +14,7 @@ def _local_context(text: str, start: int, end: int, radius: int = 350) -> str:
 
 
 def _role(context: str) -> str:
-    normalized = normalize_text(context)
-    return (
-        "active_explicit"
-        if any(
-            marker in normalized
-            for marker in ("ingrediente activo", "ingredientes activos", "active ingredient")
-        )
-        else "unknown"
-    )
+    return "active_explicit" if has_active_marker(context) else "unknown"
 
 
 def extract_document_cas(document: PdfDocument):
