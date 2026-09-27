@@ -25,11 +25,12 @@ La aplicación no incorpora OCR. Si un PDF está escaneado o no contiene texto e
 ## Cómo funciona
 
 1. Extrae el texto disponible de uno o varios PDF, priorizando el orden visual/espacial del contenido para reducir desorden en tablas y bloques maquetados.
-2. Detecta números CAS y valida su checksum; evita interpretar como CAS fragmentos de identificadores químicos más largos, como determinados números INDEX.
-3. Cruza CAS, nombres normalizados y determinadas reglas de grupo contra las tres bases locales.
-4. Clasifica el contexto de cada coincidencia para distinguir, entre otros casos, ingrediente activo, composición, menciones incidentales, negadas, de descomposición/combustión o de referencia toxicológica. La clasificación admite variantes frecuentes de encabezados de FT/FDS y pondera la proximidad entre el nombre/CAS encontrado y el encabezado que le da contexto.
-5. Aplica las reglas de decisión y las correspondencias explícitas implementadas para RSPO, ISCC y RA.
-6. Consolida la evidencia encontrada para evitar tarjetas duplicadas cuando una misma sustancia se detecta por más de un mecanismo.
+2. Extrae los **ingredientes activos identificados explícitamente por el documento**, aun cuando no tengan CAS o no coincidan con ninguna lista normativa; cuando la concentración o un CAS están suficientemente asociados a esa evidencia, también los conserva.
+3. Detecta números CAS y valida su checksum; evita interpretar como CAS fragmentos de identificadores químicos más largos, como determinados números INDEX.
+4. Cruza CAS, nombres normalizados y determinadas reglas de grupo contra las tres bases locales.
+5. Clasifica el contexto de cada coincidencia para distinguir, entre otros casos, ingrediente activo, composición, menciones incidentales, negadas, de descomposición/combustión o de referencia toxicológica. La clasificación admite variantes frecuentes de encabezados de FT/FDS y pondera la proximidad entre el nombre/CAS encontrado y el encabezado que le da contexto.
+6. Aplica las reglas de decisión y las correspondencias explícitas implementadas para RSPO, ISCC y RA.
+7. Consolida la evidencia encontrada para evitar tarjetas duplicadas cuando una misma sustancia se detecta por más de un mecanismo.
 
 La evaluación es **determinística** y utiliza bases incluidas en el proyecto. No consulta servicios externos para decidir el resultado.
 
@@ -42,6 +43,7 @@ La estructura se mantiene deliberadamente pequeña y separa responsabilidades si
 
 - `app.py`: interfaz Streamlit y renderizado.
 - `src/pdf_reader.py`: extracción de texto en orden visual/espacial y diagnóstico de documentos sin contenido principal extraíble, incluidos archivos que solo exponen encabezados o pies repetidos.
+- `src/active_ingredient_extractor.py`: extracción de ingredientes activos explícitamente identificados por la FT/FDS, independiente de que exista una coincidencia normativa.
 - `src/cas_utils.py` y `src/cas_extractor.py`: normalización, validación y extracción de CAS.
 - `src/context_classifier.py`: clasificación contextual por proximidad y normalización de variantes frecuentes de encabezados de ingrediente activo y composición.
 - `src/prohibited_database.py`: carga de las tres bases locales y metadatos de búsqueda.
@@ -156,7 +158,9 @@ Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingredie
 
 ## Evidencia y trazabilidad
 
-Cuando existe una coincidencia relevante, la aplicación muestra la sustancia, lista, CAS, uso cuando está disponible, tipo de evidencia, documento, páginas más relevantes, criterio identificado y lectura por estándar.
+Antes del cruce normativo, la sección **Identidad documental detectada** muestra los ingredientes activos que la FT/FDS identifica explícitamente, incluso cuando no existe CAS asociado o cuando el ingrediente no aparece en las bases locales. La concentración se muestra cuando puede extraerse de forma suficientemente vinculada a esa evidencia. Esta sección no implica por sí sola una restricción normativa.
+
+Cuando existe una coincidencia relevante, la aplicación muestra además la sustancia, lista, CAS, uso cuando está disponible, tipo de evidencia, documento, páginas más relevantes, criterio identificado y lectura por estándar.
 
 La sección **Detalles técnicos y trazabilidad** conserva información de auditoría, entre ella:
 
