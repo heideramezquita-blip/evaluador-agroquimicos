@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-DASHES = "-‐‑‒–—−"
+DASHES = "-‐‑‒–—−\u00ad"
 _DASH_CLASS = re.escape(DASHES)
 
 # Do not match the CAS-shaped suffix of longer hyphenated identifiers such as
