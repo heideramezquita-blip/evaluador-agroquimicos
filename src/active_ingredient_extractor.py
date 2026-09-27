@@ -26,7 +26,7 @@ _ACTIVE_LABEL_PATTERNS = (
 
 _CONCENTRATION = re.compile(
     r"(?i)(\d+(?:[.,]\d+)?\s*"
-    r"(?:%(?:\s*(?:w/w|w/v|v/v|p/p|p/v))?|"
+    r"(?:%(?:\s*(?:p(?:/p|/v)?|w/w|w/v|v/v|p/p|p/v))?|"
     r"g\s*/\s*(?:litros?|kg|l)|mg\s*/\s*(?:litros?|kg|l)|"
     r"kg\s*/\s*(?:l|ha)|g\s+l-?1|g\s+kg-?1))"
 )
@@ -86,6 +86,21 @@ _NAME_VALUE_PREFIXES = (
 )
 
 
+_IUPAC_IA_FIELD = re.compile(
+    r"(?i)^\s*nombre\s+iupac\s*\(\s*i\s*\.?\s*a\s*\.?\s*\)\s*:?\s*(.*)$"
+)
+
+_OTHER_IDENTIFIER_FIELD = re.compile(
+    r"(?i)^\s*(?:\d+(?:\.\d+)?\s*)?otros\s+medios\s+de\s+"
+    r"identificaci[oó]n\s*:\s*(.+)$"
+)
+
+_CHEMICAL_SALT_IDENTIFIER = re.compile(
+    r"(?i)^\s*sal\s+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ-]{2,30}\s+de\s+"
+    r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9][A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .,'’()/-]{1,80}\.?\s*$"
+)
+
+
 _NARRATIVE_ACTIVE_PATTERNS = (
     re.compile(
         r"(?i)\btiene\s+como\s+ingrediente\s+activo\s+"
@@ -136,7 +151,15 @@ def _active_label_tail(line: str) -> str | None:
     for pattern in _ACTIVE_LABEL_PATTERNS:
         match = pattern.match(cleaned)
         if match:
-            return match.group(1).strip(" :-/|")
+            tail = match.group(1).strip(" :-/|")
+            tail_key = match_key(tail)
+            if (
+                "identificador del producto" in tail_key
+                or tail_key.startswith("nombre identificador")
+                or tail_key.startswith("nombre cas")
+            ):
+                return ""
+            return tail
     return None
 
 
@@ -274,6 +297,99 @@ def _looks_like_name(line: str) -> bool:
     return True
 
 
+def _compact_common_name(value: str) -> str:
+    """Recover the short common name from a long chemical-name cell.
+
+    Some SDS tables place a common pesticide name followed by a long systematic
+    name in parentheses. When the full cell is too long to be a safe identity,
+    the short prefix is still useful if it is syntactically name-like.
+    """
+    cleaned = _clean_visible_text(value)
+    for separator in ("(", ","):
+        if separator in cleaned:
+            prefix = cleaned.split(separator, 1)[0].strip(" :-/|;,.")
+            if 1 <= len(match_key(prefix).split()) <= 6 and _looks_like_name(prefix):
+                return prefix
+    return ""
+
+
+def _extract_iupac_ia_identity(
+    text: str,
+    source_file: str,
+    page_number: int,
+) -> list[ActiveIngredientEvidence]:
+    """Extract identity from fields explicitly labelled Nombre IUPAC (I.A)."""
+    lines = _semantic_lines(text)
+    evidence: list[ActiveIngredientEvidence] = []
+
+    for index, line in enumerate(lines):
+        match = _IUPAC_IA_FIELD.match(line)
+        if not match:
+            continue
+
+        value = match.group(1).strip()
+        cursor = index + 1
+        if not value and cursor < len(lines):
+            value = lines[cursor]
+            cursor += 1
+
+        # These documents put the pesticide common name before the systematic
+        # IUPAC description, separated by a comma.
+        common_name = value.split(",", 1)[0].strip(" :-/|;,.")
+        if not _looks_like_name(common_name):
+            continue
+
+        window = " | ".join(lines[index : min(len(lines), index + 8)])
+        cas_values = _valid_cas_in_text(window)
+        cas = cas_values[0] if len(cas_values) == 1 else ""
+
+        evidence.append(
+            ActiveIngredientEvidence(
+                name=_clean_visible_text(common_name),
+                source_file=source_file,
+                page=page_number,
+                concentration="",
+                cas=cas,
+                context=window,
+            )
+        )
+
+    return evidence
+
+
+def _extract_other_identifier_identity(
+    text: str,
+    source_file: str,
+    page_number: int,
+) -> list[ActiveIngredientEvidence]:
+    """Use only narrowly chemical alternative identifiers as product identity.
+
+    "Otros medios de identificación" is broad in SDS documents, so it is not
+    generally promoted to active-ingredient evidence. A short salt-of-substance
+    phrase (e.g. "sal amonio de glifosato") is sufficiently chemical and
+    product-specific to expose documentary identity without relying on OCR.
+    """
+    evidence: list[ActiveIngredientEvidence] = []
+    for line in _semantic_lines(text):
+        match = _OTHER_IDENTIFIER_FIELD.match(line)
+        if not match:
+            continue
+        value = match.group(1).strip(" :-/|;,.")
+        if not _CHEMICAL_SALT_IDENTIFIER.fullmatch(value):
+            continue
+        evidence.append(
+            ActiveIngredientEvidence(
+                name=_clean_visible_text(value),
+                source_file=source_file,
+                page=page_number,
+                concentration="",
+                cas="",
+                context=line,
+            )
+        )
+    return evidence
+
+
 def _extract_narrative_active_identity(
     text: str,
     source_file: str,
@@ -390,7 +506,10 @@ def _candidate_tuples(
                     parsed_part = prefix
 
             if not _looks_like_name(parsed_part):
-                continue
+                compact = _compact_common_name(_strip_concentration(parsed_part))
+                if not compact:
+                    continue
+                parsed_part = compact
 
             name = _strip_concentration(parsed_part)
             same_line_cas = _valid_cas_in_text(part)
@@ -534,6 +653,21 @@ def _block_window(
 
         block_candidates = _candidate_tuples(lines)
         if not block_candidates:
+            label_key = match_key(label.text)
+            table_identity_header = has_active_marker(label.text) and any(
+                cue in label_key
+                for cue in (
+                    "porcentaje",
+                    "identificador del producto",
+                    "concentracion",
+                    "cas",
+                )
+            )
+            if table_identity_header:
+                concentration, cas = _metadata_values(lines)
+                if concentration or cas:
+                    metadata_parts.append(_clean_visible_text(candidate.text))
+                    max_bottom = max(max_bottom, candidate.y1 + 70)
             continue
 
         # A concentration may be extracted as its own visual row/cell. If so,
@@ -695,69 +829,65 @@ def _extract_single_component_sds_identity(
 ) -> list[ActiveIngredientEvidence]:
     """Recognize a pure/single-component SDS as product chemical identity.
 
-    Safety data sheets for a substance may not use the phrase "ingrediente
-    activo". A strong documentary pattern is:
-      - product identifier / CAS in section 1; and
-      - section 3 composition row with the same valid CAS at 100%.
-
-    This is materially stronger than a generic name mention and is safe to use
-    as chemical identity without promoting toxicology, transport or ecological
-    references.
+    A 100% composition row is decisive chemical identity even when the SDS does
+    not literally say "ingrediente activo". The CAS may be on the same line or
+    in an adjacent table cell/line; if section 1 also exposes a CAS, both must
+    agree.
     """
     if not document.pages:
         return []
 
-    identifier_text = " ".join(
-        (page.text or "") for page in document.pages[:2]
-    )
+    identifier_text = " ".join((page.text or "") for page in document.pages[:2])
     identifier_key = match_key(identifier_text)
-    has_identifier_section = (
+    if not (
         "identificador del producto" in identifier_key
         or "product identifier" in identifier_key
+        or "product name" in identifier_key
         or "nombre comercial" in identifier_key
-    )
-    if not has_identifier_section:
+    ):
         return []
 
     identifier_cas = set(_valid_cas_in_text(identifier_text))
-    if not identifier_cas:
-        return []
-
-    row_pattern = re.compile(
-        r"(?i)^\s*(?P<name>[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][^\n]{1,100}?)"
-        r"\s+(?P<cas>\d{2,7}-\d{2}-\d)\s+100\s*%(?:\s|$)"
-    )
+    hundred = re.compile(r"(?i)(?:^|\s)100(?:[.,]0+)?\s*%(?:\s|$)")
 
     for page in document.pages:
         text = page.text or ""
         if not has_composition_marker(text):
             continue
 
-        for raw_line in text.splitlines():
-            line = _clean_visible_text(raw_line)
-            match = row_pattern.match(line)
-            if not match:
+        lines = _semantic_lines(text)
+        for index, line in enumerate(lines):
+            concentration_match = hundred.search(line)
+            if not concentration_match:
                 continue
 
-            cas_match = CAS_PATTERN.search(match.group("cas"))
-            if not cas_match:
-                continue
-            cas = canonicalize_groups(*cas_match.groups())
-            if not is_valid_cas(cas) or cas not in identifier_cas:
-                continue
-
-            name = _clean_visible_text(match.group("name")).strip(" :-/|;,.")
+            raw_name = line[: concentration_match.start()].strip()
+            name = _strip_concentration(raw_name)
             if not _looks_like_name(name):
+                compact = _compact_common_name(name)
+                if compact:
+                    name = compact
+            if not _looks_like_name(name):
+                continue
+
+            window = " | ".join(
+                lines[max(0, index - 8) : min(len(lines), index + 4)]
+            )
+            cas_values = _valid_cas_in_text(window)
+            if len(cas_values) != 1:
+                continue
+            cas = cas_values[0]
+            if identifier_cas and cas not in identifier_cas:
                 continue
 
             return [
                 ActiveIngredientEvidence(
-                    name=name,
+                    name=_clean_visible_text(name),
                     source_file=document.file_name,
                     page=page.page,
-                    concentration="100%",
+                    concentration=concentration_match.group(0).strip(),
                     cas=cas,
-                    context=line,
+                    context=window,
                 )
             ]
 
@@ -832,6 +962,21 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
                 page_evidence = row_fallback
 
         evidence.extend(page_evidence)
+
+        evidence.extend(
+            _extract_iupac_ia_identity(
+                page.text or "",
+                document.file_name,
+                page.page,
+            )
+        )
+        evidence.extend(
+            _extract_other_identifier_identity(
+                page.text or "",
+                document.file_name,
+                page.page,
+            )
+        )
 
         # Some FT files declare the active ingredient in a direct sentence
         # rather than a field/table. This path is deliberately narrow and only
