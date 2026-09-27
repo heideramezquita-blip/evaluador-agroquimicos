@@ -4,6 +4,7 @@ from pathlib import Path
 import streamlit as st
 from src.engine import analyze
 from src.criteria_presentation import interpret_criteria
+from src.normative_sources import reference_blocks_markdown
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,standard_scope
 
 BASE_DIR=Path(__file__).resolve().parent
@@ -311,12 +312,26 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             st.markdown('#### Candidatos CAS descartados por checksum');st.markdown(table_html(result['invalid_candidates']),unsafe_allow_html=True)
 
 with st.expander('Fuentes normativas y alcance de la evaluación'):
-    st.markdown('''**RSPO — marco principal:** [Principios y Criterios RSPO 2024, versión 4.2](https://rspo.org/wp-content/uploads/SPA-2024-RSPO-Principles-and-Criteria-%E2%80%93-Version-4.2-spanish.pdf), indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS 1A/1B; carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
+    st.markdown(reference_blocks_markdown())
+    st.markdown('''**RSPO — marco principal:** [Principios y Criterios RSPO 2024, versión 4.2](https://rspo.org/wp-content/uploads/SPA-2024-RSPO-Principles-and-Criteria-%E2%80%93-Version-4.2-spanish.pdf), indicador 7.1.2 (C). La aplicación mapea como criterios explícitos: OMS Ia/Ib (también expresado como 1A/1B en el documento); carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A/1B; Convenios de Estocolmo o Rotterdam; y Paraquat. Las restricciones nacionales requieren verificación aparte.
 
-**ISCC — marco principal:** [ISCC EU 202-2 v1.1](https://iscc-system.org/wp-content/uploads/dlm_uploads/2026/03/ISCC-EU-202-2-Agricultural-Biomass-ISCC-Principles-2-6.pdf) (válido desde el 1 de diciembre de 2022), requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS 1a/1b, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
+**ISCC — marco principal:** [ISCC EU 202-2 v1.1](https://iscc-system.org/wp-content/uploads/dlm_uploads/2026/03/ISCC-EU-202-2-Agricultural-Biomass-ISCC-Principles-2-6.pdf) (válido desde el 1 de diciembre de 2022), requisito 2.4.1. La aplicación mapea los criterios explícitos verificados: OMS Ia/Ib, Convenio de Estocolmo y Anexo III del Convenio de Rotterdam. No amplía automáticamente ISCC a otros criterios.
 
 **Rainforest Alliance — referencia complementaria y base local de detección:** [Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA)](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
 
-La aplicación no consulta estos estándares en tiempo real. Una coincidencia de Rainforest Alliance solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita codificada; en los demás casos se muestra para revisión, sin inferir equivalencia normativa.''')
+Los enlaces de la OMS y los convenios son referencias informativas; la aplicación no consulta sus listados en tiempo real ni importa sustancias desde ellos. Solo aplica a RSPO o ISCC las correspondencias explícitas codificadas para los criterios que ya constan en la base local.''')
+
+with st.expander('Cómo interpretar los criterios de las listas'):
+    st.markdown('''**OMS Ia/Ib:** peligrosidad aguda para la salud humana; es un sistema distinto del SGA.
+
+**SGA 1A/1B:** la clase de peligro determina el significado; aquí se muestran las clases CMR cuando están documentadas.
+
+**Protocolo de Montreal:** trata sustancias que agotan la capa de ozono.
+
+**Rotterdam:** el procedimiento PIC aplica a determinadas sustancias del Anexo III y no significa una prohibición universal.
+
+**Estocolmo:** las obligaciones sobre contaminantes orgánicos persistentes dependen del anexo aplicable.
+
+**Rainforest Alliance:** sus listas son una referencia complementaria; su inclusión no equivale automáticamente a una prohibición de RSPO o ISCC.''')
 
 st.markdown('<div class="helper" style="margin-top:3rem">La herramienta prioriza el tamizaje frente a RSPO e ISCC y conserva Rainforest Alliance como referencia complementaria. No sustituye la verificación de excepciones, restricciones nacionales ni condiciones específicas del estándar.</div>',unsafe_allow_html=True)

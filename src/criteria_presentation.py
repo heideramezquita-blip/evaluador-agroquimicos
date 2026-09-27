@@ -70,15 +70,15 @@ _SGA_CMR_MEANINGS = {
 
 _CONVENTIONS = {
     "M": (
-        "Protocolo de Montreal · sustancias que agotan la capa de ozono",
+        "Capa de ozono · Protocolo de Montreal",
         "Acuerdo internacional para controlar y eliminar gradualmente sustancias que agotan la capa de ozono.",
     ),
     "R": (
-        "Convenio de Rotterdam · consentimiento fundamentado previo",
+        "Consentimiento fundamentado previo · Convenio de Rotterdam",
         "Somete ciertos químicos y plaguicidas al procedimiento de consentimiento fundamentado previo en el comercio internacional; la referencia no significa por sí sola una prohibición general.",
     ),
     "E": (
-        "Convenio de Estocolmo · contaminantes orgánicos persistentes",
+        "Contaminante orgánico persistente · Convenio de Estocolmo",
         "Busca proteger la salud y el ambiente frente a contaminantes orgánicos persistentes; las medidas dependen del anexo aplicable.",
     ),
 }

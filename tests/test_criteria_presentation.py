@@ -72,8 +72,14 @@ class CriteriaPresentationTests(unittest.TestCase):
         items = interpret_criteria("Convenciones internacionales: R, E")
         self.assertEqual(
             [item.label for item in items],
-            ["Convenio de Rotterdam · consentimiento fundamentado previo", "Convenio de Estocolmo · contaminantes orgánicos persistentes"],
+            ["Consentimiento fundamentado previo · Convenio de Rotterdam", "Contaminante orgánico persistente · Convenio de Estocolmo"],
         )
+
+    def test_montreal_is_labeled_as_ozone_layer_criterion(self):
+        items = interpret_criteria("Convenciones internacionales: M")
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].label, "Capa de ozono · Protocolo de Montreal")
+        self.assertIn("agotan la capa de ozono", items[0].explanation)
 
     def test_mitigation_markers_are_human_readable(self):
         items = interpret_criteria("EPP; Riesgo acuático; Polinizadores", "MITIGATE_RISK")
@@ -122,7 +128,9 @@ class CriteriaPresentationTests(unittest.TestCase):
     def test_severe_effects_interpretation_is_shown_with_each_evidence_card(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
         self.assertIn("criterion_summary_html(g)", app)
-        self.assertNotIn("Cómo interpretar los criterios de las listas", app)
+        self.assertIn("with st.expander('Cómo interpretar los criterios de las listas')", app)
+        glossary = app.split("with st.expander('Cómo interpretar los criterios de las listas'):", 1)[1]
+        self.assertNotIn("Efectos graves", glossary)
         self.assertIn("alta incidencia", (ROOT / "src" / "criteria_presentation.py").read_text(encoding="utf-8"))
 
     def test_evidence_cards_are_consolidated_across_detection_channels(self):

@@ -21,7 +21,7 @@ La evaluación es local y determinística. No consulta servicios externos para d
 Fuente oficial: [RSPO Principles and Criteria 2024 v4.2 — español](https://rspo.org/wp-content/uploads/SPA-2024-RSPO-Principles-and-Criteria-%E2%80%93-Version-4.2-spanish.pdf)
 
 Mapeo basado en RSPO P&C 2024 v4.2, indicador 7.1.2 (C):
-- OMS 1A / 1B.
+- OMS Ia / Ib (también expresado como 1A / 1B en el documento).
 - Carcinogenicidad, mutagenicidad o toxicidad reproductiva SGA 1A / 1B.
 - Convenios de Estocolmo o Rotterdam.
 - Paraquat.
@@ -32,11 +32,30 @@ Las restricciones o prohibiciones nacionales deben verificarse aparte.
 Fuente oficial: [ISCC EU 202-2 Agricultural Biomass: ISCC Principles 2-6](https://iscc-system.org/wp-content/uploads/dlm_uploads/2026/03/ISCC-EU-202-2-Agricultural-Biomass-ISCC-Principles-2-6.pdf)
 
 Mapeo basado en **ISCC EU 202-2 v1.1** (válido desde el 1 de diciembre de 2022), requisito 2.4.1:
-- OMS 1a / 1b.
+- OMS Ia / Ib.
 - Convenio de Estocolmo.
 - Anexo III del Convenio de Rotterdam.
 
 La aplicación no traslada automáticamente a ISCC otros criterios de Rainforest Alliance.
+
+## OMS y convenios internacionales
+
+### OMS — clasificación de plaguicidas por peligrosidad
+
+La publicación [*The WHO Recommended Classification of Pesticides by Hazard and guidelines to classification, 2019 edition*](https://www.who.int/publications/i/item/9789240005662) fue publicada en 2020 y reemplaza la edición 2009. La [ficha oficial en español](https://www.who.int/es/publications/i/item/9789240005662) registra correcciones posteriores en 2020 y 2021, sin señalar una edición sustitutiva posterior; consulta también el [PDF oficial](https://iris.who.int/server/api/core/bitstreams/36c193cd-2362-46d1-be00-fef570d80037/content). Clasifica la peligrosidad aguda para la salud humana en **Ia, Ib, II, III y U**.
+
+La clasificación OMS es distinta del **SGA**: usa categorías OMS para la peligrosidad aguda de plaguicidas, mientras que las categorías SGA se interpretan dentro de cada clase de peligro. La OMS Ia/Ib no constituye por sí sola una prohibición legal ni una autorización regulatoria del producto.
+
+
+### Convenio de Rotterdam
+
+El [listado oficial del Anexo III](https://www.pic.int/theconvention/chemicals/annexiiichemicals) identifica sustancias sujetas al procedimiento de consentimiento fundamentado previo (PIC) en el comercio internacional. La [descripción oficial del procedimiento PIC](https://www.pic.int/en-us/procedures/picprocedure.aspx) explica el mecanismo; una referencia al Anexo III no debe leerse como una prohibición universal.
+
+### Convenio de Estocolmo
+
+El [listado oficial de contaminantes orgánicos persistentes (POP)](https://chm.pops.int/TheConvention/Thepops/Listingofpops/tabid/2509/Default.aspx) reúne sustancias incluidas en los anexos A, B y C. Las obligaciones dependen del anexo; están disponibles los listados oficiales de [Anexo A](https://chm.pops.int/Implementation/Alternatives/AlternativestoPOPs/ChemicalslistedinAnnexA/tabid/5837/Default.aspx) y [Anexo B](https://chm.pops.int/Implementation/Alternatives/AlternativestoPOPs/ChemicalslistedinAnnexB/tabid/5850/Default.aspx).
+
+Estos enlaces son referencias documentales. La aplicación **no consulta las páginas en tiempo real, no importa automáticamente esas listas y no crea prohibiciones a partir de ellas**. Solo presenta una correspondencia de RSPO o ISCC cuando el criterio consta en la base local y esa equivalencia está expresamente implementada; las referencias no determinan por sí solas una prohibición legal nacional.
 
 ### Rainforest Alliance
 Fuente oficial: [Anexo al capítulo Agricultura v1.4](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14)
