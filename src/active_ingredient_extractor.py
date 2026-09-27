@@ -535,6 +535,13 @@ def _block_window(
         if not block_candidates:
             continue
 
+        # A concentration may be extracted as its own visual row/cell. If so,
+        # attach it to the nearest preceding candidate inside the same block.
+        block_concentration = _extract_concentration(" | ".join(lines))
+        if block_concentration and not any(item[1] for item in block_candidates):
+            name, _, cas = block_candidates[-1]
+            block_candidates[-1] = (name, block_concentration, cas)
+
         aligned_texts.append(candidate.text)
         if any(item[1] for item in block_candidates):
             # In two-column/table PDFs, non-identity text may be interleaved
