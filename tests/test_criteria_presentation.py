@@ -130,7 +130,8 @@ class CriteriaPresentationTests(unittest.TestCase):
         self.assertIn("criterion_summary_html(g)", app)
         self.assertIn("with st.expander('Cómo interpretar los criterios de las listas')", app)
         glossary = app.split("with st.expander('Cómo interpretar los criterios de las listas'):", 1)[1]
-        self.assertNotIn("Efectos graves", glossary)
+        self.assertIn("**Efectos graves:**", glossary)
+        self.assertEqual(glossary.count("**Efectos graves:**"), 1)
         self.assertIn("alta incidencia", (ROOT / "src" / "criteria_presentation.py").read_text(encoding="utf-8"))
 
     def test_evidence_cards_are_consolidated_across_detection_channels(self):

@@ -41,7 +41,18 @@ class NormativeSourcesTests(unittest.TestCase):
         self.assertIn("SGA 1A/1B:", app)
         self.assertIn("procedimiento de consentimiento fundamentado previo", reference_blocks_markdown())
         glossary = app.split("with st.expander('Cómo interpretar los criterios de las listas'):", 1)[1]
-        self.assertNotIn("Efectos graves", glossary)
+        for required in (
+            "Ia significa extremadamente peligroso e Ib, altamente peligroso",
+            "CMR: carcinogenicidad, mutagenicidad y toxicidad reproductiva",
+            "consentimiento fundamentado previo (PIC) en el comercio internacional",
+            "eliminación (anexo A)",
+            "restricción (anexo B)",
+            "reducción de liberaciones no intencionales (anexo C)",
+            "Efectos graves:",
+            "en esta aplicación, sus listas son una referencia complementaria",
+        ):
+            with self.subTest(text=required):
+                self.assertIn(required, glossary)
 
     def test_readme_contains_each_official_link_once_and_explains_no_live_import(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

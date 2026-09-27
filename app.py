@@ -312,16 +312,18 @@ with st.expander('Fuentes normativas y alcance de la evaluación'):
 Los enlaces de la OMS y los convenios son referencias informativas; la aplicación no consulta sus listados en tiempo real ni importa sustancias desde ellos. Solo aplica a RSPO o ISCC las correspondencias explícitas codificadas para los criterios que ya constan en la base local.''')
 
 with st.expander('Cómo interpretar los criterios de las listas'):
-    st.markdown('''**OMS Ia/Ib:** peligrosidad aguda para la salud humana; es un sistema distinto del SGA.
+    st.markdown('''**OMS Ia/Ib:** peligrosidad aguda para la salud humana: Ia significa extremadamente peligroso e Ib, altamente peligroso. Es un sistema distinto del SGA.
 
-**SGA 1A/1B:** la clase de peligro determina el significado; aquí se muestran las clases CMR cuando están documentadas.
+**SGA 1A/1B:** la categoría debe leerse junto con la clase de peligro. Aquí se muestran, cuando están documentadas, las clases CMR: carcinogenicidad, mutagenicidad y toxicidad reproductiva.
 
 **Protocolo de Montreal:** trata sustancias que agotan la capa de ozono.
 
-**Rotterdam:** el procedimiento PIC aplica a determinadas sustancias del Anexo III y no significa una prohibición universal.
+**Rotterdam:** somete determinadas sustancias del Anexo III al procedimiento de consentimiento fundamentado previo (PIC) en el comercio internacional; no significa una prohibición universal.
 
-**Estocolmo:** las obligaciones sobre contaminantes orgánicos persistentes dependen del anexo aplicable.
+**Estocolmo:** regula contaminantes orgánicos persistentes mediante eliminación (anexo A), restricción (anexo B) o reducción de liberaciones no intencionales (anexo C), según las condiciones y excepciones aplicables.
 
-**Rainforest Alliance:** sus listas son una referencia complementaria; su inclusión no equivale automáticamente a una prohibición de RSPO o ISCC.''')
+**Efectos graves:** criterio de Rainforest Alliance por alta incidencia de efectos adversos graves o irreversibles sobre la salud humana o el ambiente.
+
+**Rainforest Alliance:** en esta aplicación, sus listas son una referencia complementaria; su inclusión no equivale automáticamente a una prohibición de RSPO o ISCC.''')
 
 st.markdown('<div class="helper" style="margin-top:3rem">La herramienta prioriza el tamizaje frente a RSPO e ISCC y conserva Rainforest Alliance como referencia complementaria. No sustituye la verificación de excepciones, restricciones nacionales ni condiciones específicas del estándar.</div>',unsafe_allow_html=True)
