@@ -274,5 +274,20 @@ def interpret_criteria(criteria: str | None, source_list: str = "PROHIBITED") ->
             if mapped:
                 results.append(mapped)
                 continue
+
+        if "convenciones internacionales" in _fold(item):
+            _, _, value = item.partition(":")
+            codes = re.findall(r"(?<![A-Z])([MRE])(?![A-Z])", value.upper())
+            if codes:
+                results.extend(
+                    CriterionExplanation(
+                        f"Referencia a {_CONVENTIONS[code][0]}",
+                        _CONVENTIONS[code][1],
+                        "Convenio",
+                    )
+                    for code in dict.fromkeys(codes)
+                )
+                continue
+
         results.append(interpret_criterion(item, source_list))
     return results
