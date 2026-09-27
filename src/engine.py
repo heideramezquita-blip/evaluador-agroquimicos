@@ -10,7 +10,7 @@ from .models import CasOccurrence, CasRecord
 from .pdf_reader import read_pdf
 from .prohibited_database import ProhibitedDatabase
 from .prohibited_detector import detect_candidates
-from .rules import evaluate_prohibited
+from .rules import evaluate_prohibited, relevant_supporting_hits
 
 
 DEFAULT_MASTER_PATH = Path(__file__).resolve().parents[1] / "data" / "master_restrictions.csv"
@@ -124,6 +124,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         unprocessables,
         identity_basis=identity_basis,
     )
+    display_hits = relevant_supporting_hits(hits) or evaluation.hits
 
     return {
         "evaluation": evaluation,
@@ -132,6 +133,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         "manual_valid": manual_valid,
         "manual_invalid": manual_invalid,
         "all_hits": hits,
+        "display_hits": display_hits,
         "identity_basis": identity_basis,
         "active_ingredients": active_ingredients,
         "prohibited_specific_count": sum(bool(entry.cas) for entry in database.prohibited),
