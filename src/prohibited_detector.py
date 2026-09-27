@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .context_classifier import classify_context
-from .models import EvidenceHit, PdfDocument
+from .models import ActiveIngredientEvidence, EvidenceHit, PdfDocument
 from .text_utils import match_key, phrase_present
 
 
@@ -147,7 +147,60 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
     return hits
 
 
-def detect_candidates(documents, cas_records, db) -> list[EvidenceHit]:
+def _active_identity_hits(
+    active_ingredients: list[ActiveIngredientEvidence],
+    db,
+) -> list[EvidenceHit]:
+    """Match explicitly extracted active ingredients against specific list entries.
+
+    This path is deliberately stricter than free-text page matching: the name
+    must equal one of the normalized aliases of a specific entry. It converts
+    documentary identity already established by the dedicated extractor into
+    decisive list evidence without requiring a CAS to be present in the PDF.
+    """
+    hits: list[EvidenceHit] = []
+
+    for item in active_ingredients:
+        item_key = match_key(item.name)
+        if not item_key:
+            continue
+
+        for entry in db.specific:
+            matched_alias = next(
+                (
+                    alias
+                    for alias, alias_key in db.alias_pairs(entry)
+                    if alias_key == item_key
+                ),
+                None,
+            )
+            if not matched_alias:
+                continue
+
+            hits.append(
+                EvidenceHit(
+                    entry,
+                    "ACTIVE_IDENTITY",
+                    item.name,
+                    item.source_file,
+                    item.page,
+                    item.context or item.name,
+                    "ACTIVE",
+                    "exact_name",
+                    "Ingrediente activo identificado explícitamente por el documento "
+                    "y coincidente de forma exacta/normalizada con una lista de referencia.",
+                )
+            )
+
+    return hits
+
+
+def detect_candidates(
+    documents,
+    cas_records,
+    db,
+    active_ingredients: list[ActiveIngredientEvidence] | None = None,
+) -> list[EvidenceHit]:
     hits: list[EvidenceHit] = []
 
     for record in cas_records:
@@ -169,6 +222,8 @@ def detect_candidates(documents, cas_records, db) -> list[EvidenceHit]:
 
     for document in documents:
         hits.extend(_name_hits(document, db))
+
+    hits.extend(_active_identity_hits(active_ingredients or [], db))
 
     unique: list[EvidenceHit] = []
     seen = set()
