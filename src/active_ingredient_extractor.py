@@ -139,6 +139,31 @@ def _is_field_line(line: str) -> bool:
     return any(key.startswith(prefix) for prefix in _FIELD_PREFIXES)
 
 
+def _starts_structural_field(lines: list[str]) -> bool:
+    """Detect field labels split by PDF extraction across adjacent lines.
+
+    Example observed in NINKHA:
+        "Nombre"
+        "químico:"
+        "3-iodo-..."
+
+    Without recombining the first semantic lines, "Nombre" and "químico"
+    can be misread as separate active ingredients.
+    """
+    if not lines:
+        return False
+
+    prefixes = _FIELD_PREFIXES + _STOP_PREFIXES + _NAME_VALUE_PREFIXES
+    for size in range(1, min(3, len(lines)) + 1):
+        combined = match_key(" ".join(lines[:size]))
+        if any(
+            combined == prefix or combined.startswith(prefix + " ")
+            for prefix in prefixes
+        ):
+            return True
+    return False
+
+
 def _extract_concentration(line: str) -> str:
     match = _CONCENTRATION.search(line or "")
     return match.group(1).strip() if match else ""
@@ -301,7 +326,7 @@ def _block_window(blocks: list[PdfTextBlock], label_index: int) -> tuple[list[st
         if not lines:
             continue
 
-        if _is_stop(lines[0]):
+        if _is_stop(lines[0]) or _starts_structural_field(lines):
             aligned_texts.append(candidate.text)
             break
 
