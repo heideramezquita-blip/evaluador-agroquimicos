@@ -3,7 +3,8 @@ from pathlib import Path
 from unittest.mock import patch
 from src.engine import analyze
 from src.models import PdfDocument,PdfPage
-from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_MATCH_REVIEW
+from src.context_classifier import COMPOSITION, classify_context
+from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_MATCH_REVIEW,STATUS_NO_MATCH
 MASTER=Path(__file__).resolve().parents[1]/'data'/'master_restrictions.csv'
 
 def evaluate(text):
@@ -30,3 +31,28 @@ class SyntheticFixtures(unittest.TestCase):
  def test_split_cas(self):self.assertEqual(evaluate('Ingrediente activo Tiametoxam CAS 153719-\n23-4.')['evaluation'].status,STATUS_RA_PROHIBITED)
  def test_spaced_cas(self):self.assertEqual(evaluate('Ingrediente activo Tiametoxam CAS 153719 - 23 - 4.')['evaluation'].status,STATUS_RA_PROHIBITED)
  def test_unicode_dash_cas(self):self.assertEqual(evaluate('Ingrediente activo Tiametoxam CAS 153719–23–4.')['evaluation'].status,STATUS_RA_PROHIBITED)
+
+
+class CompositionHeadingRegressions(unittest.TestCase):
+ def test_composition_heading_tolerates_spacing_around_slash(self):
+  variants=(
+   '3. COMPOSICIÓN /INFORMACIÓN SOBRE LOS COMPONENTES\nNombre CAS TLV Composición\nFosetil Aluminio 39148-24-8 800 g/kg',
+   '3. COMPOSICIÓN/ INFORMACIÓN SOBRE LOS COMPONENTES\nNombre CAS TLV Composición\nFosetil Aluminio 39148-24-8 800 g/kg',
+   '3. COMPOSICIÓN / INFORMACIÓN SOBRE LOS COMPONENTES\nNombre CAS TLV Composición\nFosetil Aluminio 39148-24-8 800 g/kg',
+   '3. COMPOSICIÓN/INFORMACIÓN SOBRE LOS COMPONENTES\nNombre CAS TLV Composición\nFosetil Aluminio 39148-24-8 800 g/kg',
+  )
+  for text in variants:
+   with self.subTest(text=text.splitlines()[0]):
+    self.assertEqual(classify_context(text,'39148-24-8'),COMPOSITION)
+
+ def test_fosetyl_sds_composition_supports_clean_no_match(self):
+  text=('Ficha de Datos de Seguridad\n'
+        '3. COMPOSICIÓN /INFORMACIÓN SOBRE LOS COMPONENTES\n'
+        'Nombre CAS TLV Composición\n'
+        'Fosetil Aluminio 39148-24-8 800 g/kg\n'
+        'Dióxido de silicio 14808-60-7 25 g/kg\n'
+        'Información adicional de manejo y almacenamiento del producto.')
+  result=evaluate(text)
+  self.assertEqual(result['evaluation'].status,STATUS_NO_MATCH)
+  self.assertEqual({record.cas for record in result['evaluation'].cas_records},{'39148-24-8','14808-60-7'})
+  self.assertIn('CAS válido en contexto de ingrediente activo/composición',result['evaluation'].message)

@@ -4,30 +4,12 @@ from pathlib import Path
 
 from .cas_extractor import extract_document_cas, merge_cas_records
 from .cas_utils import parse_manual_cas
-from .context_classifier import ACTIVE, COMPOSITION, classify_context
+from .context_classifier import ACTIVE, COMPOSITION, classify_context, has_identity_marker
 from .models import CasOccurrence, CasRecord
 from .pdf_reader import read_pdf
 from .prohibited_database import ProhibitedDatabase
 from .prohibited_detector import detect_candidates
 from .rules import evaluate_prohibited
-from .text_utils import normalize_text
-
-
-IDENTITY_MARKERS = (
-    "ingrediente activo",
-    "ingredientes activos",
-    "principio activo",
-    "principios activos",
-    "active ingredient",
-    "active ingredients",
-    "composicion garantizada",
-    "composicion/informacion sobre los ingredientes",
-    "composicion informacion sobre los ingredientes",
-    "composicion/informacion sobre los componentes",
-    "composicion informacion sobre los componentes",
-)
-
-
 def _identity_basis(documents, records):
     """Describe whether there was enough chemical identity to support a clean no-match."""
     basis = []
@@ -42,7 +24,7 @@ def _identity_basis(documents, records):
         basis.append("CAS válido en contexto de ingrediente activo/composición")
 
     explicit_identity_section = any(
-        any(marker in normalize_text(page.text or "") for marker in IDENTITY_MARKERS)
+        has_identity_marker(page.text or "")
         for document in documents
         if document.processable
         for page in document.pages
