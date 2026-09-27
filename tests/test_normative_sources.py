@@ -49,6 +49,9 @@ class NormativeSourcesTests(unittest.TestCase):
             "restricción (anexo B)",
             "reducción de liberaciones no intencionales (anexo C)",
             "Efectos graves:",
+            "Mitigación de riesgos:",
+            "requiere medidas adicionales para reducir riesgos específicos",
+            "no significa por sí sola que el plaguicida esté prohibido",
             "en esta aplicación, sus listas son una referencia complementaria",
         ):
             with self.subTest(text=required):
