@@ -59,6 +59,18 @@ class ProhibitedEngineTests(unittest.TestCase):
   r=run_text('Documento técnico legible sobre almacenamiento, transporte y recomendaciones generales del producto. No presenta una sección de composición ni identificadores químicos utilizables.')
   self.assertEqual(r['evaluation'].status,STATUS_IDENTITY_REVIEW)
   self.assertIn('No es válido interpretar este resultado como ausencia de coincidencias',r['evaluation'].message)
+ def test_panzer_k_narrative_identity_supports_clean_no_match(self):
+  r=run_text(
+   'FICHA TÉCNICA\n'
+   'Panzer K SL es un herbicida que tiene como ingrediente activo '
+   'glifosato en forma de sal potasio en una concentración de 443 g/L '
+   'equivalente a 360 g/L del ácido.\n'
+   'Contenido de Glifosato (sal potasio): 420.85-465.15 g/L'
+  )
+  self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
+  self.assertEqual(len(r['active_ingredients']),1)
+  self.assertEqual(r['active_ingredients'][0].name.casefold(),'glifosato')
+
  def test_active_ingredient_section_without_list_match_is_clean_no_match(self):
   r=run_text('FICHA TÉCNICA DEL PRODUCTO\nIngrediente activo: Sustancia experimental XYZ 400 g/L.\nDescripción agronómica, dosis de aplicación y recomendaciones de uso para el cultivo.')
   self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
