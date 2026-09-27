@@ -3,6 +3,7 @@ import unittest
 import fitz
 
 from src.cas_extractor import _role
+from src.cas_utils import extract_cas_candidates
 from src.context_classifier import (
     ACTIVE,
     COMPOSITION,
@@ -83,6 +84,17 @@ class BenchmarkContextPatternsTests(unittest.TestCase):
             "3. COMPOSICIÓN | Nombre químico | Fipronil | 120068-37-3 | 12 %"
         )
         self.assertEqual(classify_context(context, "Fipronil"), COMPOSITION)
+
+
+
+class BenchmarkCasPatternsTests(unittest.TestCase):
+    def test_eu_index_suffix_is_not_misread_as_cas(self):
+        text = "Número INDEX: 613-088-00-6"
+        self.assertEqual(extract_cas_candidates(text), [])
+
+    def test_normal_cas_is_still_detected(self):
+        text = "CAS: 91465-08-6"
+        self.assertEqual(extract_cas_candidates(text), ["91465-08-6"])
 
 
 class BenchmarkAliasPatternsTests(unittest.TestCase):
