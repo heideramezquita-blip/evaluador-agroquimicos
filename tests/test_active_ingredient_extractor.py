@@ -129,6 +129,70 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
             [("Bifentrina", "360 g/L"), ("Fipronil", "120 g/L")],
         )
 
+    def test_iata_transport_label_is_not_treated_as_ia_active_label(self):
+        page = PdfPage(
+            page=11,
+            text=(
+                "14.3. Clase(s) de peligro para el transporte\n"
+                "IATA\n"
+                "9\n"
+                "Peligro para el medio ambiente\n"
+            ),
+            blocks=[
+                PdfTextBlock(78, 507, 100, 517, "IATA\n"),
+                PdfTextBlock(100, 584, 278, 594, "9\nPeligro para el medio ambiente\n"),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="HS Atrazine.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page.text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+        self.assertEqual(extract_active_ingredients(doc), [])
+
+    def test_single_component_sds_100_percent_confirms_product_identity(self):
+        p1 = PdfPage(
+            page=1,
+            text=(
+                "SECCIÓN 1. Identificación de la sustancia o la mezcla y de la sociedad o la empresa\n"
+                "1.1. Identificador del producto\n"
+                "Nombre comercial\n"
+                "Atrazine\n"
+                "Número CAS\n"
+                "1912-24-9\n"
+            ),
+        )
+        p3 = PdfPage(
+            page=3,
+            text=(
+                "SECCIÓN 3. Composición/información sobre los componentes\n"
+                "3.2. Mezclas\n"
+                "Nombre químico Nº CAS Concentración Clasificación\n"
+                "atrazina (ISO) 1912-24-9 100% Skin Sens. 1, Aquatic Acute 1\n"
+            ),
+        )
+        doc = PdfDocument(
+            file_name="HS Atrazine.pdf",
+            pages=[p1, p3],
+            page_count=2,
+            character_count=len(p1.text) + len(p3.text),
+            pages_with_text=2,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, "atrazina (ISO)")
+        self.assertEqual(items[0].concentration, "100%")
+        self.assertEqual(items[0].cas, "1912-24-9")
+        self.assertEqual(items[0].page, 3)
+
     def test_poliniza_two_panel_table_prefers_concentration_bearing_identity_row(self):
         page = PdfPage(
             page=1,
