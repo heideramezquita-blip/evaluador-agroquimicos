@@ -10,6 +10,7 @@ STATUS_OBSOLETE='ATENCIÓN — PLAGUICIDA OBSOLETO SEGÚN RA'
 STATUS_MITIGATION='ATENCIÓN — MITIGACIÓN DE RIESGOS SEGÚN RA'
 STATUS_MATCH_REVIEW='COINCIDENCIA NORMATIVA — REVISAR'
 STATUS_DOCUMENT_REVIEW='REVISIÓN DOCUMENTAL'
+STATUS_IDENTITY_REVIEW='REVISIÓN — IDENTIDAD QUÍMICA NO CONFIRMADA'
 STATUS_NO_MATCH='SIN COINCIDENCIAS DETECTADAS'
 NON_SUPPORTING={INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE}
 
@@ -95,8 +96,9 @@ def standard_scope(entry):
         "iscc_basis": iscc_basis,
     }
 
-def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):
+def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0,identity_basis=None):
     warnings=list(warnings or [])
+    identity_basis=list(identity_basis or [])
     by_entry={}
     for h in hits:by_entry.setdefault((h.entry.source_list,h.entry.ingredient,h.entry.cas),[]).append(h)
 
@@ -162,4 +164,15 @@ def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):
 
     if unprocessables:
         return Evaluation(STATUS_DOCUMENT_REVIEW,f'{unprocessables} documento(s) no tienen texto extraíble suficiente. No se demostró una coincidencia, pero tampoco es válido concluir su ausencia.',[],cas_records,warnings)
-    return Evaluation(STATUS_NO_MATCH,'No se identificaron coincidencias en las listas locales de referencia ni, por esta vía, con los criterios RSPO/ISCC mapeados. Resultado basado en la información disponible en los documentos analizados.',[],cas_records,warnings)
+    if not identity_basis:
+        return Evaluation(
+            STATUS_IDENTITY_REVIEW,
+            'El PDF contiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo/composición. No es válido interpretar este resultado como ausencia de coincidencias en las listas.',
+            [],cas_records,warnings
+        )
+    basis='; '.join(identity_basis)
+    return Evaluation(
+        STATUS_NO_MATCH,
+        'Se identificó información química utilizable para el tamizaje ('+basis+'), pero no se detectaron coincidencias en las listas locales de referencia ni, por esta vía, con los criterios RSPO/ISCC mapeados. Resultado basado en la información disponible en los documentos analizados.',
+        [],cas_records,warnings
+    )

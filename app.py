@@ -6,7 +6,7 @@ from src.engine import analyze
 from src.criteria_presentation import interpret_criteria
 from src.evidence_presentation import consolidate_evidence_hits
 from src.normative_sources import reference_blocks_markdown
-from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,standard_scope
+from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_IDENTITY_REVIEW,standard_scope
 
 BASE_DIR=Path(__file__).resolve().parent
 MASTER_PATH=BASE_DIR/'data'/'master_restrictions.csv'
@@ -163,7 +163,7 @@ st.markdown('</div>',unsafe_allow_html=True)
 def result_card(status,message):
     if status in (STATUS_NO_USE,STATUS_NO_USE_RSPO): css,icon='result-red','⛔'
     elif status in (STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_MITIGATION): css,icon='result-orange','⚠️'
-    elif status==STATUS_DOCUMENT_REVIEW: css,icon='result-yellow','📄'
+    elif status in (STATUS_DOCUMENT_REVIEW,STATUS_IDENTITY_REVIEW): css,icon='result-yellow','📄'
     else: css,icon='result-neutral','✓'
     parts=message.split(' Resultado basado en ',1)
     body=escape(parts[0])
@@ -263,6 +263,8 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         st.caption('La coincidencia con la lista es real; lo pendiente es confirmar el papel de la sustancia dentro del producto.')
     elif ev.status==STATUS_DOCUMENT_REVIEW:
         st.caption('No existe una coincidencia demostrada. La revisión se solicita porque el documento no pudo evaluarse de forma suficiente.')
+    elif ev.status==STATUS_IDENTITY_REVIEW:
+        st.caption('El PDF es legible, pero no se encontró una identidad química suficientemente clara para sostener un resultado negativo contra las listas.')
 
     if ev.hits:
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)

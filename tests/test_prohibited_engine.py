@@ -4,7 +4,7 @@ from unittest.mock import patch
 from src.engine import analyze
 from src.models import PdfDocument,PdfPage,ProhibitedEntry
 from src.rules import standard_scope
-from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_MITIGATION,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_NO_MATCH
+from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_MITIGATION,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_IDENTITY_REVIEW,STATUS_NO_MATCH
 MASTER=Path(__file__).resolve().parents[1]/'data'/'master_restrictions.csv'
 
 def doc(text,name='test.pdf'):
@@ -38,6 +38,21 @@ class ProhibitedEngineTests(unittest.TestCase):
   with patch('src.engine.read_pdf',return_value=PdfDocument('scan.pdf',[PdfPage(1,'')],1,0,0,False,['sin texto'])):
    r=analyze([('scan.pdf',b'x')],master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_DOCUMENT_REVIEW)
+ def test_readable_pdf_without_chemical_identity_requires_identity_review(self):
+  r=run_text('Documento técnico legible sobre almacenamiento, transporte y recomendaciones generales del producto. No presenta una sección de composición ni identificadores químicos utilizables.')
+  self.assertEqual(r['evaluation'].status,STATUS_IDENTITY_REVIEW)
+  self.assertIn('No es válido interpretar este resultado como ausencia de coincidencias',r['evaluation'].message)
+ def test_active_ingredient_section_without_list_match_is_clean_no_match(self):
+  r=run_text('FICHA TÉCNICA DEL PRODUCTO\nIngrediente activo: Sustancia experimental XYZ 400 g/L.\nDescripción agronómica, dosis de aplicación y recomendaciones de uso para el cultivo.')
+  self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
+  self.assertIn('referencia explícita a ingrediente activo/composición',r['evaluation'].message)
+ def test_contextual_valid_cas_without_list_match_is_clean_no_match(self):
+  r=run_text('COMPOSICIÓN DEL PRODUCTO\nIngrediente activo: sustancia experimental. CAS 7732-18-5. Concentración 500 g/L. Información adicional de formulación y uso.')
+  self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
+  self.assertIn('CAS válido en contexto de ingrediente activo/composición',r['evaluation'].message)
+ def test_incidental_cas_alone_does_not_support_clean_no_match(self):
+  r=run_text('INFORMACIÓN TOXICOLÓGICA Y LÍMITES DE EXPOSICIÓN. Sustancia de referencia CAS 7732-18-5. Este dato se incluye únicamente como referencia técnica y no describe la composición del producto.')
+  self.assertEqual(r['evaluation'].status,STATUS_IDENTITY_REVIEW)
  def test_manual_prohibited_without_active_confirmation_is_review(self):
   r=analyze([],manual_cas_text='153719-23-4',manual_active_confirmed=False,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
