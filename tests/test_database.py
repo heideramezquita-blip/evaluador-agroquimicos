@@ -14,3 +14,8 @@ class DatabaseTests(unittest.TestCase):
  def test_all_eight_prohibited_group_rows_have_explicit_rules(self):
   db=ProhibitedDatabase(MASTER); groups=[e for e in db.groups if e.source_list=='PROHIBITED']
   self.assertEqual({match_key(e.ingredient) for e in groups},set(GROUP_RULES))
+ def test_alias_matching_metadata_is_precomputed(self):
+  db=ProhibitedDatabase(MASTER)
+  entry=next(e for e in db.specific if e.ingredient=='Tiametoxam')
+  self.assertEqual(db.aliases(entry),('Tiametoxam',))
+  self.assertEqual(db.alias_pairs(entry),(('Tiametoxam','tiametoxam'),))

@@ -5,6 +5,13 @@ import streamlit as st
 from src.engine import analyze
 from src.criteria_presentation import interpret_criteria
 from src.evidence_presentation import consolidate_evidence_hits
+from src.evidence_presentation import (
+    channel_label,
+    context_label,
+    evidence_pages,
+    list_label,
+    usage_label,
+)
 from src.normative_sources import reference_blocks_markdown
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_OBSOLETE,STATUS_MITIGATION,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_IDENTITY_REVIEW,standard_scope
 
@@ -191,42 +198,6 @@ def table_html(rows):
         cells=''.join(f'<td>{cas_html(row.get(col,"")) if col=="CAS" else escape(str(row.get(col,"")))}</td>' for col in columns)
         body.append(f'<tr>{cells}</tr>')
     return '<div class="clean-table-wrap"><table class="clean-table"><thead><tr>'+head+'</tr></thead><tbody>'+''.join(body)+'</tbody></table></div>'
-
-def list_label(source_list):
-    return {'PROHIBITED':'RA · Prohibidos','OBSOLETE':'RA · Obsoletos','MITIGATE_RISK':'RA · Mitigación de riesgos'}.get(source_list,source_list)
-
-CONTEXT_LABELS={
-    'ACTIVE':'Ingrediente activo',
-    'COMPOSITION':'Composición del producto',
-    'INCIDENTAL':'Mención incidental',
-    'NEGATED':'Mención negada',
-    'DECOMPOSITION_COMBUSTION':'Descomposición / combustión',
-    'REFERENCE_TOXICOLOGY':'Referencia toxicológica',
-    'UNCERTAIN':'Papel en el producto por confirmar',
-}
-CHANNEL_LABELS={'CAS':'CAS','NAME':'Nombre'}
-USAGE_LABELS={'A':'Acaricida','Ad':'Adyuvante','Fun':'Fungicida','Fum':'Fumigante','H':'Herbicida','I':'Insecticida','N':'Nematicida','R':'Rodenticida','Conserv. Mad.':'Conservación de la madera'}
-
-def context_label(value):
-    return CONTEXT_LABELS.get(value,value.replace('_',' ').title())
-
-def channel_label(value):
-    return CHANNEL_LABELS.get(value,value)
-
-def usage_label(value):
-    if not value:return ''
-    return ' · '.join(USAGE_LABELS.get(x.strip(),x.strip()) for x in value.split(',') if x.strip())
-
-def evidence_pages(g):
-    priority={'ACTIVE':0,'COMPOSITION':1,'UNCERTAIN':2,'INCIDENTAL':3,'NEGATED':4,'REFERENCE_TOXICOLOGY':5,'DECOMPOSITION_COMBUSTION':6}
-    ranked=[]
-    for h in g.get('hit_items',[]):
-        if h.page:
-            ranked.append((priority.get(h.context_class,9),h.page))
-    if not ranked:return '—'
-    best=min(x[0] for x in ranked)
-    pages=sorted({p for rank,p in ranked if rank==best})
-    return ', '.join(map(str,pages))
 
 def scope_html(g):
     if g['source_list']!='PROHIBITED':

@@ -1,7 +1,14 @@
 import unittest
 from types import SimpleNamespace
 
-from src.evidence_presentation import consolidate_evidence_hits
+from src.evidence_presentation import (
+    channel_label,
+    consolidate_evidence_hits,
+    context_label,
+    evidence_pages,
+    list_label,
+    usage_label,
+)
 
 
 def make_hit(*, ingredient="Deltametrina", cas="52918-63-5", source_list="MITIGATE_RISK",
@@ -57,6 +64,24 @@ class EvidencePresentationTests(unittest.TestCase):
             make_hit(source_file="FDS.pdf"),
         ])
         self.assertEqual(len(cards), 2)
+
+    def test_shared_labels_preserve_current_ui_text(self):
+        self.assertEqual(list_label("PROHIBITED"), "RA · Prohibidos")
+        self.assertEqual(context_label("ACTIVE"), "Ingrediente activo")
+        self.assertEqual(channel_label("NAME"), "Nombre")
+        self.assertEqual(
+            usage_label("I, A"),
+            "Insecticida · Acaricida",
+        )
+
+    def test_evidence_pages_uses_best_context_priority(self):
+        cards = consolidate_evidence_hits([
+            make_hit(channel="CAS", page=5),
+            make_hit(channel="NAME", page=2),
+        ])
+        cards[0]["hit_items"][0].context_class = "REFERENCE_TOXICOLOGY"
+        cards[0]["hit_items"][1].context_class = "ACTIVE"
+        self.assertEqual(evidence_pages(cards[0]), "2")
 
 
 if __name__ == "__main__":
