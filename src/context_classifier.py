@@ -110,6 +110,8 @@ def has_composition_marker(text: str) -> bool:
             "composicion garantizada",
             "composicion porcentual",
             "analisis garantizado",
+            "composition information on ingredients",
+            "composition information on components",
         )
     ):
         return True
