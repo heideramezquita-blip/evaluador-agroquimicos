@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import fitz
 
-from .models import PdfDocument, PdfPage
+from .models import PdfDocument, PdfPage, PdfTextBlock
 from .text_utils import normalize_text
 
 
@@ -30,10 +30,27 @@ def read_pdf(pdf_bytes: bytes, file_name: str) -> PdfDocument:
             if not text.strip():
                 text = page.get_text("text") or ""
             text = text.strip()
+
+            blocks = []
+            for block in page.get_text("blocks", sort=True) or []:
+                x0, y0, x1, y1, block_text = block[:5]
+                block_text = (block_text or "").strip()
+                if not block_text:
+                    continue
+                blocks.append(
+                    PdfTextBlock(
+                        float(x0),
+                        float(y0),
+                        float(x1),
+                        float(y1),
+                        block_text,
+                    )
+                )
+
             total_chars += len(text)
             if text:
                 pages_with_text += 1
-            pages.append(PdfPage(page=page_number, text=text))
+            pages.append(PdfPage(page=page_number, text=text, blocks=blocks))
     finally:
         document.close()
 
