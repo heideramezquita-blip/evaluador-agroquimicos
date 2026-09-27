@@ -53,17 +53,66 @@ GROUP_RULES = {
 }
 
 
+_POSITIONAL_QUALIFIERS = {"alpha", "beta", "gamma", "delta", "lambda"}
+_SALT_PREFIXES = (
+    "benzoato",
+    "clorhidrato",
+    "bromuro",
+    "cloruro",
+    "dicloruro",
+    "sulfato",
+    "fosfato",
+    "acetato",
+    "nitrato",
+    "carbonato",
+)
+
+
+def _syntactic_aliases(value: str) -> tuple[str, ...]:
+    """Return conservative word-order variants seen in pesticide documents."""
+    aliases: list[str] = []
+
+    comma_match = re.fullmatch(r"\s*([^,]+),\s*([^,]+)\s*", value)
+    if comma_match:
+        base, qualifier = comma_match.groups()
+        qualifier_key = normalize_text(qualifier)
+        if qualifier_key in _POSITIONAL_QUALIFIERS:
+            aliases.extend(
+                (
+                    f"{qualifier} {base}",
+                    f"{qualifier_key}{normalize_text(base).replace(' ', '')}",
+                )
+            )
+
+    normalized = normalize_text(value)
+    salt_match = re.fullmatch(
+        rf"({'|'.join(_SALT_PREFIXES)})\s+de\s+(.+)",
+        normalized,
+    )
+    if salt_match:
+        salt, substance = salt_match.groups()
+        aliases.append(f"{substance} {salt}")
+
+    return tuple(aliases)
+
+
 def _aliases(name: str) -> tuple[str, ...]:
     values: list[str] = []
     seen: set[str] = set()
 
     for part in re.split(r";", name):
-        candidates = [re.sub(r"\*+$", "", part).strip()]
-        stripped = re.sub(r"\([^)]*\)", " ", candidates[0]).strip(" ,")
-        if stripped and stripped != candidates[0]:
+        base = re.sub(r"\*+$", "", part).strip()
+        candidates = [base]
+        stripped = re.sub(r"\([^)]*\)", " ", base).strip(" ,")
+        if stripped and stripped != base:
             candidates.append(stripped)
 
+        expanded: list[str] = []
         for candidate in candidates:
+            expanded.append(candidate)
+            expanded.extend(_syntactic_aliases(candidate))
+
+        for candidate in expanded:
             normalized = normalize_text(candidate)
             if candidate and len(normalized) >= 4 and normalized not in seen:
                 seen.add(normalized)
