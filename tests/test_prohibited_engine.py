@@ -17,6 +17,18 @@ class ProhibitedEngineTests(unittest.TestCase):
  def test_engeo_tiametoxam_ra_severe_requires_cross_standard_review(self):
   r=run_text('COMPOSICIÓN GARANTIZADA\nIngredientes Activos:\nLambda-cihalotrina\nTiametoxam\nCAS 153719-23-4\nConcentración 141 g/L')
   self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
+ def test_kadabra_keeps_mitigation_evidence_visible_beside_prohibited_hit(self):
+  r=run_text(
+   'Ingrediente activo:\n'
+   'Bifentrina 360 g/L\n'
+   'Fipronil 120 g/L\n'
+   'Producto insecticida de uso agrícola.'
+  )
+  self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
+  visible={(h.entry.source_list,h.entry.ingredient) for h in r['display_hits']}
+  self.assertIn(('PROHIBITED','Fipronil'),visible)
+  self.assertIn(('MITIGATE_RISK','Bifentrina'),visible)
+
  def test_specific_prohibited_cas_uncertain_is_orange_review(self):
   r=run_text('Ficha de seguridad de sustancia química. Identificador CAS 153719-23-4. Información general del producto y propiedades.')
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
