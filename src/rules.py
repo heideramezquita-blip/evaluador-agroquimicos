@@ -305,7 +305,7 @@ def evaluate_prohibited(
     if not identity_basis:
         return Evaluation(
             STATUS_IDENTITY_REVIEW,
-            "El PDF contiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo/composición. No es válido interpretar este resultado como ausencia de coincidencias en las listas.",
+            "El PDF contiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo. Un encabezado de composición sin contenido químico extraíble no basta para sostener un resultado negativo. No es válido interpretar este resultado como ausencia de coincidencias en las listas.",
             [],
             cas_records,
             warnings,
