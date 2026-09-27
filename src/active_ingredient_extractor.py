@@ -725,7 +725,7 @@ def _extract_single_component_sds_identity(
 
     row_pattern = re.compile(
         r"(?i)^\s*(?P<name>[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][^\n]{1,100}?)"
-        r"\s+(?P<cas>\d{2,7}-\d{2}-\d)\s+100\s*%\b"
+        r"\s+(?P<cas>\d{2,7}-\d{2}-\d)\s+100\s*%(?:\s|$)"
     )
 
     for page in document.pages:
