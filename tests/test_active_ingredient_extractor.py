@@ -171,6 +171,22 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
             [("Flubendiamide", "480 g/L")],
         )
 
+    def test_panzer_k_explicit_narrative_declares_glyphosate_identity(self):
+        text = (
+            "2. DESCRIPCIÓN\n"
+            "Panzer K SL es un herbicida que tiene como ingrediente activo "
+            "glifosato en forma de sal potasio en una concentración de "
+            "443 g/L equivalente a 360 g/L del ácido.\n"
+            "3. CARACTERÍSTICAS"
+        )
+        items = extract_active_ingredients(document(text, "FT Panzer k.pdf"))
+
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name.casefold(), "glifosato")
+        self.assertEqual(items[0].concentration, "443 g/L")
+        self.assertEqual(items[0].cas, "")
+        self.assertEqual(items[0].page, 1)
+
     def test_narrative_mention_of_ingredients_activos_does_not_open_identity_block(self):
         text = (
             "Generalidades:\n"
