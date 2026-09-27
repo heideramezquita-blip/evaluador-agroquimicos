@@ -25,7 +25,7 @@ La aplicación no incorpora OCR. Si un PDF está escaneado o no contiene texto e
 ## Cómo funciona
 
 1. Extrae el texto disponible de uno o varios PDF, priorizando el orden visual/espacial del contenido para reducir desorden en tablas y bloques maquetados.
-2. Extrae los **ingredientes activos identificados explícitamente por el documento**, aun cuando no tengan CAS o no coincidan con ninguna lista normativa; cuando la concentración o un CAS están suficientemente asociados a esa evidencia, también los conserva.
+2. Extrae los **ingredientes activos identificados explícitamente por el documento**, aun cuando no tengan CAS o no coincidan con ninguna lista normativa; cuando la concentración o un CAS están suficientemente asociados a esa evidencia, también los conserva. En FDS con tablas estructuradas de la Sección 3, extrae además por separado los **componentes de composición** con su nombre, CAS y concentración cuando puede asociarlos de forma segura, sin asumir que todos sean ingredientes activos.
 3. Detecta números CAS y valida su checksum; evita interpretar como CAS fragmentos de identificadores químicos más largos, como determinados números INDEX.
 4. Cruza CAS, nombres normalizados y determinadas reglas de grupo contra las tres bases locales.
 5. Clasifica el contexto de cada coincidencia para distinguir, entre otros casos, ingrediente activo, composición, menciones incidentales, negadas, de descomposición/combustión o de referencia toxicológica. La clasificación admite variantes frecuentes de encabezados de FT/FDS y pondera la proximidad entre el nombre/CAS encontrado y el encabezado que le da contexto.
@@ -44,7 +44,8 @@ La estructura se mantiene deliberadamente pequeña y separa responsabilidades si
 - `app.py`: interfaz Streamlit y renderizado.
 - `src/pdf_reader.py`: extracción de texto en orden visual/espacial y diagnóstico de documentos sin contenido principal extraíble, incluidos archivos que solo exponen encabezados o pies repetidos.
 - `src/active_ingredient_extractor.py`: extracción de ingredientes activos explícitamente identificados por la FT/FDS, independiente de que exista una coincidencia normativa.
-- `src/cas_utils.py` y `src/cas_extractor.py`: normalización, validación y extracción de CAS.
+- `src/cas_utils.py` y `src/cas_extractor.py`: normalización, validación y extracción de CAS, incluida la reconstrucción conservadora de CAS cuyo dígito de checksum queda separado en otro bloque de una tabla PDF.
+- `src/composition_extractor.py`: extracción descriptiva de componentes en tablas estructuradas de composición de FDS; no promueve por sí sola esos componentes a ingrediente activo.
 - `src/context_classifier.py`: clasificación contextual por proximidad y normalización de variantes frecuentes de encabezados de ingrediente activo y composición.
 - `src/prohibited_database.py`: carga de las tres bases locales y metadatos de búsqueda.
 - `src/prohibited_detector.py`: detección por CAS, nombre y reglas de grupo.
@@ -158,7 +159,7 @@ Los estados `NO UTILIZAR` requieren evidencia documental suficiente del ingredie
 
 ## Evidencia y trazabilidad
 
-Antes del cruce normativo, la sección **Identidad documental detectada** muestra los ingredientes activos que la FT/FDS identifica explícitamente, incluso cuando no existe CAS asociado o cuando el ingrediente no aparece en las bases locales. La concentración se muestra cuando puede extraerse de forma suficientemente vinculada a esa evidencia. Esta sección no implica por sí sola una restricción normativa.
+Antes del cruce normativo, la sección **Identidad documental detectada** muestra los ingredientes activos que la FT/FDS identifica explícitamente, incluso cuando no existe CAS asociado o cuando el ingrediente no aparece en las bases locales. Cuando una FDS declara una mezcla mediante una tabla estructurada de composición, la interfaz puede mostrar además **Componentes de composición detectados** con nombre, CAS y concentración. Estos componentes no se consideran automáticamente ingredientes activos, porque una FDS puede incluir solventes, sales, neutralizantes u otros componentes de formulación. Si otra evidencia del documento confirma el ingrediente activo, la composición puede utilizarse para completar su CAS o concentración.
 
 Cuando existe una coincidencia relevante, la aplicación muestra además la sustancia, lista, CAS, uso cuando está disponible, tipo de evidencia, documento, páginas más relevantes, criterio identificado y lectura por estándar.
 
