@@ -4,7 +4,7 @@ import re
 import unicodedata
 
 from .cas_utils import CAS_PATTERN, canonicalize_groups, is_valid_cas
-from .context_classifier import has_active_marker
+from .context_classifier import has_active_marker, has_composition_marker
 from .models import ActiveIngredientEvidence, PdfDocument, PdfTextBlock
 from .text_utils import match_key, normalize_text
 
@@ -21,7 +21,7 @@ _ACTIVE_LABEL_PATTERNS = (
     re.compile(
         r"(?i)^\s*active\s+ingredient\s*(?:\(s\)|s|\s+s)?\s*:?\s*(.*)$"
     ),
-    re.compile(r"(?i)^\s*i\s*\.?\s*a\s*\.?\s*:?\s*(.*)$"),
+    re.compile(r"(?i)^\s*i\s*\.?\s*a\s*\.?(?=\s|:|$)\s*:?\s*(.*)$"),
 )
 
 _CONCENTRATION = re.compile(
@@ -690,6 +690,80 @@ def _extract_composition_row_fallback(
     return evidence
 
 
+def _extract_single_component_sds_identity(
+    document: PdfDocument,
+) -> list[ActiveIngredientEvidence]:
+    """Recognize a pure/single-component SDS as product chemical identity.
+
+    Safety data sheets for a substance may not use the phrase "ingrediente
+    activo". A strong documentary pattern is:
+      - product identifier / CAS in section 1; and
+      - section 3 composition row with the same valid CAS at 100%.
+
+    This is materially stronger than a generic name mention and is safe to use
+    as chemical identity without promoting toxicology, transport or ecological
+    references.
+    """
+    if not document.pages:
+        return []
+
+    identifier_text = " ".join(
+        (page.text or "") for page in document.pages[:2]
+    )
+    identifier_key = match_key(identifier_text)
+    has_identifier_section = (
+        "identificador del producto" in identifier_key
+        or "product identifier" in identifier_key
+        or "nombre comercial" in identifier_key
+    )
+    if not has_identifier_section:
+        return []
+
+    identifier_cas = set(_valid_cas_in_text(identifier_text))
+    if not identifier_cas:
+        return []
+
+    row_pattern = re.compile(
+        r"(?i)^\s*(?P<name>[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][^\n]{1,100}?)"
+        r"\s+(?P<cas>\d{2,7}-\d{2}-\d)\s+100\s*%\b"
+    )
+
+    for page in document.pages:
+        text = page.text or ""
+        if not has_composition_marker(text):
+            continue
+
+        for raw_line in text.splitlines():
+            line = _clean_visible_text(raw_line)
+            match = row_pattern.match(line)
+            if not match:
+                continue
+
+            cas_match = CAS_PATTERN.search(match.group("cas"))
+            if not cas_match:
+                continue
+            cas = canonicalize_groups(*cas_match.groups())
+            if not is_valid_cas(cas) or cas not in identifier_cas:
+                continue
+
+            name = _clean_visible_text(match.group("name")).strip(" :-/|;,.")
+            if not _looks_like_name(name):
+                continue
+
+            return [
+                ActiveIngredientEvidence(
+                    name=name,
+                    source_file=document.file_name,
+                    page=page.page,
+                    concentration="100%",
+                    cas=cas,
+                    context=line,
+                )
+            ]
+
+    return []
+
+
 def _extract_from_lines(
     text: str,
     source_file: str,
@@ -769,6 +843,9 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
                 page.page,
             )
         )
+
+    if not evidence:
+        evidence.extend(_extract_single_component_sds_identity(document))
 
     # Deduplicate repeated product headers/blocks while preserving the strongest
     # concentration/CAS and the first page where identity was explicitly shown.
