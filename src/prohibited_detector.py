@@ -16,7 +16,10 @@ def _line_context(text: str, needle: str, radius_lines: int = 8) -> str:
     Evaluate every local occurrence and prefer direct identity evidence while
     keeping incidental/negated/reference mentions lower priority.
     """
-    lines = text.splitlines()
+    # PDF text extraction often inserts many empty layout lines between a
+    # heading and its value. Work on semantic (non-empty) lines so the context
+    # radius measures content rather than page-layout whitespace.
+    lines = [line for line in text.splitlines() if line.strip()]
     needle_key = match_key(needle)
     tokens = [token for token in needle_key.split() if len(token) >= 4]
     candidates = []
