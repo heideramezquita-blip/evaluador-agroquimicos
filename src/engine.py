@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .active_ingredient_extractor import extract_active_ingredients
 from .cas_extractor import extract_document_cas, merge_cas_records
 from .cas_utils import parse_manual_cas
-from .context_classifier import ACTIVE, COMPOSITION, classify_context, has_active_marker
+from .context_classifier import ACTIVE, COMPOSITION, classify_context
 from .models import CasOccurrence, CasRecord
 from .pdf_reader import read_pdf
 from .prohibited_database import ProhibitedDatabase
@@ -15,7 +16,7 @@ from .rules import evaluate_prohibited
 DEFAULT_MASTER_PATH = Path(__file__).resolve().parents[1] / "data" / "master_restrictions.csv"
 
 
-def _identity_basis(documents, records) -> list[str]:
+def _identity_basis(documents, records, active_ingredients=None) -> list[str]:
     """Describe whether there was enough chemical identity to support a clean no-match."""
     basis: list[str] = []
 
@@ -28,18 +29,14 @@ def _identity_basis(documents, records) -> list[str]:
     if contextual_document_cas:
         basis.append("CAS válido en contexto de ingrediente activo/composición")
 
-    # A bare composition heading is not enough to support a clean no-match:
-    # several real SDS files in the benchmark expose "3. COMPOSICIÓN" while
-    # the actual component table is image-based or missing from extracted
-    # text. Require either a contextual validated CAS (above) or an explicit
-    # active-ingredient label.
-    explicit_active_section = any(
-        has_active_marker(page.text or "")
-        for document in documents
-        if document.processable
-        for page in document.pages
-    )
-    if explicit_active_section:
+    if active_ingredients is None:
+        active_ingredients = [
+            item
+            for document in documents
+            if document.processable
+            for item in extract_active_ingredients(document)
+        ]
+    if active_ingredients:
         basis.append("referencia explícita a ingrediente activo")
 
     manual_cas = any(
@@ -81,6 +78,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
     record_groups = []
     invalid_candidates = []
     warnings = []
+    active_ingredients = []
     read_failures = 0
 
     for file_name, payload in files:
@@ -96,6 +94,8 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         records, invalid = extract_document_cas(document)
         record_groups.append(records)
         invalid_candidates.extend(invalid)
+        if document.processable:
+            active_ingredients.extend(extract_active_ingredients(document))
 
     manual_valid, manual_invalid = parse_manual_cas(manual_cas_text)
     record_groups.append(_manual_records(manual_valid, manual_active_confirmed))
@@ -116,7 +116,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
             "no excluye registros normativos definidos sin CAS."
         )
 
-    identity_basis = _identity_basis(documents, records)
+    identity_basis = _identity_basis(documents, records, active_ingredients)
     evaluation = evaluate_prohibited(
         records,
         hits,
@@ -133,6 +133,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         "manual_invalid": manual_invalid,
         "all_hits": hits,
         "identity_basis": identity_basis,
+        "active_ingredients": active_ingredients,
         "prohibited_specific_count": sum(bool(entry.cas) for entry in database.prohibited),
         "prohibited_group_count": sum(not bool(entry.cas) for entry in database.prohibited),
         "obsolete_count": len(database.obsolete),
