@@ -6,26 +6,55 @@ from .text_utils import match_key, phrase_present
 
 
 def _line_context(text: str, needle: str, radius_lines: int = 8) -> str:
+    """Return the most informative local context for a matched substance name.
+
+    A product name can repeat in headers/footers before the chemically useful
+    occurrence appears (for example, "Producto: Paraquat..." above
+    "Ingredientes Activos: Paraquat 200 g/L"). Returning the first occurrence
+    therefore downgraded explicit active-ingredient evidence to UNCERTAIN.
+
+    Evaluate every local occurrence and prefer direct identity evidence while
+    keeping incidental/negated/reference mentions lower priority.
+    """
     lines = text.splitlines()
     needle_key = match_key(needle)
     tokens = [token for token in needle_key.split() if len(token) >= 4]
+    candidates = []
+
+    priority = {
+        "ACTIVE": 0,
+        "COMPOSITION": 1,
+        "UNCERTAIN": 2,
+        "INCIDENTAL": 3,
+        "NEGATED": 4,
+        "REFERENCE_TOXICOLOGY": 5,
+        "DECOMPOSITION_COMBUSTION": 6,
+    }
 
     for index, line in enumerate(lines):
         line_key = match_key(line)
-        if needle_key and (
+        if not needle_key or not (
             needle_key in line_key or (tokens and tokens[0] in line_key)
         ):
-            context = " | ".join(
-                item.strip()
-                for item in lines[
-                    max(0, index - radius_lines) : min(
-                        len(lines), index + radius_lines + 1
-                    )
-                ]
-                if item.strip()
-            )
-            if phrase_present(context, needle):
-                return context
+            continue
+
+        context = " | ".join(
+            item.strip()
+            for item in lines[
+                max(0, index - radius_lines) : min(
+                    len(lines), index + radius_lines + 1
+                )
+            ]
+            if item.strip()
+        )
+        if not phrase_present(context, needle):
+            continue
+
+        context_class = classify_context(context, needle)
+        candidates.append((priority.get(context_class, 9), index, context))
+
+    if candidates:
+        return min(candidates, key=lambda item: (item[0], item[1]))[2]
 
     return text[:700]
 
