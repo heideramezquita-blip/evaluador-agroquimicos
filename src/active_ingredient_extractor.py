@@ -358,6 +358,18 @@ def _candidate_tuples(
         if _is_stop(line):
             break
 
+        orphan_concentration = _extract_concentration(line)
+        orphan_cas_values = _valid_cas_in_text(line)
+        stripped_orphan = _strip_concentration(line)
+        if candidates and orphan_concentration and not _looks_like_name(stripped_orphan):
+            name, concentration, cas = candidates[-1]
+            candidates[-1] = (
+                name,
+                concentration or orphan_concentration,
+                cas or (orphan_cas_values[0] if len(orphan_cas_values) == 1 else ""),
+            )
+            continue
+
         field_value = _field_value_candidate(line)
         candidate_line = field_value or line
         if not field_value and _is_field_line(candidate_line):
@@ -527,8 +539,15 @@ def _block_window(
         if any(item[1] for item in block_candidates):
             # In two-column/table PDFs, non-identity text may be interleaved
             # before the real composition row. A concentration-bearing row is
-            # materially stronger, so prefer it over earlier loose candidates.
-            concentration_payload.extend(lines)
+            # materially stronger, so prefer only those parsed identities over
+            # earlier loose candidates such as "Aspecto" / "Polvo blanco".
+            for name, concentration, cas in block_candidates:
+                if not concentration:
+                    continue
+                reconstructed = f"{name} {concentration}"
+                if cas:
+                    reconstructed += f" {cas}"
+                concentration_payload.append(reconstructed)
             identity_found = True
             max_bottom = max(max_bottom, candidate.y1 + 70)
         elif not fallback_payload:
