@@ -771,6 +771,103 @@ def _extract_from_blocks(
     return evidence
 
 
+def _extract_explicit_active_table_identity(
+    blocks: list[PdfTextBlock],
+    source_file: str,
+    page_number: int,
+) -> list[ActiveIngredientEvidence]:
+    """Recover a row from an explicitly labelled active-ingredient table.
+
+    Some SDS PDFs extract each table column as a separate block and in a
+    non-row order. The header itself still says INGREDIENTE ACTIVO and names
+    identity/percentage columns, so pair the nearest row cells geometrically
+    instead of reading subsequent prose as identities.
+    """
+    for header in blocks:
+        header_key = match_key(header.text)
+        if not has_active_marker(header.text):
+            continue
+        if not any(
+            cue in header_key
+            for cue in (
+                "identificador del producto",
+                "porcentaje",
+                "concentracion",
+                "cas",
+            )
+        ):
+            continue
+
+        row_blocks = [
+            block
+            for block in blocks
+            if block is not header
+            and block.y0 >= header.y1 - 2
+            and block.y0 <= header.y1 + 150
+        ]
+        name_candidates = []
+        for block in row_blocks:
+            text = _clean_visible_text(block.text)
+            if not text or _starts_structural_field(_semantic_lines(block.text)):
+                continue
+
+            cas_values = _valid_cas_in_text(text)
+            compact = _compact_common_name(_strip_concentration(text))
+            if not compact:
+                continue
+            if not cas_values and block.x0 > header.x0 + (header.x1 - header.x0) * 0.55:
+                continue
+            name_candidates.append((block, compact, cas_values))
+
+        if not name_candidates:
+            continue
+
+        # The first data row is the block nearest the table header.
+        name_block, name, own_cas = min(
+            name_candidates,
+            key=lambda item: (abs(item[0].y0 - header.y1), item[0].x0),
+        )
+
+        cas = own_cas[0] if len(own_cas) == 1 else ""
+        if not cas:
+            nearby_cas = []
+            for block in row_blocks:
+                if abs(block.y0 - name_block.y0) > 35:
+                    continue
+                nearby_cas.extend(_valid_cas_in_text(block.text))
+            unique_cas = list(dict.fromkeys(nearby_cas))
+            if len(unique_cas) == 1:
+                cas = unique_cas[0]
+
+        concentration = ""
+        concentration_blocks = []
+        for block in row_blocks:
+            value = _extract_concentration(block.text)
+            if not value:
+                continue
+            concentration_blocks.append((abs(block.y0 - name_block.y0), value))
+        if concentration_blocks:
+            concentration = min(concentration_blocks, key=lambda item: item[0])[1]
+
+        context = " | ".join(
+            _clean_visible_text(block.text)
+            for block in [header, *row_blocks]
+            if _clean_visible_text(block.text)
+        )
+        return [
+            ActiveIngredientEvidence(
+                name=name,
+                source_file=source_file,
+                page=page_number,
+                concentration=concentration,
+                cas=cas,
+                context=context,
+            )
+        ]
+
+    return []
+
+
 def _extract_composition_row_fallback(
     text: str,
     source_file: str,
@@ -862,7 +959,13 @@ def _extract_single_component_sds_identity(
                 continue
 
             raw_name = line[: concentration_match.start()].strip()
-            name = _strip_concentration(raw_name)
+            raw_name = CAS_PATTERN.sub(" ", raw_name)
+            raw_name = re.sub(
+                r"(?i)\b(?:n[uú]mero\s+)?cas\b\s*[:#-]?",
+                " ",
+                raw_name,
+            )
+            name = re.sub(r"\s+", " ", raw_name).strip(" :-/|;,.+")
             if not _looks_like_name(name):
                 compact = _compact_common_name(name)
                 if compact:
@@ -943,6 +1046,12 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
                 document.file_name,
                 page.page,
             )
+            if not page_evidence:
+                page_evidence = _extract_explicit_active_table_identity(
+                    page.blocks,
+                    document.file_name,
+                    page.page,
+                )
         else:
             page_evidence = _extract_from_lines(
                 page.text or "",
