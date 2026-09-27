@@ -130,7 +130,7 @@ class BenchmarkIdentityBasisTests(unittest.TestCase):
         document = self._document("Ingrediente activo: Sustancia Ejemplo 200 g/L")
         self.assertEqual(
             _identity_basis([document], []),
-            ["referencia explícita a ingrediente activo"],
+            ["referencia explícita a ingrediente activo/composición"],
         )
 
 
