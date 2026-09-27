@@ -49,7 +49,7 @@ div.stButton>button:hover{background:#c92b27;color:#fff;border:0}
 .result-neutral{background:#f8fafc;border-color:#94a3b8;color:#334155}
 .section-title{font-size:1.25rem;font-weight:800;color:var(--ink);margin:1.7rem 0 .8rem}
 .match-box{border:1px solid #e4e7ec;border-radius:12px;padding:1rem 1.1rem;margin:.65rem 0;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.03)}
-.match-title{font-size:1.05rem;font-weight:800;color:#101828;margin-bottom:.35rem}.match-meta{color:#475467;font-size:.92rem;line-height:1.6}.match-meta b{color:#344054;font-weight:750}
+.match-title{font-size:1.05rem;font-weight:800;color:#101828;margin-bottom:.35rem}.match-meta{color:#475467;font-size:.92rem;line-height:1.6}.match-meta b{color:#344054;font-weight:750}.criterion-summary{margin:.7rem 0 0;padding:.7rem .8rem;border-radius:9px;background:#f8fafc;color:#344054;font-size:.9rem;line-height:1.5}.criterion-summary-title{font-weight:800;color:#101828;margin-bottom:.25rem}.criterion-summary ul{margin:.2rem 0 0;padding-left:1.1rem}.criterion-summary li+li{margin-top:.3rem}
 [data-testid="stMetric"]{background:#fafafa;border:1px solid #eee;padding:.8rem;border-radius:10px}
 /* Streamlit theme hardening: keep native widgets readable in light UI */
 .stApp, .stApp p, .stApp label, .stApp span, .stApp div{color:#344054}
@@ -232,10 +232,8 @@ def scope_html(g):
     class EntryView:
         ingredient=g['ingredient']; criteria=g['criteria']
     scope=standard_scope(EntryView())
-    rspo='criterio explícito' if scope['rspo'] else 'sin equivalencia automática'
-    iscc='criterio explícito' if scope['iscc'] else 'sin equivalencia automática'
-    if scope['rspo_basis']: rspo+=' ('+', '.join(scope['rspo_basis'])+')'
-    if scope['iscc_basis']: iscc+=' ('+', '.join(scope['iscc_basis'])+')'
+    rspo='criterio explícito aplicable' if scope['rspo'] else 'sin equivalencia automática'
+    iscc='criterio explícito aplicable' if scope['iscc'] else 'sin equivalencia automática'
     return '<b>Lectura por estándar:</b> RSPO: '+escape(rspo)+' · ISCC: '+escape(iscc)+' · RA: prohibido'
 
 def consolidated_hits(hits):
@@ -249,21 +247,15 @@ def consolidated_hits(hits):
         g['hit_items'].append(h)
     return list(grouped.values())
 
-def render_list_interpretation(g):
+def criterion_summary_html(g):
     signals=interpret_criteria(g.get('criteria',''),g['source_list'])
     if not signals:
-        return
-    if g['source_list']=='MITIGATE_RISK':
-        st.markdown('**La lista señala**')
-        st.markdown(' · '.join(escape(signal.label) for signal in signals))
-        st.markdown('**En sencillo**')
-        st.write('Rainforest Alliance incluye esta sustancia en su lista sujeta a mitigación de riesgos. Si se utiliza, deben aplicarse las medidas indicadas por el estándar. Esta referencia, por sí sola, no equivale a una prohibición de RSPO o ISCC.')
-        return
-
-    st.markdown('**Criterio identificado**')
-    for signal in signals:
-        st.markdown(f'**{escape(signal.label)}**')
-        st.write(signal.explanation)
+        return ''
+    items=''.join(
+        f'<li><strong>{escape(signal.label)}</strong> — {escape(signal.explanation)}</li>'
+        for signal in signals
+    )
+    return '<div class="criterion-summary"><div class="criterion-summary-title">Criterio identificado</div><ul>'+items+'</ul></div>'
 
 if st.button('Evaluar documentos',type='primary',use_container_width=True):
     items=[(f.name,f.getvalue()) for f in (files or [])]
@@ -287,9 +279,8 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             pages=evidence_pages(g); classes=' · '.join(context_label(x) for x in sorted(g['classes']))
             usage=usage_label(g['usage'])
             usage_html=f'<br><b>Uso principal:</b> {escape(usage)}' if usage else ''
-            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div></div>',unsafe_allow_html=True)
+            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div>{criterion_summary_html(g)}</div>',unsafe_allow_html=True)
             with st.expander(f'Ver evidencia documental — {g["ingredient"]}'):
-                render_list_interpretation(g)
                 st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
                 st.write('**Tipo de evidencia:**',classes)
                 st.write('**Página(s) más relevante(s):**',pages)
@@ -327,16 +318,5 @@ with st.expander('Fuentes normativas y alcance de la evaluación'):
 **Rainforest Alliance — referencia complementaria y base local de detección:** [Anexo al capítulo Agricultura v1.4 (A-07-SCRL-B-FA)](https://knowledge.rainforest-alliance.org/docs/es/farming-annex-v14), listas de plaguicidas **prohibidos**, **obsoletos** y **sujetos a mitigación de riesgos**. **Última carga de la base local: septiembre de 2026.**
 
 La aplicación no consulta estos estándares en tiempo real. Una coincidencia de Rainforest Alliance solo se traslada a RSPO o ISCC cuando existe una correspondencia explícita codificada; en los demás casos se muestra para revisión, sin inferir equivalencia normativa.''')
-
-with st.expander('Cómo interpretar los criterios de las listas'):
-    st.markdown('''**OMS 1A/1B:** clasificación de peligrosidad aguda para la salud. 1A significa extremadamente peligroso y 1B altamente peligroso. Es un sistema distinto del SGA.
-
-**Criterios SGA 1A/1B:** se refieren a peligros como carcinogenicidad, mutagenicidad o toxicidad para la reproducción. Si la fila local solo marca el criterio, la aplicación no atribuye una subcategoría concreta.
-
-**Convenios internacionales:** Montreal aborda sustancias que agotan la capa de ozono; Rotterdam aplica el consentimiento fundamentado previo al comercio internacional de ciertos químicos y plaguicidas; Estocolmo controla contaminantes orgánicos persistentes. La inclusión en una lista no significa que los tres convenios impongan la misma medida.
-
-**Efectos graves (Rainforest Alliance):** alta incidencia de efectos adversos graves o irreversibles en la salud humana o el ambiente.
-
-**Rainforest Alliance:** sus listas de prohibidos y de mitigación son referencias complementarias. La aplicación solo refleja una equivalencia con RSPO o ISCC cuando la regla correspondiente está codificada; una señal de mitigación o un criterio distinto no se convierte automáticamente en una prohibición de esos estándares.''')
 
 st.markdown('<div class="helper" style="margin-top:3rem">La herramienta prioriza el tamizaje frente a RSPO e ISCC y conserva Rainforest Alliance como referencia complementaria. No sustituye la verificación de excepciones, restricciones nacionales ni condiciones específicas del estándar.</div>',unsafe_allow_html=True)

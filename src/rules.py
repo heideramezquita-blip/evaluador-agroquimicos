@@ -1,6 +1,7 @@
 from __future__ import annotations
 from .context_classifier import ACTIVE,COMPOSITION,INCIDENTAL,NEGATED,DECOMPOSITION,REFERENCE
 from .models import Evaluation
+from .criteria_presentation import interpret_criteria
 
 STATUS_NO_USE='NO UTILIZAR — RSPO E ISCC'
 STATUS_NO_USE_RSPO='NO UTILIZAR — RSPO'
@@ -26,52 +27,72 @@ def _strong_hits(items):
     return []
 
 def standard_scope(entry):
-    """Map a Rainforest Alliance PROHIBITED entry to explicit RSPO/ISCC criteria.
+    """Map an RA prohibited entry to criteria explicitly shared by RSPO/ISCC.
 
-    This is deliberately conservative: a Rainforest Alliance flag is not treated
-    as proof of equivalence when the other standard does not state that criterion
-    explicitly. National-law restrictions are outside this local mapping.
+    This consumes the same semantic interpretation as the UI. A CMR word by
+    itself is insufficient: the documented SGA category must be 1A or 1B.
     """
-    criteria=(entry.criteria or '').lower()
-    ingredient=(entry.ingredient or '').lower()
+    criteria = entry.criteria or ""
+    ingredient = (entry.ingredient or "").casefold()
+    signals = interpret_criteria(criteria, "PROHIBITED")
 
-    who_acute=('toxicidad aguda: 1a' in criteria or 'toxicidad aguda: 1b' in criteria)
-    cmr=any(term in criteria for term in ('carcinogenicidad:', 'mutagenicidad:', 'toxicidad reproductiva:'))
+    who_acute = any(
+        signal.system == "OMS"
+        and signal.hazard_class == "Toxicidad aguda"
+        and signal.category in {"Ia", "Ib"}
+        and signal.ra_hhp_criterion
+        for signal in signals
+    )
+    cmr_signals = [
+        signal for signal in signals
+        if signal.system == "SGA"
+        and signal.hazard_class in {
+            "Carcinogenicidad", "Mutagenicidad", "Toxicidad reproductiva"
+        }
+        and signal.category in {"1A", "1B", "1A/1B"}
+        and signal.ra_hhp_criterion
+    ]
 
-    conventions=set()
-    marker='convenciones internacionales:'
-    if marker in criteria:
-        raw=criteria.split(marker,1)[1].split(';',1)[0]
-        conventions={x.strip().upper() for x in raw.replace(',',' ').split() if x.strip()}
-    stockholm='E' in conventions
-    rotterdam='R' in conventions
-    paraquat='paraquat' in ingredient
+    conventions = set()
+    marker = "convenciones internacionales:"
+    folded_criteria = criteria.casefold()
+    if marker in folded_criteria:
+        raw = folded_criteria.split(marker, 1)[1].split(";", 1)[0]
+        conventions = {x.strip().upper() for x in raw.replace(",", " ").split() if x.strip()}
+    stockholm = "E" in conventions
+    rotterdam = "R" in conventions
+    paraquat = "paraquat" in ingredient
 
-    # RSPO P&C 2024 v4.2, 7.1.2(C): WHO 1A/1B, GHS CMR 1A/1B,
-    # Stockholm/Rotterdam, national restrictions and paraquat.
-    rspo=who_acute or cmr or stockholm or rotterdam or paraquat
-    # ISCC EU 202-2, 2.4.1: WHO 1a/1b, Stockholm and Annex III Rotterdam.
-    iscc=who_acute or stockholm or rotterdam
+    # RSPO P&C 2024 v4.2, 7.1.2(C): OMS Ia/Ib, SGA CMR 1A/1B,
+    # Stockholm/Rotterdam, national restrictions and Paraquat.
+    rspo = who_acute or bool(cmr_signals) or stockholm or rotterdam or paraquat
+    # ISCC EU 202-2, 2.4.1: OMS Ia/Ib, Stockholm and Annex III Rotterdam.
+    iscc = who_acute or stockholm or rotterdam
 
-    rspo_basis=[]
-    iscc_basis=[]
+    rspo_basis = []
+    iscc_basis = []
     if who_acute:
-        rspo_basis.append('OMS 1A/1B'); iscc_basis.append('OMS 1A/1B')
-    if cmr:
-        rspo_basis.append('SGA CMR')
+        rspo_basis.append("Toxicidad aguda · OMS Ia/Ib")
+        iscc_basis.append("Toxicidad aguda · OMS Ia/Ib")
+    for signal in cmr_signals:
+        basis = f"SGA · {signal.hazard_class} {signal.category}"
+        if basis not in rspo_basis:
+            rspo_basis.append(basis)
     if stockholm:
-        rspo_basis.append('Estocolmo'); iscc_basis.append('Estocolmo')
+        rspo_basis.append("Convenio de Estocolmo")
+        iscc_basis.append("Convenio de Estocolmo")
     if rotterdam:
-        rspo_basis.append('Rotterdam'); iscc_basis.append('Rotterdam')
+        rspo_basis.append("Convenio de Rotterdam")
+        iscc_basis.append("Convenio de Rotterdam")
     if paraquat:
-        rspo_basis.append('Paraquat')
+        rspo_basis.append("Paraquat")
 
     return {
-        'rspo':rspo,
-        'iscc':iscc,
-        'ra':True,
-        'rspo_basis':rspo_basis,
-        'iscc_basis':iscc_basis,
+        "rspo": rspo,
+        "iscc": iscc,
+        "ra": True,
+        "rspo_basis": rspo_basis,
+        "iscc_basis": iscc_basis,
     }
 
 def evaluate_prohibited(cas_records,hits,warnings=None,unprocessables=0):

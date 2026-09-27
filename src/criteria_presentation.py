@@ -40,7 +40,7 @@ _CMR_CLASSES = {
     "toxicidad para la reproduccion": "Toxicidad reproductiva",
     "reproductive toxicity": "Toxicidad reproductiva",
 }
-_GHS_CATEGORY = re.compile(r"\b(?:GHS|SGA)\s*(?:categor[ií]a\s*)?([1-4][AB]?)\b", re.I)
+_SGA_CATEGORY = re.compile(r"\b(?:GHS|SGA)\s*(?:categor[ií]a\s*)?([1-4][AB]?)\b", re.I)
 _WHO_CLASS = re.compile(r"\b(?:OMS|WHO)\s*(?:class(?:e)?\s*)?(IA|IB|II|III|U|1A|1B|2|3)\b", re.I)
 _ACUTE_CATEGORY = re.compile(r"\b(IA|IB|II|III|U|1A|1B|2|3)\b", re.I)
 
@@ -56,7 +56,7 @@ _WHO_CATEGORIES = {
     "U": ("U", "poco probable que presente peligro agudo bajo uso normal"),
 }
 
-_GHS_CMR_MEANINGS = {
+_SGA_CMR_MEANINGS = {
     ("Carcinogenicidad", "1A"): "Se sabe que causa cáncer en seres humanos.",
     ("Carcinogenicidad", "1B"): "Se presume que causa cáncer en seres humanos.",
     ("Carcinogenicidad", "2"): "Se sospecha que puede causar cáncer.",
@@ -70,15 +70,15 @@ _GHS_CMR_MEANINGS = {
 
 _CONVENTIONS = {
     "M": (
-        "Protocolo de Montreal",
-        "Controla y elimina gradualmente sustancias que agotan la capa de ozono.",
+        "Protocolo de Montreal · sustancias que agotan la capa de ozono",
+        "Acuerdo internacional para controlar y eliminar gradualmente sustancias que agotan la capa de ozono.",
     ),
     "R": (
-        "Convenio de Rotterdam",
-        "Aplica el procedimiento de consentimiento fundamentado previo a ciertos químicos y plaguicidas en el comercio internacional; no es por sí solo una prohibición general.",
+        "Convenio de Rotterdam · consentimiento fundamentado previo",
+        "Somete ciertos químicos y plaguicidas al procedimiento de consentimiento fundamentado previo en el comercio internacional; la referencia no significa por sí sola una prohibición general.",
     ),
     "E": (
-        "Convenio de Estocolmo",
+        "Convenio de Estocolmo · contaminantes orgánicos persistentes",
         "Busca proteger la salud y el ambiente frente a contaminantes orgánicos persistentes; las medidas dependen del anexo aplicable.",
     ),
 }
@@ -101,21 +101,22 @@ def _criterion_class(label: str) -> str | None:
 
 
 def _explain_ghs(item: str, source_list: str) -> CriterionExplanation | None:
-    match = _GHS_CATEGORY.search(item)
+    match = _SGA_CATEGORY.search(item)
     if not match:
         return None
 
     category = match.group(1).upper()
     before_category = item[:match.start()]
-    # The class is taken from the text before the GHS category, commonly
-    # "Carcinogenicidad: GHS 1B". A bare "GHS 1B" deliberately has no class.
+    # The class is taken from the text before the category, commonly
+    # "Carcinogenicidad: SGA 1B". Legacy GHS wording is accepted as input;
+    # a bare category deliberately has no class.
     label_part = re.sub(r"\b(?:GHS|SGA)\b", "", before_category, flags=re.I)
     label_part = label_part.strip(" :-·|")
     hazard_class = _criterion_class(label_part)
 
     if hazard_class:
-        label = f"{hazard_class} · GHS {category}"
-        meaning = _GHS_CMR_MEANINGS.get((hazard_class, category))
+        label = f"{hazard_class} · SGA {category}"
+        meaning = _SGA_CMR_MEANINGS.get((hazard_class, category))
         relevant = source_list == "PROHIBITED" and category in {"1A", "1B"}
         if meaning and relevant:
             explanation = (
@@ -129,30 +130,30 @@ def _explain_ghs(item: str, source_list: str) -> CriterionExplanation | None:
             )
         else:
             explanation = (
-                f"La fuente registra GHS {category} para {hazard_class.lower()}. "
+                f"La fuente registra SGA {category} para {hazard_class.lower()}. "
                 "La categoría debe interpretarse dentro de esta clase de peligro."
             )
         return CriterionExplanation(
-            label, explanation, "GHS/SGA", hazard_class, category, relevant
+            label, explanation, "SGA", hazard_class, category, relevant
         )
 
     # Preserve an explicitly named non-CMR class, but do not map it to an RA
     # carcinogenicity, mutagenicity, or reproductive-toxicity criterion.
     if label_part:
-        label = f"{label_part} · GHS {category}"
+        label = f"{label_part} · SGA {category}"
         explanation = (
-            f"La fuente registra GHS {category} para esta clase. La categoría "
+            f"La fuente registra SGA {category} para esta clase. La categoría "
             "no se interpreta como carcinogenicidad, mutagenicidad ni toxicidad "
             "reproductiva."
         )
-        return CriterionExplanation(label, explanation, "GHS/SGA", label_part, category, False)
+        return CriterionExplanation(label, explanation, "SGA", label_part, category, False)
 
     return CriterionExplanation(
-        f"GHS {category} · clase de peligro no indicada",
+        f"SGA {category} · clase de peligro no indicada",
         "La fuente no identifica la clase de peligro. No es posible determinar "
         "el significado toxicológico ni si corresponde a un criterio SGA de "
         "Rainforest Alliance; la aplicación no infiere esa clase.",
-        "GHS/SGA",
+        "SGA",
         None,
         category,
         False,
@@ -160,7 +161,7 @@ def _explain_ghs(item: str, source_list: str) -> CriterionExplanation | None:
 
 
 def _explain_who(item: str, source_list: str) -> CriterionExplanation | None:
-    if _GHS_CATEGORY.search(item):
+    if _SGA_CATEGORY.search(item):
         return None
     label, separator, value = item.partition(":")
     folded_label = _fold(label)
@@ -220,11 +221,11 @@ def _explain_ra_marker(item: str, source_list: str) -> CriterionExplanation | No
         return None
 
     return CriterionExplanation(
-        f"{hazard_class} · GHS 1A/1B",
+        f"{hazard_class} · SGA 1A/1B",
         "La lista de Rainforest Alliance marca esta clase de peligro dentro de los "
         "criterios SGA 1A/1B. La fila local identifica la clase, pero no especifica "
         "si la subcategoría es 1A o 1B.",
-        "GHS/SGA",
+        "SGA",
         hazard_class,
         "1A/1B",
         True,
@@ -237,7 +238,7 @@ def _explain_convention(item: str) -> list[CriterionExplanation]:
         return []
     codes = re.findall(r"(?<![A-Z])([MRE])(?![A-Z])", value.upper())
     return [
-        CriterionExplanation(f"Referencia a { _CONVENTIONS[code][0] }", _CONVENTIONS[code][1], "Convenio")
+        CriterionExplanation(_CONVENTIONS[code][0], _CONVENTIONS[code][1], "Convenio")
         for code in dict.fromkeys(codes)
     ]
 
@@ -295,7 +296,7 @@ def interpret_criteria(criteria: str | None, source_list: str = "PROHIBITED") ->
             if codes:
                 results.extend(
                     CriterionExplanation(
-                        f"Referencia a {_CONVENTIONS[code][0]}",
+                        _CONVENTIONS[code][0],
                         _CONVENTIONS[code][1],
                         "Convenio",
                     )

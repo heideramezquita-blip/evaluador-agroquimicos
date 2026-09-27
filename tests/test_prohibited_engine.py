@@ -2,7 +2,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 from src.engine import analyze
-from src.models import PdfDocument,PdfPage
+from src.models import PdfDocument,PdfPage,ProhibitedEntry
+from src.rules import standard_scope
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_MITIGATION,STATUS_OBSOLETE,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_NO_MATCH
 MASTER=Path(__file__).resolve().parents[1]/'data'/'master_restrictions.csv'
 
@@ -58,6 +59,17 @@ class ProhibitedEngineTests(unittest.TestCase):
  def test_paraquat_maps_explicitly_to_rspo(self):
   r=analyze([],manual_cas_text='4685-14-7',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_NO_USE_RSPO)
+ def test_sga_cmr_category_2_does_not_map_to_rspo(self):
+  entry=ProhibitedEntry('Sustancia de prueba','123-45-6','', 'Carcinogenicidad: SGA 2','test','1','2026')
+  scope=standard_scope(entry)
+  self.assertFalse(scope['rspo'])
+  self.assertFalse(scope['iscc'])
+ def test_rspo_scope_names_each_documented_sga_class(self):
+  entry=ProhibitedEntry('Sustancia de prueba','123-45-6','', 'Carcinogenicidad: ✓; Toxicidad reproductiva: ✓','test','1','2026')
+  scope=standard_scope(entry)
+  self.assertTrue(scope['rspo'])
+  self.assertIn('SGA · Carcinogenicidad 1A/1B',scope['rspo_basis'])
+  self.assertIn('SGA · Toxicidad reproductiva 1A/1B',scope['rspo_basis'])
  def test_ra_severe_only_does_not_auto_map_to_rspo_or_iscc(self):
   r=analyze([],manual_cas_text='34256-82-1',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
