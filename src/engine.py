@@ -40,7 +40,7 @@ def _identity_basis(documents, records) -> list[str]:
         for page in document.pages
     )
     if explicit_active_section:
-        basis.append("referencia explícita a ingrediente activo")
+        basis.append("referencia explícita a ingrediente activo/composición")
 
     manual_cas = any(
         occurrence.source == "manual"
