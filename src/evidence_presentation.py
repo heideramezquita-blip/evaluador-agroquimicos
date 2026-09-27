@@ -41,7 +41,7 @@ CONTEXT_PRIORITY = {
     DECOMPOSITION: 6,
 }
 
-CHANNEL_LABELS = {"CAS": "CAS", "NAME": "Nombre"}
+CHANNEL_LABELS = {"CAS": "CAS", "NAME": "Nombre", "ACTIVE_IDENTITY": "Ingrediente activo"}
 
 USAGE_LABELS = {
     "A": "Acaricida",
