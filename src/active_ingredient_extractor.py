@@ -636,6 +636,59 @@ def _extract_from_blocks(
     return evidence
 
 
+def _extract_composition_row_fallback(
+    text: str,
+    source_file: str,
+    page_number: int,
+) -> list[ActiveIngredientEvidence]:
+    """Recover concentration-bearing composition rows from spatial text.
+
+    Some table PDFs merge the active-ingredient header with a neighbouring
+    properties panel. Their block geometry can therefore be ambiguous even
+    though the sorted page text still preserves a row such as
+    "Ácido 1-naftalenacético (ANA) 60 g/kg". This fallback only accepts rows
+    with an explicit concentration immediately following the candidate name.
+    """
+    lines = _semantic_lines(text)
+    evidence: list[ActiveIngredientEvidence] = []
+
+    for index, line in enumerate(lines):
+        if not has_active_marker(line):
+            continue
+
+        for row in lines[index + 1 : index + 8]:
+            if _is_stop(row):
+                break
+            concentration_match = _CONCENTRATION.search(row)
+            if not concentration_match:
+                continue
+
+            raw_name = row[: concentration_match.start()].strip(" :-/|;,.+")
+            raw_name = re.sub(r"(?i)^aspecto?\s*:\s*", "", raw_name).strip()
+            if not _looks_like_name(raw_name):
+                continue
+
+            cas_values = _valid_cas_in_text(row)
+            evidence.append(
+                ActiveIngredientEvidence(
+                    name=_clean_visible_text(raw_name),
+                    source_file=source_file,
+                    page=page_number,
+                    concentration=concentration_match.group(1).strip(),
+                    cas=cas_values[0] if len(cas_values) == 1 else "",
+                    context=" | ".join(
+                        lines[max(0, index - 2) : min(len(lines), index + 8)]
+                    ),
+                )
+            )
+            break
+
+        if evidence:
+            break
+
+    return evidence
+
+
 def _extract_from_lines(
     text: str,
     source_file: str,
@@ -680,13 +733,30 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
 
     for page in document.pages:
         if page.blocks:
-            evidence.extend(
-                _extract_from_blocks(page.blocks, document.file_name, page.page)
+            page_evidence = _extract_from_blocks(
+                page.blocks,
+                document.file_name,
+                page.page,
             )
         else:
-            evidence.extend(
-                _extract_from_lines(page.text or "", document.file_name, page.page)
+            page_evidence = _extract_from_lines(
+                page.text or "",
+                document.file_name,
+                page.page,
             )
+
+        # Prefer an explicit concentration-bearing composition row over a
+        # concentration-less candidate produced by an ambiguous merged table.
+        if not any(item.concentration for item in page_evidence):
+            row_fallback = _extract_composition_row_fallback(
+                page.text or "",
+                document.file_name,
+                page.page,
+            )
+            if row_fallback:
+                page_evidence = row_fallback
+
+        evidence.extend(page_evidence)
 
         # Some FT files declare the active ingredient in a direct sentence
         # rather than a field/table. This path is deliberately narrow and only
