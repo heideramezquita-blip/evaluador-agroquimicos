@@ -76,6 +76,25 @@ class ProhibitedEngineTests(unittest.TestCase):
  def test_manual_prohibited_with_active_confirmation_is_no_use(self):
   r=analyze([],manual_cas_text='153719234',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
+ def test_explicit_lufenuron_identity_triggers_mitigation_not_review(self):
+  r=run_text(
+   'FICHA TÉCNICA\n'
+   'COMPOSICIÓN GARANTIZADA:\n'
+   'Ingrediente activo:\n'
+   'Lufenuron\n'
+   'Ingredientes aditivos\n'
+   '50 g/L\n'
+   'Insecticida agrícola.'
+  )
+  self.assertEqual(r['evaluation'].status,STATUS_MITIGATION)
+  self.assertIn('Lufenurón',r['evaluation'].message)
+  self.assertTrue(any(
+   h.entry.source_list=='MITIGATE_RISK'
+   and h.entry.ingredient=='Lufenurón'
+   and h.context_class=='ACTIVE'
+   for h in r['display_hits']
+  ))
+
  def test_mitigation_list_triggers_attention(self):
   r=analyze([],manual_cas_text='52918-63-5',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_MITIGATION)
