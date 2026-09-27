@@ -238,6 +238,20 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     elif ev.status==STATUS_IDENTITY_REVIEW:
         st.caption('El PDF es legible, pero no se encontró una identidad química suficientemente clara para sostener un resultado negativo contra las listas.')
 
+    if result['display_hits']:
+        st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
+        for g in consolidate_evidence_hits(result['display_hits']):
+            pages=evidence_pages(g); classes=' · '.join(context_label(x) for x in sorted(g['classes']))
+            usage=usage_label(g['usage'])
+            usage_html=f'<br><b>Uso principal:</b> {escape(usage)}' if usage else ''
+            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div>{criterion_summary_html(g)}</div>',unsafe_allow_html=True)
+            with st.expander(f'Ver evidencia documental — {g["ingredient"]}'):
+                st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
+                st.write('**Tipo de evidencia:**',classes)
+                st.write('**Página(s) más relevante(s):**',pages)
+                st.caption('La clasificación describe el criterio de la lista. El papel de la sustancia se evalúa aparte con la evidencia del documento; la concentración solo se confirma si el PDF la especifica.')
+                st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
+
     if result['active_ingredients']:
         st.markdown('<div class="section-title">Identidad documental detectada</div>',unsafe_allow_html=True)
         st.markdown(
@@ -258,20 +272,6 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
             'aunque no coincidan con una lista normativa. La ausencia de CAS asociado no impide mostrar '
             'el ingrediente; solo indica que no se confirmó un CAS junto a esa evidencia documental.'
         )
-
-    if ev.hits:
-        st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
-        for g in consolidate_evidence_hits(ev.hits):
-            pages=evidence_pages(g); classes=' · '.join(context_label(x) for x in sorted(g['classes']))
-            usage=usage_label(g['usage'])
-            usage_html=f'<br><b>Uso principal:</b> {escape(usage)}' if usage else ''
-            st.markdown(f'<div class="match-box"><div class="match-title">{escape(g["ingredient"])}</div><div class="match-meta"><b>Lista:</b> {escape(list_label(g["source_list"]))} &nbsp;·&nbsp; <b>CAS:</b> {cas_html(g["cas"])}{usage_html}<br><b>Evidencia:</b> {escape(classes)}<br><b>Documento:</b> {escape(g["file"])} &nbsp;·&nbsp; <b>Página(s) más relevante(s):</b> {escape(pages)}<br>{scope_html(g)}</div>{criterion_summary_html(g)}</div>',unsafe_allow_html=True)
-            with st.expander(f'Ver evidencia documental — {g["ingredient"]}'):
-                st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
-                st.write('**Tipo de evidencia:**',classes)
-                st.write('**Página(s) más relevante(s):**',pages)
-                st.caption('La clasificación describe el criterio de la lista. El papel de la sustancia se evalúa aparte con la evidencia del documento; la concentración solo se confirma si el PDF la especifica.')
-                st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
 
     if result['manual_invalid']:st.warning('CAS manuales descartados por formato/checksum: '+', '.join(result['manual_invalid']))
     for w in ev.warnings:st.info(w)
