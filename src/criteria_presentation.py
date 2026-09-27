@@ -31,9 +31,14 @@ def _split_items(criteria: str | None) -> list[str]:
 
 _CMR_CLASSES = {
     "carcinogenicidad": "Carcinogenicidad",
+    "carcinogenicity": "Carcinogenicidad",
     "mutagenicidad": "Mutagenicidad",
+    "mutagenicity": "Mutagenicidad",
+    "germ cell mutagenicity": "Mutagenicidad",
+    "mutagenicity of germ cells": "Mutagenicidad",
     "toxicidad reproductiva": "Toxicidad reproductiva",
     "toxicidad para la reproduccion": "Toxicidad reproductiva",
+    "reproductive toxicity": "Toxicidad reproductiva",
 }
 _GHS_CATEGORY = re.compile(r"\b(?:GHS|SGA)\s*(?:categor[ií]a\s*)?([1-4][AB]?)\b", re.I)
 _WHO_CLASS = re.compile(r"\b(?:OMS|WHO)\s*(?:class(?:e)?\s*)?(IA|IB|II|III|U|1A|1B|2|3)\b", re.I)
@@ -258,27 +263,6 @@ def interpret_criterion(item: str, source_list: str = "PROHIBITED") -> Criterion
         "La lista registra este criterio; la información disponible no permite añadir una interpretación más específica.",
         source_list or None,
     )
-
-
-def interpret_criteria(criteria: str | None, source_list: str = "PROHIBITED") -> list[CriterionExplanation]:
-    """Interpret each semicolon-separated criterion from the normalized list."""
-    results: list[CriterionExplanation] = []
-    for item in _split_items(criteria):
-        if "convenciones internacionales" in _fold(item):
-            label, _, value = item.partition(":")
-            codes = re.findall(r"(?<![A-Z])([MRE])(?![A-Z])", value.upper())
-            if codes:
-                results.extend(
-                    CriterionExplanation(
-                        f"Referencia a {_CONVENTIONS[code][0]}",
-                        _CONVENTIONS[code][1],
-                        "Convenio",
-                    )
-                    for code in dict.fromkeys(codes)
-                )
-                continue
-        results.append(interpret_criterion(item, source_list))
-    return results
 
 
 def interpret_criteria(criteria: str | None, source_list: str = "PROHIBITED") -> list[CriterionExplanation]:
