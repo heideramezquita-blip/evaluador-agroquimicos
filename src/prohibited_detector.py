@@ -162,21 +162,29 @@ def _active_identity_hits(
 
     for item in active_ingredients:
         item_key = match_key(item.name)
-        if not item_key:
-            continue
 
         for entry in db.specific:
+            cas_match = bool(item.cas and entry.cas and item.cas == entry.cas)
             matched_alias = next(
                 (
                     alias
                     for alias, alias_key in db.alias_pairs(entry)
-                    if alias_key == item_key
+                    if item_key and alias_key == item_key
                 ),
                 None,
             )
-            if not matched_alias:
+            if not cas_match and not matched_alias:
                 continue
 
+            strength = "validated_cas" if cas_match else "exact_name"
+            detail = (
+                "Identidad química del producto/ingrediente confirmada documentalmente "
+                "y coincidente por CAS validado con una lista de referencia."
+                if cas_match
+                else
+                "Ingrediente activo identificado explícitamente por el documento "
+                "y coincidente de forma exacta/normalizada con una lista de referencia."
+            )
             hits.append(
                 EvidenceHit(
                     entry,
@@ -186,9 +194,8 @@ def _active_identity_hits(
                     item.page,
                     item.context or item.name,
                     "ACTIVE",
-                    "exact_name",
-                    "Ingrediente activo identificado explícitamente por el documento "
-                    "y coincidente de forma exacta/normalizada con una lista de referencia.",
+                    strength,
+                    detail,
                 )
             )
 
