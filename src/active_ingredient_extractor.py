@@ -364,11 +364,22 @@ def _candidate_tuples(
             continue
 
         for part in _split_candidate_line(candidate_line):
-            if not _looks_like_name(part):
+            parsed_part = part
+            concentration = _extract_concentration(part)
+
+            # Composition rows frequently use "Teflubenzuron: 150 g/L ...".
+            # Treat only the short field before ':' as the identity when the
+            # remainder contains a concentration. Structural labels such as
+            # "Nombre químico:" were already excluded above.
+            if ":" in part and concentration:
+                prefix = part.split(":", 1)[0].strip()
+                if 1 <= len(match_key(prefix).split()) <= 6:
+                    parsed_part = prefix
+
+            if not _looks_like_name(parsed_part):
                 continue
 
-            name = _strip_concentration(part)
-            concentration = _extract_concentration(part)
+            name = _strip_concentration(parsed_part)
             same_line_cas = _valid_cas_in_text(part)
             candidates.append(
                 (
@@ -393,6 +404,46 @@ def _candidate_tuples(
     return candidates
 
 
+def _contains_stop_field(lines: list[str]) -> bool:
+    return any(_is_stop(line) for line in lines)
+
+
+def _metadata_values(lines: list[str]) -> tuple[str, str]:
+    """Extract concentration/CAS from structural metadata without creating names."""
+    text = " | ".join(lines)
+    concentration = _extract_concentration(text)
+    cas_values = _valid_cas_in_text(text)
+    cas = cas_values[0] if len(cas_values) == 1 else ""
+    return concentration, cas
+
+
+def _truncate_after_active_label(lines: list[str]) -> list[str]:
+    """Keep only identity payload inside the label block.
+
+    A PDF block may contain "Ingredientes activos: X" followed immediately by
+    another structural field such as "Nombre químico:". Do not let the next
+    field become part of the active-ingredient window.
+    """
+    payload: list[str] = []
+    found = False
+
+    for line in lines:
+        if not found:
+            tail = _active_label_tail(line)
+            if tail is None:
+                continue
+            found = True
+            if tail:
+                payload.append(tail)
+            continue
+
+        if _starts_structural_field([line]) or _is_stop(line):
+            break
+        payload.append(line)
+
+    return payload
+
+
 def _horizontal_overlap(a: PdfTextBlock, b: PdfTextBlock) -> float:
     overlap = max(0.0, min(a.x1, b.x1) - max(a.x0, b.x0))
     width = max(1.0, min(a.x1 - a.x0, b.x1 - b.x0))
@@ -412,24 +463,20 @@ def _block_window(
 ) -> tuple[list[str], str, str]:
     label = blocks[label_index]
     label_lines = _semantic_lines(label.text)
-    payload: list[str] = []
+    payload = _truncate_after_active_label(label_lines)
+    inline_candidates = _candidate_tuples(payload)
 
-    # Keep anything following the explicit label inside the same PDF block.
-    for index, line in enumerate(label_lines):
-        tail = _active_label_tail(line)
-        if tail is None:
-            continue
-        if tail:
-            payload.append(tail)
-        payload.extend(label_lines[index + 1 :])
-        break
-
-    # Then inspect only geometrically aligned blocks immediately below the
-    # label. This prevents a two-column FT from mixing the active-ingredient
-    # sidebar with "Modo de Acción" or other prose from the main column.
     aligned_texts = [label.text]
-    metadata_text = ""
-    max_bottom = label.y1 + 150
+    metadata_parts: list[str] = []
+    max_bottom = label.y1 + 180
+
+    # If the label block already contains a usable identity (common in web
+    # tables and compact FT layouts), do not absorb generic neighbouring text.
+    # Only scan nearby structural blocks to enrich concentration/CAS.
+    identity_found = bool(inline_candidates)
+    fallback_payload: list[str] = []
+    concentration_payload: list[str] = []
+
     for candidate in blocks[label_index + 1 :]:
         if candidate.y0 > max_bottom:
             break
@@ -442,29 +489,58 @@ def _block_window(
         if not lines:
             continue
 
-        if _is_stop(lines[0]) or _starts_structural_field(lines):
-            aligned_texts.append(candidate.text)
-            if _looks_like_composition_table(lines):
-                metadata_text = _clean_visible_text(candidate.text)
-            break
-
-        # Another explicit active label starts a separate block, not a
-        # continuation of this one.
         if _active_label_tail(lines[0]) is not None:
             break
 
-        aligned_texts.append(candidate.text)
-        payload.extend(lines)
+        structural = _starts_structural_field(lines)
+        stop_field = _contains_stop_field(lines)
 
-        # A concentration-bearing aligned block is normally the identity row.
-        # Continue only until the next aligned section heading, which is
-        # handled by the stop logic above.
-        max_bottom = max(max_bottom, candidate.y1 + 70)
+        if structural:
+            aligned_texts.append(candidate.text)
+            concentration, cas = _metadata_values(lines)
+            if concentration or cas or _looks_like_composition_table(lines):
+                metadata_parts.append(_clean_visible_text(candidate.text))
+                max_bottom = max(max_bottom, candidate.y1 + 70)
+                continue
+            # A new non-metadata structural field ends the identity area.
+            if identity_found:
+                break
+            continue
+
+        if stop_field:
+            # "C.s.p. 1 L | Ingredientes aditivos:" is a single extracted
+            # block in some FT files. The additive marker terminates the active
+            # ingredient area; preceding text in that block is not an active.
+            break
+
+        if identity_found:
+            # Identity is already explicit in the label block. Ignore generic
+            # nearby prose/catalog text; only structural metadata above may
+            # enrich it.
+            continue
+
+        block_candidates = _candidate_tuples(lines)
+        if not block_candidates:
+            continue
+
+        aligned_texts.append(candidate.text)
+        if any(item[1] for item in block_candidates):
+            # In two-column/table PDFs, non-identity text may be interleaved
+            # before the real composition row. A concentration-bearing row is
+            # materially stronger, so prefer it over earlier loose candidates.
+            concentration_payload.extend(lines)
+            identity_found = True
+            max_bottom = max(max_bottom, candidate.y1 + 70)
+        elif not fallback_payload:
+            fallback_payload.extend(lines)
+
+    if not inline_candidates:
+        payload = concentration_payload or fallback_payload
 
     return (
         payload,
         " | ".join(_clean_visible_text(x) for x in aligned_texts),
-        metadata_text,
+        " | ".join(metadata_parts),
     )
 
 
@@ -509,9 +585,22 @@ def _extract_from_blocks(
             continue
 
         payload, context, metadata_text = _block_window(blocks, block_index)
+        candidates = _candidate_tuples(payload, metadata_text=metadata_text)
+
+        if len(candidates) == 1 and metadata_text:
+            name, concentration, cas = candidates[0]
+            metadata_concentration, metadata_cas = _metadata_values(
+                _semantic_lines(metadata_text)
+            )
+            candidates[0] = (
+                name,
+                concentration or metadata_concentration,
+                cas or metadata_cas,
+            )
+
         evidence.extend(
             _evidence_from_candidates(
-                _candidate_tuples(payload, metadata_text=metadata_text),
+                candidates,
                 source_file=source_file,
                 page_number=page_number,
                 context=context,
