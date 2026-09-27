@@ -4,6 +4,7 @@ from pathlib import Path
 
 from .active_ingredient_extractor import extract_active_ingredients
 from .cas_extractor import extract_document_cas, merge_cas_records
+from .composition_extractor import extract_composition_components
 from .cas_utils import parse_manual_cas
 from .context_classifier import ACTIVE, COMPOSITION, classify_context
 from .models import CasOccurrence, CasRecord
@@ -11,6 +12,7 @@ from .pdf_reader import read_pdf
 from .prohibited_database import ProhibitedDatabase
 from .prohibited_detector import detect_candidates
 from .rules import evaluate_prohibited, relevant_supporting_hits
+from .text_utils import match_key
 
 
 DEFAULT_MASTER_PATH = Path(__file__).resolve().parents[1] / "data" / "master_restrictions.csv"
@@ -50,6 +52,37 @@ def _identity_basis(documents, records, active_ingredients=None) -> list[str]:
     return basis
 
 
+def _enrich_active_ingredients(active_ingredients, composition_components):
+    """Fill missing active-ingredient metadata from an exact composition row.
+
+    This never promotes a composition component to active ingredient. It only
+    enriches an identity that another documentary path already established.
+    """
+    by_name = {
+        match_key(component.name): component
+        for component in composition_components
+        if match_key(component.name)
+    }
+    by_cas = {
+        component.cas: component
+        for component in composition_components
+        if component.cas
+    }
+
+    for item in active_ingredients:
+        component = by_name.get(match_key(item.name))
+        if component is None and item.cas:
+            component = by_cas.get(item.cas)
+        if component is None:
+            continue
+        if not item.cas and component.cas:
+            item.cas = component.cas
+        if not item.concentration and component.concentration:
+            item.concentration = component.concentration
+
+    return active_ingredients
+
+
 def _manual_records(valid_cas: list[str], active_confirmed: bool) -> list[CasRecord]:
     role = "active_explicit" if active_confirmed else "unknown"
     return [
@@ -79,6 +112,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
     invalid_candidates = []
     warnings = []
     active_ingredients = []
+    composition_components = []
     read_failures = 0
 
     for file_name, payload in files:
@@ -96,6 +130,12 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         invalid_candidates.extend(invalid)
         if document.processable:
             active_ingredients.extend(extract_active_ingredients(document))
+            composition_components.extend(extract_composition_components(document))
+
+    active_ingredients = _enrich_active_ingredients(
+        active_ingredients,
+        composition_components,
+    )
 
     manual_valid, manual_invalid = parse_manual_cas(manual_cas_text)
     record_groups.append(_manual_records(manual_valid, manual_active_confirmed))
@@ -136,6 +176,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         "display_hits": display_hits,
         "identity_basis": identity_basis,
         "active_ingredients": active_ingredients,
+        "composition_components": composition_components,
         "prohibited_specific_count": sum(bool(entry.cas) for entry in database.prohibited),
         "prohibited_group_count": sum(not bool(entry.cas) for entry in database.prohibited),
         "obsolete_count": len(database.obsolete),
