@@ -176,7 +176,7 @@ def _evaluate_strong_prohibited(strong_hits, cas_records, warnings) -> Evaluatio
         message = (
             "Coincidencia con criterios explícitos de plaguicidas de RSPO e ISCC: "
             + ", ".join(both)
-            + ". Rainforest Alliance también incluye el/los ingrediente(s) en su lista PROHIBIDOS."
+            + ". Rainforest Alliance también incluye la(s) sustancia(s) detectada(s) en su lista PROHIBIDOS."
         )
         if rspo_only:
             message += (
@@ -196,7 +196,7 @@ def _evaluate_strong_prohibited(strong_hits, cas_records, warnings) -> Evaluatio
         message = (
             "Coincidencia con un criterio explícito de plaguicidas de RSPO: "
             + ", ".join(rspo_only)
-            + ". Rainforest Alliance también incluye el/los ingrediente(s) en su lista PROHIBIDOS. Esta coincidencia no se traslada automáticamente como prohibición ISCC."
+            + ". Rainforest Alliance también incluye la(s) sustancia(s) detectada(s) en su lista PROHIBIDOS. Esta coincidencia no se traslada automáticamente como prohibición ISCC."
         )
         if ra_only:
             message += (
@@ -215,7 +215,7 @@ def _evaluate_strong_prohibited(strong_hits, cas_records, warnings) -> Evaluatio
     names = ra_only or sorted({hit.entry.ingredient for hit in strong_hits})
     return Evaluation(
         STATUS_RA_PROHIBITED,
-        "Rainforest Alliance incluye el/los ingrediente(s) en su lista PROHIBIDOS: "
+        "Rainforest Alliance incluye la(s) sustancia(s) detectada(s) en su lista PROHIBIDOS: "
         + ", ".join(names)
         + ". El criterio detectado no se trata como equivalencia automática de prohibición en RSPO o ISCC; revise el requisito aplicable antes de decidir su uso.",
         strong_hits,
@@ -263,8 +263,8 @@ def _review_evaluation(
                 "de Rainforest Alliance: "
                 + ", ".join(names)
                 + ". La coincidencia con la lista es real, pero no se confirmó "
-                "automáticamente que la sustancia corresponda al ingrediente activo "
-                "del producto. Confirme la identidad antes de tratarla como una "
+                "automáticamente el papel de la sustancia dentro del producto. "
+                "Confirme la identidad documental antes de tratarla como una "
                 "prohibición del producto."
             )
         else:
@@ -306,8 +306,8 @@ def _review_evaluation(
                 "Se encontró un CAS que coincide exactamente con la lista de "
                 "MITIGACIÓN DE RIESGOS de Rainforest Alliance: "
                 + ", ".join(names)
-                + ". No se confirmó automáticamente que corresponda al ingrediente "
-                "activo del producto; confirme la identidad antes de aplicar las "
+                + ". No se confirmó automáticamente el papel de la sustancia dentro del "
+                "producto; confirme la identidad documental antes de aplicar las "
                 "medidas de mitigación asociadas."
             )
         else:
@@ -359,7 +359,7 @@ def evaluate_prohibited(
         names = sorted({hit.entry.ingredient for hit in strong_obsolete})
         return Evaluation(
             STATUS_OBSOLETE,
-            "Rainforest Alliance identifica como obsoleto el/los plaguicida(s): "
+            "Rainforest Alliance identifica como obsoleta(s) la(s) sustancia(s) detectada(s): "
             + ", ".join(names)
             + ". Esta clasificación se conserva como alerta complementaria; la decisión frente a RSPO/ISCC debe verificarse con sus requisitos aplicables y la normativa nacional.",
             strong_obsolete,
@@ -372,7 +372,7 @@ def evaluate_prohibited(
         names = sorted({hit.entry.ingredient for hit in strong_mitigation})
         return Evaluation(
             STATUS_MITIGATION,
-            "Rainforest Alliance incluye este ingrediente en su lista de mitigación de riesgos: "
+            "Rainforest Alliance incluye la(s) sustancia(s) detectada(s) en su lista de mitigación de riesgos: "
             + ", ".join(names)
             + ". Esta señal se presenta como referencia complementaria y no se convierte automáticamente en una prohibición RSPO o ISCC.",
             strong_mitigation,
