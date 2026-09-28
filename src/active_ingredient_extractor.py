@@ -509,6 +509,19 @@ def _looks_like_name(line: str) -> bool:
     if key in non_identity_tokens:
         return False
 
+    # Comparative SDS wording such as "Para ingrediente(s) activo(s)
+    # similare(s)" is a toxicology/ecology reference. Parentheses in "(s)"
+    # previously let the compact-name fallback truncate this to the plausible
+    # looking but meaningless identity "Para ingrediente".
+    if key.startswith("para ingrediente"):
+        return False
+    if (
+        "para ingrediente" in key
+        and "activo" in key
+        and ("similar" in key or "similare" in key)
+    ):
+        return False
+
     words = key.split()
     if len(words) > 12 or len(value) > 120:
         return False
