@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Si utiliza este software, cite este repositorio."
+title: "Evaluador de Agroquímicos"
+type: software
+authors:
+  - family-names: "Amézquita"
+    given-names: "Heider"
+repository-code: "https://github.com/heideramezquita-blip/evaluador-agroquimicos"
+url: "https://evaluador-agroquimicos.streamlit.app/"
+license: MIT
