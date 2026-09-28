@@ -341,7 +341,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
     record_groups.append(_manual_records(manual_valid, manual_active_confirmed))
     records = merge_cas_records(record_groups)
 
-    hits = detect_candidates(documents, records, database, active_ingredients)
+    hits = detect_candidates(documents, records, database)
     if manual_active_confirmed:
         for hit in hits:
             if hit.channel == "CAS" and hit.source_file == "Entrada manual":
