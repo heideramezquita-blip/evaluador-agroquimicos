@@ -11,6 +11,7 @@ INCIDENTAL = "INCIDENTAL"
 NEGATED = "NEGATED"
 DECOMPOSITION = "DECOMPOSITION_COMBUSTION"
 REFERENCE = "REFERENCE_TOXICOLOGY"
+REFERENCE_LIST = "REFERENCE_LIST"
 UNCERTAIN = "UNCERTAIN"
 
 _ACTIVE_PATTERNS = (
@@ -20,6 +21,27 @@ _ACTIVE_PATTERNS = (
 )
 _IA_MARKER = re.compile(
     r"(?:^|[^a-z0-9])i\s*\.?\s*a\s*\.?(?:$|[^a-z0-9])"
+)
+
+_REFERENCE_LIST_PATTERNS = (
+    re.compile(
+        r"\b(?:lista|listado)\s+(?:de\s+)?"
+        r"(?:plaguicidas|pesticidas|sustancias|ingredientes)\s+"
+        r"(?:prohibidos?|obsoletos?)\b"
+    ),
+    re.compile(
+        r"\b(?:lista|listado)\s+(?:de\s+)?"
+        r"(?:plaguicidas|pesticidas|sustancias|ingredientes)"
+        r".{0,80}\bmitigaci[oó]n\b"
+    ),
+    re.compile(
+        r"\b(?:prohibited|obsolete)\s+"
+        r"(?:pesticides?|substances?|ingredients?)\s+list\b"
+    ),
+    re.compile(
+        r"\blist\s+of\s+(?:prohibited|obsolete)\s+"
+        r"(?:pesticides?|substances?|ingredients?)\b"
+    ),
 )
 
 _PRODUCT_IDENTITY_MARKERS = (
@@ -117,6 +139,16 @@ def has_active_marker(text: str) -> bool:
     return False
 
 
+def has_reference_list_marker(text: str) -> bool:
+    """Recognize documents whose purpose is to enumerate reference-list entries.
+
+    A table headed "Ingrediente activo" inside a prohibited/obsolete/mitigation
+    list describes the list schema, not the composition of a product.
+    """
+    normalized = normalize_text(text)
+    return any(pattern.search(normalized) for pattern in _REFERENCE_LIST_PATTERNS)
+
+
 def has_product_identity_marker(text: str) -> bool:
     """Recognize explicit Section 1/product-identity fields."""
     normalized = normalize_text(text)
@@ -189,6 +221,8 @@ def _global_context_class(normalized: str) -> str:
         return DECOMPOSITION
     if _contains_any(normalized, _INCIDENTAL_MARKERS):
         return INCIDENTAL
+    if has_reference_list_marker(normalized):
+        return REFERENCE_LIST
     if has_active_marker(normalized):
         return ACTIVE
     if _contains_any(normalized, _REFERENCE_MARKERS):
