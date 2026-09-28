@@ -8,6 +8,7 @@ from .context_classifier import (
     INCIDENTAL,
     NEGATED,
     REFERENCE,
+    REFERENCE_LIST,
 )
 from .criteria_presentation import convention_codes, interpret_criteria
 from .models import Evaluation
@@ -30,7 +31,7 @@ SOURCE_PROHIBITED = "PROHIBITED"
 SOURCE_OBSOLETE = "OBSOLETE"
 SOURCE_MITIGATION = "MITIGATE_RISK"
 
-NON_SUPPORTING = {INCIDENTAL, NEGATED, DECOMPOSITION, REFERENCE}
+NON_SUPPORTING = {INCIDENTAL, NEGATED, DECOMPOSITION, REFERENCE, REFERENCE_LIST}
 SUPPORTING = {ACTIVE, COMPOSITION, PRODUCT_IDENTITY}
 
 
@@ -344,6 +345,25 @@ def evaluate_prohibited(
     warnings = list(warnings or [])
     identity_basis = list(identity_basis or [])
     screening_basis = list(screening_basis or [])
+
+    if hits and all(hit.context_class == REFERENCE_LIST for hit in hits):
+        identities = {
+            (hit.entry.source_list, hit.entry.ingredient)
+            for hit in hits
+        }
+        return Evaluation(
+            STATUS_MATCH_REVIEW,
+            "Se detectaron "
+            + str(len(identities))
+            + " identidades de las listas locales en un documento reconocido "
+            + "como lista o referencia normativa. Las coincidencias son reales "
+            + "y se conservan para trazabilidad, pero no se interpretan como "
+            + "ingredientes o componentes de un producto.",
+            hits,
+            cas_records,
+            warnings,
+        )
+
     strong_by_source = _strong_hits_by_source(hits)
 
     strong_prohibited = strong_by_source[SOURCE_PROHIBITED]
