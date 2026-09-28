@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 from src.engine import analyze
 from src.models import PdfDocument,PdfPage,PdfTextBlock,ProhibitedEntry
+from src.prohibited_database import ProhibitedDatabase
 from src.rules import standard_scope
 from src.rules import STATUS_NO_USE,STATUS_NO_USE_RSPO,STATUS_RA_PROHIBITED,STATUS_MITIGATION,STATUS_OBSOLETE,STATUS_PROHIBITED_REVIEW,STATUS_OBSOLETE_REVIEW,STATUS_MITIGATION_REVIEW,STATUS_MATCH_REVIEW,STATUS_DOCUMENT_REVIEW,STATUS_IDENTITY_REVIEW,STATUS_NO_MATCH
 MASTER=Path(__file__).resolve().parents[1]/'data'/'master_restrictions.csv'
@@ -508,6 +509,39 @@ class ProhibitedEngineTests(unittest.TestCase):
    h.channel=='ACTIVE_IDENTITY'
    for h in r['all_hits']
   ))
+
+ def test_reference_list_surfaces_every_unique_prohibited_identity_without_product_claim(self):
+  database=ProhibitedDatabase(MASTER)
+  expected={entry.ingredient for entry in database.prohibited}
+  self.assertEqual(len(expected),163)
+
+  rows=[
+   'MANEJO DE PLAGUICIDAS',
+   'Anexo 1. Listado de plaguicidas prohibidos',
+   'No. PLAGUICIDAS PROHIBIDOS Ingrediente activo o grupo Número CAS',
+  ]
+  rows.extend(
+   f'{index}. {entry.ingredient} {entry.cas or "varios"}'
+   for index,entry in enumerate(database.prohibited,start=1)
+  )
+  r=run_text('\n'.join(rows))
+
+  detected={
+   item['ingredient']
+   for item in r['detected_identities']
+   if item['source_list']=='PROHIBITED'
+  }
+  self.assertEqual(detected,expected)
+  self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
+  self.assertEqual(r['display_hits'],[])
+  self.assertTrue(all(
+   item['contexts']==['REFERENCE_LIST']
+   for item in r['detected_identities']
+  ))
+  self.assertEqual(
+   r['targeted_screening']['matched_identities'],
+   len(r['detected_identities']),
+  )
 
 
 class ResultContractTests(unittest.TestCase):
