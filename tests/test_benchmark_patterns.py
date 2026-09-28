@@ -8,12 +8,14 @@ from src.engine import _identity_basis
 from src.context_classifier import (
     ACTIVE,
     COMPOSITION,
+    PRODUCT_IDENTITY,
     DECOMPOSITION,
     INCIDENTAL,
     NEGATED,
     REFERENCE,
     classify_context,
     has_active_marker,
+    has_product_identity_marker,
     has_composition_marker,
     has_identity_marker,
 )
@@ -101,6 +103,14 @@ class BenchmarkContextPatternsTests(unittest.TestCase):
             "3. COMPOSICIÓN | Nombre químico | Fipronil | 120068-37-3 | 12 %"
         )
         self.assertEqual(classify_context(context, "Fipronil"), COMPOSITION)
+
+    def test_product_identifier_is_distinct_supporting_context(self):
+        context = "1. Identificador del producto | Product name | Thiamethoxam"
+        self.assertTrue(has_product_identity_marker(context))
+        self.assertEqual(
+            classify_context(context, "Thiamethoxam"),
+            PRODUCT_IDENTITY,
+        )
 
 
 
