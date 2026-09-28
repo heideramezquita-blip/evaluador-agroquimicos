@@ -7,7 +7,7 @@ from .active_ingredient_extractor import extract_active_ingredients
 from .cas_extractor import extract_document_cas, merge_cas_records
 from .composition_extractor import extract_composition_components
 from .cas_utils import parse_manual_cas
-from .context_classifier import ACTIVE, COMPOSITION, PRODUCT_IDENTITY, REFERENCE_LIST, classify_context
+from .context_classifier import ACTIVE, COMPOSITION, PRODUCT_IDENTITY, REFERENCE_LIST, classify_context, has_reference_list_marker
 from .models import (
     ActiveIngredientEvidence,
     CasOccurrence,
@@ -382,7 +382,10 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         records, invalid = extract_document_cas(document)
         record_groups.append(records)
         invalid_candidates.extend(invalid)
-        if document.processable:
+        reference_list_document = has_reference_list_marker(
+            "\n".join(page.text or "" for page in document.pages)
+        )
+        if document.processable and not reference_list_document:
             active_ingredients.extend(extract_active_ingredients(document))
             composition_components.extend(extract_composition_components(document))
 
