@@ -127,6 +127,64 @@ class CompositionExtractorTests(unittest.TestCase):
         )
         self.assertNotIn("613-167-00-5", [item.cas for item in items])
 
+    def test_dow_generic_component_header_extracts_glyphosate_dma(self):
+        page_text = (
+            "3. COMPOSICIÓN/INFORMACIÓN SOBRE LOS COMPONENTES\n"
+            "Naturaleza química: Regulador del crecimiento vegetal\n"
+            "Este producto es una mezcla.\n"
+            "Componente Número de registro CAS Concentración\n"
+            "Glifosato Sal DMA 34494-04-7 50.2%\n"
+            "Saldo No disponible 49.8%\n"
+            "4. PRIMEROS AUXILIOS\n"
+        )
+        page = PdfPage(
+            page=2,
+            text=page_text,
+            blocks=[
+                PdfTextBlock(
+                    79.2, 462.2, 429.7, 476.8,
+                    "3. COMPOSICIÓN/INFORMACIÓN SOBRE LOS COMPONENTES\n",
+                ),
+                PdfTextBlock(
+                    79.2, 499.7, 330.6, 522.5,
+                    "Naturaleza química: Regulador del crecimiento vegetal\n"
+                    "Este producto es una mezcla.\n",
+                ),
+                PdfTextBlock(
+                    79.6, 522.8, 489.9, 545.4,
+                    "Componente\nNúmero de registro\nCAS\nConcentración\n",
+                ),
+                PdfTextBlock(
+                    79.2, 573.3, 469.2, 584.4,
+                    "Glifosato Sal DMA\n34494-04-7\n50.2%\n",
+                ),
+                PdfTextBlock(
+                    79.2, 598.4, 469.2, 609.5,
+                    "Saldo\nNo disponible\n49.8%\n",
+                ),
+                PdfTextBlock(
+                    79.2, 656.1, 206.4, 670.6,
+                    "4. PRIMEROS AUXILIOS\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="HS Dow.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page_text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_composition_components(doc)
+
+        self.assertEqual(
+            [(item.name, item.cas, item.concentration) for item in items],
+            [("Glifosato Sal DMA", "34494-04-7", "50.2")],
+        )
+
     def test_mayoral_sds_components_are_not_promoted_to_active_ingredients(self):
         self.assertEqual(extract_active_ingredients(self._mayoral_document()), [])
 
