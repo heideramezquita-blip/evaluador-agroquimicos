@@ -187,16 +187,14 @@ def _global_context_class(normalized: str) -> str:
         return NEGATED
     if _contains_any(normalized, _DECOMPOSITION_MARKERS):
         return DECOMPOSITION
-    if _contains_any(normalized, _REFERENCE_MARKERS):
-        return REFERENCE
     if _contains_any(normalized, _INCIDENTAL_MARKERS):
         return INCIDENTAL
     if has_active_marker(normalized):
         return ACTIVE
-    if has_product_identity_marker(normalized):
-        return PRODUCT_IDENTITY
     if _contains_any(normalized, _REFERENCE_MARKERS):
         return REFERENCE
+    if has_product_identity_marker(normalized):
+        return PRODUCT_IDENTITY
     if has_composition_marker(normalized):
         return COMPOSITION
     return UNCERTAIN
