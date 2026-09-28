@@ -7,6 +7,7 @@ import unicodedata
 from .context_classifier import (
     ACTIVE,
     COMPOSITION,
+    PRODUCT_IDENTITY,
     DECOMPOSITION,
     INCIDENTAL,
     NEGATED,
@@ -24,6 +25,7 @@ LIST_LABELS = {
 CONTEXT_LABELS = {
     ACTIVE: "Ingrediente activo",
     COMPOSITION: "Composición del producto",
+    PRODUCT_IDENTITY: "Identidad del producto",
     INCIDENTAL: "Mención incidental",
     NEGATED: "Mención negada",
     DECOMPOSITION: "Descomposición / combustión",
@@ -34,11 +36,12 @@ CONTEXT_LABELS = {
 CONTEXT_PRIORITY = {
     ACTIVE: 0,
     COMPOSITION: 1,
-    UNCERTAIN: 2,
-    INCIDENTAL: 3,
-    NEGATED: 4,
-    REFERENCE: 5,
-    DECOMPOSITION: 6,
+    PRODUCT_IDENTITY: 2,
+    UNCERTAIN: 3,
+    INCIDENTAL: 4,
+    NEGATED: 5,
+    REFERENCE: 6,
+    DECOMPOSITION: 7,
 }
 
 CHANNEL_LABELS = {"CAS": "CAS", "NAME": "Nombre", "ACTIVE_IDENTITY": "Ingrediente activo"}
