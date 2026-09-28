@@ -555,6 +555,10 @@ def _looks_like_name(line: str) -> bool:
         "version",
         "revision",
         "sds",
+        "nombre",
+        "identificador",
+        "identificador del producto",
+        "porcentaje",
     }
     if key in non_identity_tokens:
         return False
@@ -1508,6 +1512,18 @@ def _extract_from_blocks(
         if _find_active_label_span(lines) is None:
             continue
 
+        header_key = match_key(block.text)
+        if (
+            has_active_marker(block.text)
+            and "identificador del producto" in header_key
+            and ("porcentaje" in header_key or "concentracion" in header_key)
+        ):
+            # This is a table header such as
+            # "INGREDIENTE ACTIVO - NOMBRE | IDENTIFICADOR DEL PRODUCTO | PORCENTAJE",
+            # not an ingredient value. Let the dedicated structured-table
+            # extractor pair the row geometrically.
+            continue
+
         payload, context, metadata_text = _block_window(blocks, block_index)
         candidates = _candidate_tuples(payload, metadata_text=metadata_text)
 
@@ -2254,46 +2270,66 @@ def _enrich_active_concentrations_from_document(
                 break
 
 
-def _use_table_artifact(item: ActiveIngredientEvidence) -> bool:
+def _use_table_artifact(
+    item: ActiveIngredientEvidence,
+    document: PdfDocument,
+    strong_identity_keys: set[str],
+) -> bool:
     """Reject biological-target rows accidentally captured below an active header.
 
     Repeated product headers often sit directly above agronomic recommendation
     tables. If PDF text order collapses the table, weed names can appear to be
-    continuations of "INGREDIENTE ACTIVO". Preserve a true identity that
-    directly follows the active marker, but reject other metadata-free names
-    when their context clearly belongs to a use/target/dose table.
+    continuations of "INGREDIENTE ACTIVO". Use both the local extraction
+    context and the full source page, because some PDF block paths preserve
+    only the candidate block and omit the nearby table header.
     """
     if item.concentration or item.cas:
-        return False
-
-    context_key = match_key(item.context)
-    if not any(
-        cue in context_key
-        for cue in (
-            "recomendaciones de uso",
-            "objetivo biologico",
-            "blanco biologico",
-            "dosis",
-        )
-    ):
         return False
 
     name_key = match_key(item.name)
     if not name_key:
         return True
 
-    # Keep the actual value immediately attached to an explicit active label,
-    # e.g. "INGREDIENTE ACTIVO: GLIFOSATO", even if the same page also contains
-    # a recommendation table.
-    explicit_patterns = (
-        rf"\bingrediente\s+activo\s+{re.escape(name_key)}\b",
-        rf"\bingredientes\s+activos\s+{re.escape(name_key)}\b",
-        rf"\bactive\s+ingredient\s+{re.escape(name_key)}\b",
+    page_text = ""
+    for page in document.pages:
+        if page.page == item.page:
+            page_text = page.text or ""
+            break
+
+    combined_key = match_key(f"{item.context} {page_text}")
+    use_table_context = any(
+        cue in combined_key
+        for cue in (
+            "recomendaciones de uso",
+            "objetivo biologico",
+            "blanco biologico",
+            "malezas a controlar",
+            "dosis",
+        )
     )
-    if any(re.search(pattern, context_key) for pattern in explicit_patterns):
+    if not use_table_context:
         return False
 
-    return True
+    # If this exact identity is already established elsewhere in the same
+    # document with concentration or CAS, a repeated header occurrence is safe
+    # to discard during deduplication rather than treating later table text as
+    # additional chemistry.
+    if name_key in strong_identity_keys:
+        return False
+
+    # Keep an identity only when the page itself explicitly binds that exact
+    # name to an active-ingredient label. Otherwise, when a stronger identity
+    # exists in the document, metadata-free names inside a use table are
+    # biological targets, crops or other agronomic text.
+    explicit_patterns = (
+        rf"\bingrediente\s+activo\s*[:\-]?\s*{re.escape(name_key)}\b",
+        rf"\bingredientes\s+activos\s*[:\-]?\s*{re.escape(name_key)}\b",
+        rf"\bactive\s+ingredient\s*[:\-]?\s*{re.escape(name_key)}\b",
+    )
+    if any(re.search(pattern, combined_key) for pattern in explicit_patterns):
+        return False
+
+    return bool(strong_identity_keys)
 
 
 def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEvidence]:
@@ -2384,7 +2420,16 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
 
     _enrich_active_concentrations_from_document(evidence, document)
 
-    evidence = [item for item in evidence if not _use_table_artifact(item)]
+    strong_identity_keys = {
+        match_key(item.name)
+        for item in evidence
+        if match_key(item.name) and (item.concentration or item.cas)
+    }
+    evidence = [
+        item
+        for item in evidence
+        if not _use_table_artifact(item, document, strong_identity_keys)
+    ]
 
     # Deduplicate repeated product headers/blocks while preserving the strongest
     # concentration/CAS and the first page where identity was explicitly shown.
