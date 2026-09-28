@@ -529,5 +529,5 @@ class ResultContractTests(unittest.TestCase):
   r=analyze([],manual_cas_text='34256-82-1',manual_active_confirmed=True,master_path=MASTER)
   self.assertEqual(
    r['evaluation'].message,
-   'Rainforest Alliance incluye el/los ingrediente(s) en su lista PROHIBIDOS: Acetoclor. El criterio detectado no se trata como equivalencia automática de prohibición en RSPO o ISCC; revise el requisito aplicable antes de decidir su uso.'
+   'Rainforest Alliance incluye la(s) sustancia(s) detectada(s) en su lista PROHIBIDOS: Acetoclor. El criterio detectado no se trata como equivalencia automática de prohibición en RSPO o ISCC; revise el requisito aplicable antes de decidir su uso.'
   )
