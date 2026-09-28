@@ -27,6 +27,8 @@ _STOP_KEYS = (
 _HEADER_CUES = (
     "nombre quimico",
     "chemical name",
+    "componente",
+    "component",
 )
 
 _META_CUES = (
@@ -77,8 +79,13 @@ def _name_like(value: str) -> bool:
 
 def _is_composition_header_text(text: str) -> bool:
     key = match_key(text)
+    has_name_column = (
+        "nombre quimico" in key
+        or "chemical name" in key
+        or re.search(r"\bcomponentes?\b", key) is not None
+    )
     return (
-        any(cue in key for cue in _HEADER_CUES)
+        has_name_column
         and "cas" in key
         and any(cue in key for cue in _META_CUES[1:])
     )
