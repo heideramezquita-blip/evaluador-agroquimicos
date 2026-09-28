@@ -3,6 +3,7 @@ from __future__ import annotations
 from .context_classifier import (
     ACTIVE,
     COMPOSITION,
+    PRODUCT_IDENTITY,
     DECOMPOSITION,
     INCIDENTAL,
     NEGATED,
@@ -30,39 +31,27 @@ SOURCE_OBSOLETE = "OBSOLETE"
 SOURCE_MITIGATION = "MITIGATE_RISK"
 
 NON_SUPPORTING = {INCIDENTAL, NEGATED, DECOMPOSITION, REFERENCE}
+SUPPORTING = {ACTIVE, COMPOSITION, PRODUCT_IDENTITY}
 
 
 def _strong_hits(items):
-    active = [hit for hit in items if hit.context_class == ACTIVE]
+    """Return decisive list-first evidence from supporting document contexts.
 
-    # A non-deterministic group-name hit is only a screening signal. It must
-    # never become decisive merely because wording such as "arsenical" appears
-    # near the active ingredient. Exact validated CAS evidence has priority;
-    # CAS-less groups require an explicitly deterministic membership rule.
-    decisive = [
+    Exact CAS/name matches and deterministic group matches are decisive when
+    they are tied to active-ingredient, composition or explicit product-
+    identity context. The dedicated active-ingredient extractor is not part
+    of this decision path.
+    """
+    return [
         hit
-        for hit in active
-        if hit.strength in ("validated_cas", "exact_name", "group_deterministic")
-    ]
-    if decisive:
-        composition_cas = [
-            hit
-            for hit in items
-            if hit.strength == "validated_cas"
-            and hit.context_class == COMPOSITION
-        ]
-        return decisive + composition_cas
-
-    has_validated_cas = any(hit.strength == "validated_cas" for hit in items)
-    has_active_exact_name = any(
-        hit.strength == "exact_name" and hit.context_class == ACTIVE
         for hit in items
-    )
-    if has_validated_cas and has_active_exact_name:
-        return items
-
-    return []
-
+        if hit.context_class in SUPPORTING
+        and hit.strength in (
+            "validated_cas",
+            "exact_name",
+            "group_deterministic",
+        )
+    ]
 
 def _strong_hits_by_source(hits) -> dict[str, list]:
     by_entry = {}
