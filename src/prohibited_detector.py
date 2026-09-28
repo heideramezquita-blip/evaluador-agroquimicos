@@ -113,12 +113,26 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
             term_keys = rule["term_keys"]
 
             if rule.get("all_terms"):
-                if not all(
-                    _key_present(padded_page_key, term_key)
-                    for term_key in term_keys
+                present_terms = [
+                    term
+                    for term, term_key in zip(terms, term_keys)
+                    if _key_present(padded_page_key, term_key)
+                ]
+                if len(present_terms) == len(terms):
+                    alias = " + ".join(terms)
+                elif (
+                    reference_list_document
+                    and len(terms) >= 3
+                    and len(present_terms) >= len(terms) - 1
                 ):
+                    # Reference tables can clip the final word of a very long
+                    # cell while preserving the other combination members.
+                    # Keep the identity in the inventory as a non-decisive
+                    # candidate; never use this partial recovery as strong
+                    # product evidence.
+                    alias = " + ".join(present_terms)
+                else:
                     continue
-                alias = " + ".join(terms)
                 context = page.text[:1200]
             else:
                 alias = next(
