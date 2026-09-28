@@ -30,7 +30,7 @@ _ACTIVE_LABEL_PATTERNS = (
 _CONCENTRATION_UNIT = (
     r"%(?:\s*(?:p(?:/p|/v)?|w/w|w/v|v/v|p/p|p/v))?|"
     r"g\s*/\s*(?:litros?|kg|l)|mg\s*/\s*(?:litros?|kg|l)|"
-    r"kg\s*/\s*(?:l|ha)|g\s+l-?1|g\s+kg-?1"
+    r"kg\s*/\s*l|g\s+l-?1|g\s+kg-?1"
 )
 
 _CONCENTRATION = re.compile(
@@ -68,6 +68,7 @@ _STOP_PREFIXES = (
     "beneficios",
     "cultivos",
     "blancos biologicos",
+    "objetivo biologico",
     "recomendaciones de uso",
     "instrucciones de uso",
     "instrucciones de uso y manejo",
@@ -925,10 +926,41 @@ def _candidate_tuples(
     candidates: list[tuple[str, str, str]] = []
     lines = _coalesce_split_concentration_lines(lines)
     systematic_description_open = False
+    equivalence_description_open = False
 
     for line in lines:
         if _is_stop(line):
             break
+
+        line_key = match_key(line)
+
+        # Equivalence/salt wording inside an active-ingredient declaration
+        # describes the already identified active rather than introducing a
+        # second ingredient. Example:
+        #   Glifosato 680 g/kg
+        #   N-(phosphonomethyl) glycine, equivalente a 747 g/kg de Glyphosate
+        #   Monoammonium salt, de formulacion a 20 C
+        # Keep the labelled common name and its formulation concentration.
+        if candidates and (
+            "equivalente a" in line_key
+            or "equivalent to" in line_key
+            or "acid equivalent" in line_key
+        ):
+            equivalence_description_open = True
+            continue
+
+        if equivalence_description_open:
+            descriptive_markers = (
+                " salt",
+                "sal ",
+                "de formulacion",
+                "formulacion a",
+                "formulation",
+            )
+            padded_key = f" {line_key} "
+            if any(marker in padded_key for marker in descriptive_markers):
+                continue
+            equivalence_description_open = False
 
         orphan_concentration = _extract_concentration(line)
         orphan_cas_values = extract_valid_cas(line)
@@ -2124,10 +2156,7 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
         # ambiguous composition tables and must not reinterpret a wrapped
         # narrative fragment such as "potasio en una concentración de 443 g/L"
         # as a second active ingredient.
-        if (
-            not narrative_evidence
-            and not any(item.concentration for item in page_evidence)
-        ):
+        if not narrative_evidence and not page_evidence:
             row_fallback = _extract_composition_row_fallback(
                 page.text or "",
                 document.file_name,
