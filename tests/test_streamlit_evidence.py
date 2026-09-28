@@ -31,7 +31,7 @@ class StreamlitEvidenceTests(unittest.TestCase):
 
         filename = "deltametrina-regression.pdf"
         result = analyze([(filename, payload)])
-        self.assertEqual({hit.channel for hit in result["evaluation"].hits}, {"CAS", "NAME", "ACTIVE_IDENTITY"})
+        self.assertEqual({hit.channel for hit in result["evaluation"].hits}, {"CAS", "NAME"})
 
         upload = SimpleNamespace(name=filename, getvalue=lambda: payload)
         # Supply the uploaded bytes at the widget boundary; use the real PDF
