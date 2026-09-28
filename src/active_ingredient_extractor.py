@@ -552,6 +552,22 @@ def _looks_like_name(line: str) -> bool:
     # Repeated document metadata in page headers/footers is never chemistry.
     if key.startswith(("version ", "revision ", "fecha de revision ", "sds ")):
         return False
+
+    # Physical-appearance values belong to product-properties panels, not to
+    # chemical identity. This prevents two-panel layouts from promoting values
+    # such as "Polvo blanco" when the true active row is nearby.
+    physical_form_prefixes = (
+        "polvo ",
+        "liquido ",
+        "solido ",
+        "granulo ",
+        "granulos ",
+        "suspension ",
+        "emulsion ",
+        "gel ",
+    )
+    if any(key.startswith(prefix) for prefix in physical_form_prefixes):
+        return False
     return True
 
 
