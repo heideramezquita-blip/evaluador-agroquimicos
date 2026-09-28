@@ -43,6 +43,13 @@ _CONCENTRATION_SERIES = re.compile(
     rf"(?P<unit>{_CONCENTRATION_UNIT})"
 )
 
+
+_APPLICATION_RATE = re.compile(
+    r"(?i)\b\d+(?:[.,]\d+)?"
+    r"(?:\s*(?:a|-)\s*\d+(?:[.,]\d+)?)?\s*"
+    r"(?:kg|g|l|ml)\s*/\s*ha\b"
+)
+
 _STOP_PREFIXES = (
     "ingrediente aditivo",
     "ingredientes aditivos",
@@ -2047,12 +2054,43 @@ def _extract_from_lines(
         context = " | ".join(
             lines[max(0, marker_index - 2) : min(len(lines), marker_index + 8)]
         )
+        candidates = _candidate_tuples(
+            payload,
+            metadata_text=" | ".join(metadata_lines),
+        )
+
+        # Product headers are often repeated above recommendation tables. In a
+        # plain-text extraction, the singular "INGREDIENTE ACTIVO: GLIFOSATO"
+        # can then be followed by biological targets and an application dose,
+        # making weeds look like additional active ingredients. When the label
+        # is singular and the nearby text clearly belongs to a use/dose table,
+        # keep only the first unambiguous identity from that header.
+        label_key = match_key(" ".join(lines[marker_index:end_index]))
+        lookahead = lines[end_index : end_index + 20]
+        lookahead_key = match_key(" ".join(lookahead))
+        use_table_context = (
+            "ingredientes activos" not in label_key
+            and "active ingredients" not in label_key
+            and any(
+                cue in lookahead_key
+                for cue in (
+                    "recomendaciones de uso",
+                    "objetivo biologico",
+                    "dosis",
+                )
+            )
+            and any(_APPLICATION_RATE.search(line) for line in lookahead)
+        )
+        if (
+            use_table_context
+            and len(candidates) > 1
+            and all(not concentration for _, concentration, _ in candidates)
+        ):
+            candidates = candidates[:1]
+
         evidence.extend(
             _evidence_from_candidates(
-                _candidate_tuples(
-                    payload,
-                    metadata_text=" | ".join(metadata_lines),
-                ),
+                candidates,
                 source_file=source_file,
                 page_number=page_number,
                 context=context,
