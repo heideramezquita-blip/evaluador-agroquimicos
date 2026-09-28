@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .context_classifier import ACTIVE, classify_context
+from .context_classifier import classify_context
 from .models import EvidenceHit, PdfDocument
 from .text_utils import match_key, phrase_present
 
@@ -27,11 +27,12 @@ def _line_context(text: str, needle: str, radius_lines: int = 8) -> str:
     priority = {
         "ACTIVE": 0,
         "COMPOSITION": 1,
-        "UNCERTAIN": 2,
-        "INCIDENTAL": 3,
-        "NEGATED": 4,
-        "REFERENCE_TOXICOLOGY": 5,
-        "DECOMPOSITION_COMBUSTION": 6,
+        "PRODUCT_IDENTITY": 2,
+        "UNCERTAIN": 3,
+        "INCIDENTAL": 4,
+        "NEGATED": 5,
+        "REFERENCE_TOXICOLOGY": 6,
+        "DECOMPOSITION_COMBUSTION": 7,
     }
 
     for index, line in enumerate(lines):
