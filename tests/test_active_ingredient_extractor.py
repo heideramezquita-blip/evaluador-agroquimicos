@@ -957,6 +957,133 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
         self.assertFalse(any("echinochloa" in item.name.casefold() for item in items))
         self.assertFalse(any(item.concentration.casefold().endswith("kg/ha") for item in items))
 
+    def test_credit_sorted_page_geometry_does_not_promote_target_weeds(self):
+        page1_text = (
+            "Ingrediente Activo:\n"
+            "Glifosato 680 g/kg\n"
+            "N - (phosphonomethyl) glycine, equivalente a 747 g/kg de Glyphosate\n"
+            "Monoammonium salt, de formulacion a 20ºC,\n"
+            "Ingredientes Aditivos: c.s.p. 1 kg\n"
+        )
+        page3_text = (
+            "INGREDIENTE ACTIVO:\n"
+            "GLIFOSATO\n"
+            "Anexos: RECOMENDACIONES DE USO - REGISTROS\n"
+            "PAÍS MARCA CULTIVO OBJETIVO BIOLÓGICO DOSIS\n"
+            "Liendre puerco Echinochloa colonum, 3.0 Kg/ha\n"
+            "Falsa caminadora Ischaemum rugosum, Realizar aplicaciones en\n"
+            "Pata de gallina Eleusine indica, Paja pelua post emergencia, con\n"
+            "Paspalum pilosum, Guarda rocío las malezas en\n"
+            "Arroz Digitaria sanguinalis, Batatilla Ipomoea crecimiento activo, que\n"
+            "trífida, Clavito Jussiaea linifolia, Cortadera no hayan alcanzado el\n"
+            "Guarda Rocio Digitaria sanguinalis,\n"
+            "Coquito Cyperus rotundus, Cortadera\n"
+            "Cyperus diffusus, Limpia Frascos Setaria geniculata, Escoba Sida Rhombifolia\n"
+            "Café Pega Desmodium tortuosum, Amor 1.0 a 2.0 Kg/ha\n"
+        )
+        doc = PdfDocument(
+            file_name="FT Credit.pdf",
+            pages=[
+                PdfPage(
+                    page=1,
+                    text=page1_text,
+                    blocks=[
+                        PdfTextBlock(
+                            54.7, 209.5, 292.1, 275.1,
+                            "Ingrediente Activo:\n"
+                            "Glifosato ……………………………………...………….680 g/kg\n"
+                            "N - (phosphonomethyl) glycine, equivalente a 747 g/kg de Glyphosate\n"
+                            "Monoammonium salt,  de formulacion a 20ºC,\n"
+                            "Ingredientes Aditivos: …………………………….....…c.s.p. 1  kg\n",
+                        ),
+                    ],
+                ),
+                PdfPage(
+                    page=3,
+                    text=page3_text,
+                    blocks=[
+                        PdfTextBlock(467.9, 142.0, 554.5, 153.8, "INGREDIENTE ACTIVO:\n"),
+                        PdfTextBlock(511.0, 152.0, 554.5, 163.8, "GLIFOSATO\n"),
+                        PdfTextBlock(
+                            76.4, 177.0, 472.9, 196.8,
+                            "Anexos:\nRECOMENDACIONES DE USO - REGISTROS\n",
+                        ),
+                        PdfTextBlock(
+                            99.2, 218.7, 524.7, 230.8,
+                            "PAÍS\nMARCA\nCULTIVO\nOBJETIVO BIOLÓGICO\nDOSIS\n",
+                        ),
+                        PdfTextBlock(
+                            475.2, 235.2, 557.6, 315.5,
+                            "3.0 Kg/ha\nRealizar aplicaciones en\npost emergencia, con\n"
+                            "las malezas en\ncrecimiento activo, que\nno hayan alcanzado el\n"
+                            "estado de floración o\nfructificación.\n",
+                        ),
+                        PdfTextBlock(
+                            312.8, 235.0, 462.8, 315.5,
+                            "Liendre puerco Echinochloa colonum,\n"
+                            "Falsa caminadora Ischaemum rugosum,\n"
+                            "Pata de gallina Eleusine indica, Paja pelua\n"
+                            "Paspalum pilosum, Guarda rocío\n",
+                        ),
+                        PdfTextBlock(
+                            486.3, 377.8, 538.8, 388.6,
+                            "1.0 a 2.0 Kg/ha\n",
+                        ),
+                        PdfTextBlock(
+                            312.8, 319.6, 462.8, 440.1,
+                            "Guarda Rocio Digitaria sanguinalis,\n"
+                            "Coquito Cyperus rotundus, Cortadera\n"
+                            "Cyperus diffusus, Limpia Frascos Setaria geniculata, "
+                            "Escoba Sida Rhombifolia\n",
+                        ),
+                    ],
+                ),
+            ],
+            page_count=2,
+            character_count=len(page1_text) + len(page3_text),
+            pages_with_text=2,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name.casefold(), item.concentration) for item in items],
+            [("glifosato", "680 g/kg")],
+        )
+        self.assertFalse(any("echinochloa" in item.name.casefold() for item in items))
+        self.assertFalse(any("sida" in item.name.casefold() for item in items))
+        self.assertFalse(any("ipomoea" in item.name.casefold() for item in items))
+
+    def test_finale_worded_formulation_concentration_keeps_only_active_name(self):
+        text = (
+            "COMPOSICIÓN GARANTIZADA:\n"
+            "Ingredientes activos:\n"
+            "Glufosinato de Amonio, 150 gramos por litro de formulación a 20°C\n"
+            "Ingredientes aditivos: c.s.p 1 Litro\n"
+        )
+        items = extract_active_ingredients(document(text, "08. FT Finale.pdf"))
+
+        self.assertEqual(
+            [(item.name, item.concentration) for item in items],
+            [("Glufosinato de Amonio", "150 g/L")],
+        )
+
+    def test_destierro_concentration_intro_is_not_part_of_active_name(self):
+        text = (
+            "2. DESCRIPCIÓN\n"
+            "Destierro SL es un herbicida no selectivo, formulado como concentrado soluble, a partir del\n"
+            "ingrediente activo: glufosinato de amonio, a una concentración de 150 g/L.\n"
+            "3. CARACTERÍSTICAS\n"
+        )
+        items = extract_active_ingredients(document(text, "05. FT Destierro.pdf"))
+
+        self.assertEqual(
+            [(item.name.casefold(), item.concentration) for item in items],
+            [("glufosinato de amonio", "150 g/L")],
+        )
+
     def test_touchdown_iupac_equivalence_is_not_promoted_to_active_identity(self):
         p1 = PdfPage(
             page=1,
