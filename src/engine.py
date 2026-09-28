@@ -140,6 +140,24 @@ def _identity_basis_from_screening(screening_identity: dict) -> list[str]:
     return basis
 
 
+def _targeted_screening_basis(
+    documents: list[PdfDocument],
+    manual_valid: list[str],
+) -> list[str]:
+    """Describe the material that was actually searched against local lists."""
+    basis: list[str] = []
+    processable = sum(document.processable for document in documents)
+    if processable:
+        basis.append(
+            f"{processable} documento(s) con texto extraíble"
+        )
+    if manual_valid:
+        basis.append(
+            f"{len(manual_valid)} CAS manual(es) válido(s)"
+        )
+    return basis
+
+
 def _identity_basis(
     documents: list[PdfDocument],
     records: list[CasRecord],
@@ -344,12 +362,26 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         composition_components,
     )
     identity_basis = _identity_basis_from_screening(screening_identity)
+    screening_basis = _targeted_screening_basis(documents, manual_valid)
+    targeted_screening = {
+        "documents_received": len(files),
+        "documents_processable": sum(
+            document.processable for document in documents
+        ),
+        "entries_screened": len(database.entries),
+        "matched_entries": len({
+            (hit.entry.source_list, hit.entry.ingredient, hit.entry.cas)
+            for hit in hits
+        }),
+        "manual_cas_valid": len(manual_valid),
+    }
     evaluation = evaluate_prohibited(
         records,
         hits,
         warnings,
         unprocessables,
         identity_basis=identity_basis,
+        screening_basis=screening_basis,
     )
     display_hits = relevant_supporting_hits(hits) or evaluation.hits
 
@@ -362,6 +394,8 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         "all_hits": hits,
         "display_hits": display_hits,
         "identity_basis": identity_basis,
+        "screening_basis": screening_basis,
+        "targeted_screening": targeted_screening,
         "screening_identity": screening_identity,
         "active_ingredients": active_ingredients,
         "composition_components": composition_components,
