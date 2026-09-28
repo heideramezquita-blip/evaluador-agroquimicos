@@ -38,6 +38,8 @@ La aplicación no incorpora OCR. Si un PDF está escaneado o no contiene texto e
 
 La evaluación es **determinística** y utiliza bases incluidas en el proyecto. No consulta servicios externos para decidir el resultado.
 
+Cuando el PDF cargado es él mismo una **lista o referencia normativa** —por ejemplo, un listado de plaguicidas prohibidos— el motor mantiene dos comportamientos separados: inventaría todas las identidades de las bases locales que aparecen en el documento, pero no interpreta esas filas como ingredientes o componentes de un producto. En ese caso se omite además la extracción auxiliar de ingrediente activo/composición y las coincidencias se presentan como trazabilidad de una lista de referencia.
+
 La identificación no pretende reconocer cualquier sustancia química existente. Las coincidencias por nombre y grupo se realizan contra los registros y reglas incluidos en las bases locales. Un CAS válido que aparezca en una parte incidental del documento tampoco se trata automáticamente como ingrediente activo.
 
 
