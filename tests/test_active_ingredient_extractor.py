@@ -1338,6 +1338,107 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
         self.assertNotIn("VERSION", [item.name for item in items])
         self.assertNotIn("REVISION", [item.name for item in items])
 
+    def test_dow_similar_active_toxicology_references_do_not_create_identity(self):
+        page8_text = (
+            "11. INFORMACIÓN TOXICOLÓGICA\n"
+            "Toxicidad Sistémica de Organo Blanco Específico (Exposición Repetida)\n"
+            "Para materiales similares(s):\n"
+            "Glifosato.\n"
+            "Carcinogenicidad\n"
+            "Para ingrediente(s) activo(s) similare(s). Glifosato. "
+            "No provocó cáncer en animales de laboratorio.\n"
+            "Teratogenicidad\n"
+            "Para ingrediente(s) activo(s) similare(s). Glifosato. "
+            "Es tóxico para el feto de animales de laboratorio.\n"
+            "Toxicidad para la reproducción\n"
+            "Para ingrediente(s) activo(s) similare(s). Glifosato. "
+            "En estudios realizados sobre animales de laboratorio, sólo se han "
+            "demostrado efectos en la reproducción a dosis que también produjeron "
+            "toxicidad importante en los progenitores.\n"
+        )
+        page9_text = (
+            "12. INFORMACIÓN ECOLÓGICA\n"
+            "Persistencia y degradabilidad\n"
+            "Glifosato Sal DMA\n"
+            "Biodegradabilidad: Para ingrediente(s) activo(s) similare(s). "
+            "Glifosato. Puede ocurrir una biodegradación en condiciones aeróbicas.\n"
+            "Potencial de bioacumulación\n"
+            "Glifosato Sal DMA\n"
+            "Bioacumulación: Para ingrediente(s) activo(s) similare(s). "
+            "Glifosato. El potencial de bioconcentración es bajo.\n"
+            "Movilidad en el suelo\n"
+            "Glifosato Sal DMA\n"
+            "Para ingrediente(s) activo(s) similare(s).\n"
+            "Glifosato.\n"
+            "Se prevé que el material sea relativamente inmóvil en el suelo.\n"
+        )
+        doc = PdfDocument(
+            file_name="HS Dow.pdf",
+            pages=[
+                PdfPage(
+                    page=8,
+                    text=page8_text,
+                    blocks=[
+                        PdfTextBlock(
+                            79.2, 233.2, 531.7, 278.9,
+                            "Carcinogenicidad\n"
+                            "Para ingrediente(s) activo(s) similare(s).  Glifosato.  "
+                            "No provocó cáncer en animales de laboratorio.\n"
+                            "Peso de la evaluación de la evidencia de estudios "
+                            "epidemiológicos apoya ninguna asociación entre la "
+                            "exposición al glifosato y el cáncer.\n",
+                        ),
+                        PdfTextBlock(
+                            79.2, 290.7, 534.6, 324.9,
+                            "Teratogenicidad\n"
+                            "Para ingrediente(s) activo(s) similare(s).  Glifosato.  "
+                            "Es tóxico para el feto de animales de laboratorio a dosis "
+                            "tóxicas para la madre.\n",
+                        ),
+                        PdfTextBlock(
+                            79.2, 336.6, 504.0, 382.4,
+                            "Toxicidad para la reproducción\n"
+                            "Para ingrediente(s) activo(s) similare(s).  Glifosato.  "
+                            "En estudios realizados sobre animales de laboratorio, "
+                            "sólo se han demostrado efectos en la reproducción.\n",
+                        ),
+                    ],
+                ),
+                PdfPage(
+                    page=9,
+                    text=page9_text,
+                    blocks=[
+                        PdfTextBlock(
+                            115.2, 359.7, 521.5, 382.4,
+                            "Biodegradabilidad: Para ingrediente(s) activo(s) "
+                            "similare(s).  Glifosato.  Puede ocurrir una biodegradación "
+                            "en condiciones aeróbicas.\n",
+                        ),
+                        PdfTextBlock(
+                            115.2, 463.1, 523.0, 508.9,
+                            "Bioacumulación: Para ingrediente(s) activo(s) similare(s).  "
+                            "Glifosato.  El potencial de bioconcentración es bajo.\n",
+                        ),
+                        PdfTextBlock(
+                            115.2, 589.9, 456.3, 623.9,
+                            "Para ingrediente(s) activo(s) similare(s).\n"
+                            "Glifosato.\n"
+                            "Se prevé que el material sea relativamente inmóvil en el suelo.\n",
+                        ),
+                    ],
+                ),
+            ],
+            page_count=2,
+            character_count=len(page8_text) + len(page9_text),
+            pages_with_text=2,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(items, [])
+
     def test_metsulfuron_ecology_endpoints_do_not_become_active_identity(self):
         text = (
             "IngredienteActivo:\n"
