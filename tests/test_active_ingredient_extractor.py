@@ -1465,6 +1465,71 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
         self.assertNotIn("VERSION", [item.name for item in items])
         self.assertNotIn("REVISION", [item.name for item in items])
 
+    def test_flumyzin_active_table_header_is_not_promoted_to_identity(self):
+        page_text = (
+            "3. COMPOSICIÓN/INFORMACIÓN DE LOS COMPONENTES\n"
+            "3.1 Sustancia\n"
+            "INGREDIENTE ACTIVO - NOMBRE IDENTIFICADOR DEL PRODUCTO PORCENTAJE\n"
+            "Flumioxazin (2-[7-fluoro-3,4-dihydro-3-oxo-4-(2-propynyl)-2H-1,4-"
+            "benzoxazin-6-yl]-4,5,6,7-tetrahydro-1H-isoindole-1,3(2H)-dione) "
+            "(103361-09-7).\n"
+            "103361-09-7 (CAS)\n600-425-7 (EC)\n51%p\n"
+            "Arcilla Caolín\nND\n16%p\n"
+            "Otros ** (incluyendo partículas no clasificadas) (No CAS#).\nND\n32%p\n"
+        )
+        page = PdfPage(
+            page=2,
+            text=page_text,
+            blocks=[
+                PdfTextBlock(190.0,231.0,422.0,243.3,"3. COMPOSICIÓN/INFORMACIÓN DE LOS COMPONENTES\n"),
+                PdfTextBlock(49.7,250.9,103.3,262.8,"3.1 Sustancia\n"),
+                PdfTextBlock(
+                    98.1,271.4,510.9,283.3,
+                    "INGREDIENTE ACTIVO -  NOMBRE\n"
+                    "IDENTIFICADOR DEL PRODUCTO\n"
+                    "PORCENTAJE\n",
+                ),
+                PdfTextBlock(468.7,289.8,490.5,301.3,"51%p\n"),
+                PdfTextBlock(308.4,293.8,381.1,317.3,"103361-09-7 (CAS)\n600-425-7 (EC)\n"),
+                PdfTextBlock(
+                    73.1,291.8,181.2,375.3,
+                    "Flumioxazin (2-[7-fluoro-3,4-\n"
+                    "dihydro-3-oxo-4-\n"
+                    "(2-propynyl)-2H-1,4-\n"
+                    "benzoxazin-6-yl]-4,5,6,7-\n"
+                    "tetrahydro-1H-isoindole-\n"
+                    "1,3(2H)-dione) *\n"
+                    "(103361-09-7).\n",
+                ),
+                PdfTextBlock(73.1,381.0,121.1,392.5,"Arcilla Caolín\n"),
+                PdfTextBlock(468.7,381.0,490.5,392.5,"16%p\n"),
+                PdfTextBlock(339.2,381.5,350.3,393.0,"ND\n"),
+                PdfTextBlock(468.7,402.4,490.5,413.9,"32%p\n"),
+                PdfTextBlock(339.2,405.2,350.3,416.7,"ND\n"),
+                PdfTextBlock(
+                    73.1,399.0,187.5,422.5,
+                    "Otros ** ( incluyendo partículas\nno clasificadas) (No CAS#).\n",
+                ),
+            ],
+        )
+        doc = PdfDocument(
+            file_name="12. HS Flumyzin.pdf",
+            pages=[page],
+            page_count=1,
+            character_count=len(page_text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(len(items), 1)
+        self.assertIn("Flumioxazin", items[0].name)
+        self.assertEqual(items[0].cas, "103361-09-7")
+        self.assertEqual(items[0].concentration, "51%p")
+        self.assertNotIn(items[0].name.upper(), {"NOMBRE", "IDENTIFICADOR DEL PRODUCTO", "PORCENTAJE"})
+
     def test_dow_similar_active_toxicology_references_do_not_create_identity(self):
         page8_text = (
             "11. INFORMACIÓN TOXICOLÓGICA\n"
