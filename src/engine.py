@@ -7,7 +7,7 @@ from .active_ingredient_extractor import extract_active_ingredients
 from .cas_extractor import extract_document_cas, merge_cas_records
 from .composition_extractor import extract_composition_components
 from .cas_utils import parse_manual_cas
-from .context_classifier import ACTIVE, COMPOSITION, classify_context
+from .context_classifier import ACTIVE, COMPOSITION, PRODUCT_IDENTITY, classify_context
 from .models import (
     ActiveIngredientEvidence,
     CasOccurrence,
@@ -74,7 +74,7 @@ def _screening_identity(
         if any(
             occurrence.source == "document"
             and classify_context(occurrence.context, record.cas)
-            in {ACTIVE, COMPOSITION}
+            in {ACTIVE, COMPOSITION, PRODUCT_IDENTITY}
             for occurrence in record.occurrences
         ):
             document_cas.append(record.cas)
