@@ -534,6 +534,8 @@ class ProhibitedEngineTests(unittest.TestCase):
   self.assertEqual(detected,expected)
   self.assertEqual(r['evaluation'].status,STATUS_MATCH_REVIEW)
   self.assertEqual(r['display_hits'],[])
+  self.assertEqual(r['active_ingredients'],[])
+  self.assertEqual(r['composition_components'],[])
   self.assertTrue(all(
    item['contexts']==['REFERENCE_LIST']
    for item in r['detected_identities']
