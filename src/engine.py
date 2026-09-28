@@ -193,6 +193,66 @@ def _enrich_active_ingredients(
     return active_ingredients
 
 
+def _sanitize_active_ingredients(
+    active_ingredients: list[ActiveIngredientEvidence],
+    documents: list[PdfDocument],
+) -> list[ActiveIngredientEvidence]:
+    """Apply a final documentary sanity check before screening/UI.
+
+    The extractor intentionally supports many heterogeneous PDF layouts. This
+    guard prevents two high-cost failure classes from leaking into the result:
+    structural table headers presented as chemical names, and biological-target
+    rows from recommendation tables presented as additional active ingredients.
+    """
+    document_by_name = {document.file_name: document for document in documents}
+    strong_by_file: dict[str, set[str]] = {}
+
+    for item in active_ingredients:
+        key = match_key(item.name)
+        if key and (item.concentration or item.cas):
+            strong_by_file.setdefault(item.source_file, set()).add(key)
+
+    structural_names = {
+        "nombre",
+        "identificador",
+        "identificador del producto",
+        "porcentaje",
+        "concentracion",
+        "cas",
+        "numero cas",
+    }
+    use_cues = (
+        "recomendaciones de uso",
+        "objetivo biologico",
+        "blanco biologico",
+        "malezas a controlar",
+        "dosis",
+    )
+
+    cleaned: list[ActiveIngredientEvidence] = []
+    for item in active_ingredients:
+        key = match_key(item.name)
+        if not key or key in structural_names:
+            continue
+
+        strong_keys = strong_by_file.get(item.source_file, set())
+        if not item.concentration and not item.cas and strong_keys and key not in strong_keys:
+            document = document_by_name.get(item.source_file)
+            page_text = ""
+            if document is not None:
+                for page in document.pages:
+                    if page.page == item.page:
+                        page_text = page.text or ""
+                        break
+            page_key = match_key(page_text)
+            if any(cue in page_key for cue in use_cues):
+                continue
+
+        cleaned.append(item)
+
+    return cleaned
+
+
 def _manual_records(valid_cas: list[str], active_confirmed: bool) -> list[CasRecord]:
     role = "active_explicit" if active_confirmed else "unknown"
     return [
@@ -245,6 +305,10 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
     active_ingredients = _enrich_active_ingredients(
         active_ingredients,
         composition_components,
+    )
+    active_ingredients = _sanitize_active_ingredients(
+        active_ingredients,
+        documents,
     )
 
     manual_valid, manual_invalid = parse_manual_cas(manual_cas_text)
