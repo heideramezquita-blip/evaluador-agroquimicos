@@ -524,7 +524,14 @@ class ProhibitedEngineTests(unittest.TestCase):
    f'{index}. {entry.ingredient} {entry.cas or "varios"}'
    for index,entry in enumerate(database.prohibited,start=1)
   )
-  r=run_text('\n'.join(rows))
+  # Reproduce a real PDF-extraction defect observed in the supplied list:
+  # the long benomyl/carbofuran/thiram combination row loses the tail of
+  # "tiram" while the other members remain readable.
+  text='\n'.join(rows).replace(
+   'benomilo ≥7%, carbofurano ≥10%, tiram ≥15%.',
+   'benomilo ≥7%, carbofurano ≥10%, tir',
+  )
+  r=run_text(text)
 
   detected={
    item['ingredient']
