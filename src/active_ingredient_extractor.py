@@ -116,6 +116,18 @@ _FIELD_PREFIXES = (
     "formula molecular",
     "peso molecular",
     "clasificacion",
+    "densidad",
+    "ph",
+    "tension superficial",
+    "solubilidad",
+    "viscosidad",
+    "apariencia",
+    "color",
+    "olor",
+    "punto de fusion",
+    "punto de ebullicion",
+    "punto de inflamacion",
+    "presion de vapor",
 )
 
 _NAME_VALUE_PREFIXES = (
@@ -559,6 +571,14 @@ def _looks_like_name(line: str) -> bool:
         "identificador",
         "identificador del producto",
         "porcentaje",
+        "densidad",
+        "ph",
+        "tension superficial",
+        "solubilidad",
+        "viscosidad",
+        "apariencia",
+        "color",
+        "olor",
     }
     if key in non_identity_tokens:
         return False
