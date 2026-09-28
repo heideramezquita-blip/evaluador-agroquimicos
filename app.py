@@ -81,7 +81,50 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     identity_summary=comparison_basis_summary(result)
     result_card(ev.status,ev.message,identity_summary)
 
-    if ev.status in (
+    detected_items=result.get('detected_identities',[])
+    reference_list_only=bool(detected_items) and all(
+        item.get('contexts')==['REFERENCE_LIST']
+        for item in detected_items
+    )
+
+    if detected_items:
+        st.markdown('<div class="section-title">Coincidencias detectadas contra las listas</div>',unsafe_allow_html=True)
+        st.caption(
+            f'{len(detected_items)} identidad(es) única(s) de las bases locales '
+            'fueron localizadas en el contenido analizado. Este inventario no '
+            'implica por sí solo que sean ingredientes del producto.'
+        )
+        with st.expander(
+            f'Ver inventario completo de coincidencias ({len(detected_items)})',
+            expanded=len(detected_items)<=12,
+        ):
+            st.markdown(
+                table_html([
+                    {
+                        'Lista': list_label(item.get('source_list','')),
+                        'Identidad': item.get('ingredient',''),
+                        'CAS': '; '.join(item.get('cas_values',[])) or 'Sin CAS específico',
+                        'Contexto': ' · '.join(
+                            context_label(value)
+                            for value in item.get('contexts',[])
+                        ),
+                        'Documento(s)': '; '.join(item.get('files',[])),
+                        'Página(s)': ', '.join(
+                            str(page) for page in item.get('pages',[])
+                        ) or '—',
+                    }
+                    for item in detected_items
+                ]),
+                unsafe_allow_html=True,
+            )
+
+    if reference_list_only:
+        st.caption(
+            'El documento fue reconocido como una lista o referencia normativa. '
+            'Las coincidencias se enumeran para trazabilidad y no se atribuyen '
+            'como composición de un producto.'
+        )
+    elif ev.status in (
         STATUS_MATCH_REVIEW,
         STATUS_PROHIBITED_REVIEW,
         STATUS_OBSOLETE_REVIEW,
