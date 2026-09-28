@@ -1465,6 +1465,72 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
         self.assertNotIn("VERSION", [item.name for item in items])
         self.assertNotIn("REVISION", [item.name for item in items])
 
+    def test_panzer_k_physical_properties_do_not_become_active_identity(self):
+        page_text = (
+            "1. NOMBRE\n"
+            "Panzer K SL Registro Nacional ICA No. PL0009912023\n"
+            "2. DESCRIPCIÓN\n"
+            "Panzer K SL es un herbicida que tiene como ingrediente activo glifosato en forma de sal "
+            "potasio en una concentración de 443 g/L equivalente a 360 g/L del ácido.\n"
+            "3. CARACTERÍSTICAS\n"
+            "Panzer K SL es un herbicida, liquido concentrado soluble, no selectivo, de aplicación en post "
+            "emergencia y de acción sistémica.\n"
+            "4. ESPECIFICACIONES\n"
+            "Densidad (g/ml): 1.240-1.260\n"
+            "pH: 4.3-5.5\n"
+            "Contenido de Glifosato (sal potasio): 420.85-465.15 g/L\n"
+            "Tensión superficial: Inferior a 28 dinas/cm\n"
+        )
+        doc = PdfDocument(
+            file_name="18. FT Panzer k.pdf",
+            pages=[
+                PdfPage(
+                    page=1,
+                    text=page_text,
+                    blocks=[
+                        PdfTextBlock(85.1,120.6,140.6,131.7,"1. NOMBRE\n"),
+                        PdfTextBlock(85.1,144.0,328.7,155.1,"Panzer K SL Registro Nacional ICA No. PL0009912023\n"),
+                        PdfTextBlock(85.1,190.9,160.3,202.0,"2. DESCRIPCIÓN\n"),
+                        PdfTextBlock(
+                            85.1,214.3,512.6,238.8,
+                            "Panzer K SL es un herbicida que tiene como ingrediente activo glifosato en forma de sal\n"
+                            "potasio en una concentración de 443 g/L equivalente a 360 g/L del ácido.\n",
+                        ),
+                        PdfTextBlock(85.1,274.7,181.0,285.8,"3. CARACTERÍSTICAS\n"),
+                        PdfTextBlock(
+                            85.1,298.1,512.7,322.6,
+                            "Panzer K SL es un herbicida, liquido concentrado soluble, no selectivo, de aplicación en post\n"
+                            "emergencia y de acción sistémica.\n",
+                        ),
+                        PdfTextBlock(85.1,358.4,183.6,369.4,"4. ESPECIFICACIONES\n"),
+                        PdfTextBlock(85.1,381.8,218.2,392.8,"Densidad (g/ml): 1.240-1.260\n"),
+                        PdfTextBlock(85.1,405.3,136.9,416.3,"pH: 4.3-5.5\n"),
+                        PdfTextBlock(
+                            85.1,428.7,334.1,439.7,
+                            "Contenido de Glifosato (sal potasio): 420.85-465.15 g/L\n",
+                        ),
+                        PdfTextBlock(
+                            85.1,452.1,275.3,463.1,
+                            "Tensión superficial: Inferior a 28 dinas/cm\n",
+                        ),
+                    ],
+                ),
+            ],
+            page_count=1,
+            character_count=len(page_text),
+            pages_with_text=1,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name.casefold(), item.concentration) for item in items],
+            [("glifosato en forma de sal potasio", "443 g/L")],
+        )
+        self.assertFalse(any(item.name.casefold() == "densidad" for item in items))
+
     def test_flumyzin_active_table_header_is_not_promoted_to_identity(self):
         page_text = (
             "3. COMPOSICIÓN/INFORMACIÓN DE LOS COMPONENTES\n"
