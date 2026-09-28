@@ -209,6 +209,8 @@ def _active_label_tail(line: str) -> str | None:
                 "en el producto",
                 "en la formulacion",
                 "grado tecnico",
+                "similar ",
+                "similare",
                 "que ",
             )
             if any(
@@ -221,9 +223,9 @@ def _active_label_tail(line: str) -> str | None:
 
 
 def _is_contextual_active_reference(lines: list[str], index: int) -> bool:
-    """Reject active-marker text that belongs to a surrounding prose label."""
+    """Reject active-marker text that belongs to surrounding prose/reference text."""
     preceding = match_key(" ".join(lines[max(0, index - 2) : index]))
-    return any(
+    if any(
         preceding.endswith(prefix)
         for prefix in (
             "compatibilidad con",
@@ -238,6 +240,25 @@ def _is_contextual_active_reference(lines: list[str], index: int) -> bool:
             "posee 2",
             "presenta dos",
             "presenta 2",
+        )
+    ):
+        return True
+
+    # SDS toxicology/ecology sections often compare the product with data for
+    # "ingrediente(s) activo(s) similare(s)". This is reference evidence, not
+    # a declaration of the product's active ingredient. PDF wrapping may split
+    # "Para ingrediente(s)" and "activo(s) similare(s)" across adjacent lines.
+    local = match_key(
+        " ".join(lines[max(0, index - 2) : min(len(lines), index + 3)])
+    )
+    return bool(
+        re.search(
+            r"\bpara\s+ingredientes?\s+activos?\s+similares?\b",
+            local,
+        )
+        or re.search(
+            r"\bfor\s+similar\s+active\s+ingredients?\b",
+            local,
         )
     )
 
@@ -521,6 +542,13 @@ def _looks_like_name(line: str) -> bool:
         "toxicidad para los",
         "tiempo de exposicion",
         "estimacion basada en datos",
+        "para ingrediente activo similar",
+        "para ingredientes activos similares",
+        "toxicidad para la reproduccion para ingrediente",
+        "carcinogenicidad para ingrediente",
+        "teratogenicidad para ingrediente",
+        "biodegradabilidad para ingrediente",
+        "bioacumulacion para ingrediente",
     )
     normalized = normalize_text(value)
     if any(marker in normalized for marker in prose_markers):
