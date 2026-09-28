@@ -295,6 +295,14 @@ def detect_candidates(
     db,
     active_ingredients: list[ActiveIngredientEvidence] | None = None,
 ) -> list[EvidenceHit]:
+    """Run list-first screening against every readable document.
+
+    CAS, normalized names/aliases and configured group rules are the primary
+    evidence channels. active_ingredients is retained for call compatibility
+    and presentation elsewhere, but it does not create, suppress or gate
+    regulatory matches.
+    """
+    del active_ingredients
     hits: list[EvidenceHit] = []
 
     for record in cas_records:
@@ -316,14 +324,6 @@ def detect_candidates(
 
     for document in documents:
         hits.extend(_name_hits(document, db))
-
-    hits.extend(_active_identity_hits(active_ingredients or [], db))
-
-    hits = _gate_hits_to_active_identity(
-        hits,
-        active_ingredients or [],
-        db,
-    )
 
     unique: list[EvidenceHit] = []
     seen = set()
