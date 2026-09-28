@@ -876,6 +876,87 @@ class ActiveIngredientExtractorTests(unittest.TestCase):
             ],
         )
 
+    def test_credit_keeps_glyphosate_and_rejects_equivalence_and_biological_target(self):
+        page1_text = (
+            "Ingrediente Activo:\n"
+            "Glifosato 680 g/kg\n"
+            "N - (phosphonomethyl) glycine, equivalente a 747 g/kg de Glyphosate\n"
+            "Monoammonium salt, de formulacion a 20ºC,\n"
+            "Ingredientes Aditivos: c.s.p. 1 kg\n"
+        )
+        page3_text = (
+            "INGREDIENTE ACTIVO:\n"
+            "GLIFOSATO\n"
+            "Liendre puerco Echinochloa colonum,\n"
+            "Falsa caminadora Ischaemum rugosum,\n"
+            "Pata de gallina Eleusine indica\n"
+            "3.0 Kg/ha\n"
+            "Anexos: RECOMENDACIONES DE USO - REGISTROS\n"
+            "PAÍS MARCA CULTIVO OBJETIVO BIOLÓGICO DOSIS\n"
+        )
+        doc = PdfDocument(
+            file_name="FT Credit.pdf",
+            pages=[
+                PdfPage(
+                    page=1,
+                    text=page1_text,
+                    blocks=[
+                        PdfTextBlock(
+                            54.7, 209.5, 292.1, 275.1,
+                            "Ingrediente Activo:\n"
+                            "Glifosato ……………………………………...………….680 g/kg\n"
+                            "N - (phosphonomethyl) glycine, equivalente a 747 g/kg de Glyphosate\n"
+                            "Monoammonium salt,  de formulacion a 20ºC,\n"
+                            "Ingredientes Aditivos: …………………………….....…c.s.p. 1  kg\n",
+                        ),
+                    ],
+                ),
+                PdfPage(
+                    page=3,
+                    text=page3_text,
+                    blocks=[
+                        PdfTextBlock(467.9, 142.0, 554.5, 153.8, "INGREDIENTE ACTIVO:\n"),
+                        PdfTextBlock(511.0, 152.0, 554.5, 163.8, "GLIFOSATO\n"),
+                        PdfTextBlock(
+                            76.4, 177.0, 472.9, 196.8,
+                            "Anexos:\nRECOMENDACIONES DE USO - REGISTROS\n",
+                        ),
+                        PdfTextBlock(
+                            99.2, 218.7, 524.7, 230.8,
+                            "PAÍS\nMARCA\nCULTIVO\nOBJETIVO BIOLÓGICO\nDOSIS\n",
+                        ),
+                        PdfTextBlock(
+                            312.8, 235.0, 462.8, 315.5,
+                            "Liendre puerco   Echinochloa colonum,\n"
+                            "Falsa caminadora Ischaemum rugosum,\n"
+                            "Pata de gallina Eleusine indica\n",
+                        ),
+                        PdfTextBlock(
+                            475.2, 235.2, 557.6, 315.5,
+                            "3.0 Kg/ha\n"
+                            "Realizar aplicaciones en post emergencia, con las malezas en crecimiento activo.\n",
+                        ),
+                    ],
+                ),
+            ],
+            page_count=2,
+            character_count=len(page1_text) + len(page3_text),
+            pages_with_text=2,
+            processable=True,
+            warnings=[],
+        )
+
+        items = extract_active_ingredients(doc)
+
+        self.assertEqual(
+            [(item.name.casefold(), item.concentration) for item in items],
+            [("glifosato", "680 g/kg")],
+        )
+        self.assertFalse(any("equivalente" in item.name.casefold() for item in items))
+        self.assertFalse(any("monoammonium" in item.name.casefold() for item in items))
+        self.assertFalse(any("echinochloa" in item.name.casefold() for item in items))
+        self.assertFalse(any(item.concentration.casefold().endswith("kg/ha") for item in items))
+
     def test_touchdown_iupac_equivalence_is_not_promoted_to_active_identity(self):
         p1 = PdfPage(
             page=1,
