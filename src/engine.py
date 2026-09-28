@@ -7,7 +7,7 @@ from .active_ingredient_extractor import extract_active_ingredients
 from .cas_extractor import extract_document_cas, merge_cas_records
 from .composition_extractor import extract_composition_components
 from .cas_utils import parse_manual_cas
-from .context_classifier import ACTIVE, COMPOSITION, PRODUCT_IDENTITY, classify_context
+from .context_classifier import ACTIVE, COMPOSITION, PRODUCT_IDENTITY, REFERENCE_LIST, classify_context
 from .models import (
     ActiveIngredientEvidence,
     CasOccurrence,
@@ -156,6 +156,64 @@ def _targeted_screening_basis(
             f"{len(manual_valid)} CAS manual(es) válido(s)"
         )
     return basis
+
+
+def _detected_identities(hits) -> list[dict]:
+    """Collapse raw hit channels into one inventory row per list identity.
+
+    A substance found by both CAS and name remains one detected identity.
+    Multiple CAS rows for the same named list identity are grouped together.
+    This inventory is intentionally independent of whether the context is
+    strong enough to drive the regulatory decision.
+    """
+    grouped: dict[tuple[str, str], dict] = {}
+
+    for hit in hits:
+        key = (hit.entry.source_list, hit.entry.ingredient)
+        item = grouped.setdefault(
+            key,
+            {
+                "source_list": hit.entry.source_list,
+                "ingredient": hit.entry.ingredient,
+                "cas_values": set(),
+                "files": set(),
+                "pages": set(),
+                "contexts": set(),
+                "channels": set(),
+            },
+        )
+        if hit.entry.cas:
+            item["cas_values"].add(hit.entry.cas)
+        if hit.source_file:
+            item["files"].add(hit.source_file)
+        if hit.page:
+            item["pages"].add(hit.page)
+        if hit.context_class:
+            item["contexts"].add(hit.context_class)
+        if hit.channel:
+            item["channels"].add(hit.channel)
+
+    result = []
+    for item in grouped.values():
+        result.append(
+            {
+                "source_list": item["source_list"],
+                "ingredient": item["ingredient"],
+                "cas_values": sorted(item["cas_values"]),
+                "files": sorted(item["files"]),
+                "pages": sorted(item["pages"]),
+                "contexts": sorted(item["contexts"]),
+                "channels": sorted(item["channels"]),
+            }
+        )
+
+    return sorted(
+        result,
+        key=lambda item: (
+            item["source_list"],
+            match_key(item["ingredient"]),
+        ),
+    )
 
 
 def _identity_basis(
@@ -363,16 +421,18 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
     )
     identity_basis = _identity_basis_from_screening(screening_identity)
     screening_basis = _targeted_screening_basis(documents, manual_valid)
+    detected_identities = _detected_identities(hits)
     targeted_screening = {
         "documents_received": len(files),
         "documents_processable": sum(
             document.processable for document in documents
         ),
         "entries_screened": len(database.entries),
-        "matched_entries": len({
+        "matched_records": len({
             (hit.entry.source_list, hit.entry.ingredient, hit.entry.cas)
             for hit in hits
         }),
+        "matched_identities": len(detected_identities),
         "manual_cas_valid": len(manual_valid),
     }
     evaluation = evaluate_prohibited(
@@ -383,7 +443,14 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         identity_basis=identity_basis,
         screening_basis=screening_basis,
     )
-    display_hits = relevant_supporting_hits(hits) or evaluation.hits
+    reference_list_only = bool(hits) and all(
+        hit.context_class == REFERENCE_LIST for hit in hits
+    )
+    display_hits = (
+        []
+        if reference_list_only
+        else (relevant_supporting_hits(hits) or evaluation.hits)
+    )
 
     return {
         "evaluation": evaluation,
@@ -396,6 +463,7 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         "identity_basis": identity_basis,
         "screening_basis": screening_basis,
         "targeted_screening": targeted_screening,
+        "detected_identities": detected_identities,
         "screening_identity": screening_identity,
         "active_ingredients": active_ingredients,
         "composition_components": composition_components,
