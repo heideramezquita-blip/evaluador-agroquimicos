@@ -220,6 +220,14 @@ def _sanitize_active_ingredients(
         "concentracion",
         "cas",
         "numero cas",
+        "densidad",
+        "ph",
+        "tension superficial",
+        "solubilidad",
+        "viscosidad",
+        "apariencia",
+        "color",
+        "olor",
     }
     use_cues = (
         "recomendaciones de uso",
