@@ -37,6 +37,12 @@ _CONCENTRATION = re.compile(
     rf"(?i)(\d+(?:[.,]\d+)?\s*(?:{_CONCENTRATION_UNIT}))"
 )
 
+_WORDED_CONCENTRATION = re.compile(
+    r"(?i)\b(?P<value>\d+(?:[.,]\d+)?)\s*"
+    r"(?P<num>gramos?|miligramos?|kilogramos?)\s+por\s+"
+    r"(?P<den>litros?|kilogramos?)\b"
+)
+
 _CONCENTRATION_SERIES = re.compile(
     rf"(?i)(?P<values>\d+(?:[.,]\d+)?"
     rf"(?:\s*\+\s*\d+(?:[.,]\d+)?)+)\s*"
@@ -378,8 +384,38 @@ def _starts_structural_field(lines: list[str]) -> bool:
 
 
 def _extract_concentration(line: str) -> str:
-    match = _CONCENTRATION.search(line or "")
-    return match.group(1).strip() if match else ""
+    value = line or ""
+    match = _CONCENTRATION.search(value)
+    if match:
+        return match.group(1).strip()
+
+    # Some technical sheets spell formulation concentrations out in words,
+    # e.g. "150 gramos por litro de formulación a 20°C". Normalize only the
+    # unambiguous mass/volume or mass/mass forms used as product composition;
+    # application rates such as kg/ha remain excluded.
+    worded = _WORDED_CONCENTRATION.search(value)
+    if not worded:
+        return ""
+
+    numerator = match_key(worded.group("num"))
+    denominator = match_key(worded.group("den"))
+    num_unit = {
+        "gramo": "g",
+        "gramos": "g",
+        "miligramo": "mg",
+        "miligramos": "mg",
+        "kilogramo": "kg",
+        "kilogramos": "kg",
+    }.get(numerator)
+    den_unit = {
+        "litro": "L",
+        "litros": "L",
+        "kilogramo": "kg",
+        "kilogramos": "kg",
+    }.get(denominator)
+    if not num_unit or not den_unit:
+        return ""
+    return f"{worded.group('value')} {num_unit}/{den_unit}"
 
 
 def _format_concentration(value: str, unit: str) -> str:
@@ -416,9 +452,23 @@ def _extract_concentration_series(text: str) -> list[str]:
 
 def _strip_concentration(line: str) -> str:
     value = _CONCENTRATION.sub(" ", line or "")
+    value = _WORDED_CONCENTRATION.sub(" ", value)
     value = CAS_PATTERN.sub(" ", value)
     value = re.sub(r"(?i)\b(?:n[uú]mero\s+)?cas\b\s*[:#-]?", " ", value)
     value = re.sub(r"(?i)\(\s*formulaci[oó]n[^)]*\)", " ", value)
+    value = re.sub(
+        r"(?i)\bde\s+formulaci[oó]n\s+a\s+\d+(?:[.,]\d+)?\s*°?\s*c\b",
+        " ",
+        value,
+    )
+    # Once the numeric value has been removed, a trailing introducer such as
+    # ", a una concentración de" is descriptive syntax, not part of the
+    # ingredient name (observed in Destierro SL).
+    value = re.sub(
+        r"(?i)[,;]?\s*(?:a|en)\s+una\s+concentraci[oó]n\s+de\s*[.;,]?\s*$",
+        " ",
+        value,
+    )
     value = re.sub(r"\.{3,}", " ", value)
     value = re.sub(r"\(\s*\)", " ", value)
     value = re.sub(r"\s*\+\s*$", " ", value)
@@ -2204,6 +2254,48 @@ def _enrich_active_concentrations_from_document(
                 break
 
 
+def _use_table_artifact(item: ActiveIngredientEvidence) -> bool:
+    """Reject biological-target rows accidentally captured below an active header.
+
+    Repeated product headers often sit directly above agronomic recommendation
+    tables. If PDF text order collapses the table, weed names can appear to be
+    continuations of "INGREDIENTE ACTIVO". Preserve a true identity that
+    directly follows the active marker, but reject other metadata-free names
+    when their context clearly belongs to a use/target/dose table.
+    """
+    if item.concentration or item.cas:
+        return False
+
+    context_key = match_key(item.context)
+    if not any(
+        cue in context_key
+        for cue in (
+            "recomendaciones de uso",
+            "objetivo biologico",
+            "blanco biologico",
+            "dosis",
+        )
+    ):
+        return False
+
+    name_key = match_key(item.name)
+    if not name_key:
+        return True
+
+    # Keep the actual value immediately attached to an explicit active label,
+    # e.g. "INGREDIENTE ACTIVO: GLIFOSATO", even if the same page also contains
+    # a recommendation table.
+    explicit_patterns = (
+        rf"\bingrediente\s+activo\s+{re.escape(name_key)}\b",
+        rf"\bingredientes\s+activos\s+{re.escape(name_key)}\b",
+        rf"\bactive\s+ingredient\s+{re.escape(name_key)}\b",
+    )
+    if any(re.search(pattern, context_key) for pattern in explicit_patterns):
+        return False
+
+    return True
+
+
 def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEvidence]:
     """Extract explicitly labelled active ingredients independently of list matches."""
     evidence: list[ActiveIngredientEvidence] = []
@@ -2291,6 +2383,8 @@ def extract_active_ingredients(document: PdfDocument) -> list[ActiveIngredientEv
         evidence.extend(_extract_single_component_sds_identity(document))
 
     _enrich_active_concentrations_from_document(evidence, document)
+
+    evidence = [item for item in evidence if not _use_table_artifact(item)]
 
     # Deduplicate repeated product headers/blocks while preserving the strongest
     # concentration/CAS and the first page where identity was explicitly shown.
