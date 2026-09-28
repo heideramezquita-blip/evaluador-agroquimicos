@@ -12,6 +12,7 @@ from .context_classifier import (
     INCIDENTAL,
     NEGATED,
     REFERENCE,
+    REFERENCE_LIST,
     UNCERTAIN,
 )
 
@@ -30,6 +31,7 @@ CONTEXT_LABELS = {
     NEGATED: "Mención negada",
     DECOMPOSITION: "Descomposición / combustión",
     REFERENCE: "Referencia toxicológica",
+    REFERENCE_LIST: "Lista / referencia normativa",
     UNCERTAIN: "Papel en el producto por confirmar",
 }
 
@@ -41,7 +43,8 @@ CONTEXT_PRIORITY = {
     INCIDENTAL: 4,
     NEGATED: 5,
     REFERENCE: 6,
-    DECOMPOSITION: 7,
+    REFERENCE_LIST: 7,
+    DECOMPOSITION: 8,
 }
 
 CHANNEL_LABELS = {"CAS": "CAS", "NAME": "Nombre", "GROUP_NAME": "Grupo"}
