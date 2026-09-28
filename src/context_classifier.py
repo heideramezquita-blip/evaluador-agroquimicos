@@ -6,6 +6,7 @@ from .text_utils import match_key, normalize_text
 
 ACTIVE = "ACTIVE"
 COMPOSITION = "COMPOSITION"
+PRODUCT_IDENTITY = "PRODUCT_IDENTITY"
 INCIDENTAL = "INCIDENTAL"
 NEGATED = "NEGATED"
 DECOMPOSITION = "DECOMPOSITION_COMBUSTION"
@@ -19,6 +20,17 @@ _ACTIVE_PATTERNS = (
 )
 _IA_MARKER = re.compile(
     r"(?:^|[^a-z0-9])i\s*\.?\s*a\s*\.?(?:$|[^a-z0-9])"
+)
+
+_PRODUCT_IDENTITY_MARKERS = (
+    "identificador del producto",
+    "identificador sga del producto",
+    "product identifier",
+    "product name",
+    "nombre del producto",
+    "nombre comercial",
+    "otros medios de identificacion",
+    "other means of identification",
 )
 
 _NEGATED_MARKERS = (
@@ -105,6 +117,12 @@ def has_active_marker(text: str) -> bool:
     return False
 
 
+def has_product_identity_marker(text: str) -> bool:
+    """Recognize explicit Section 1/product-identity fields."""
+    normalized = normalize_text(text)
+    return _contains_any(normalized, _PRODUCT_IDENTITY_MARKERS)
+
+
 def has_composition_marker(text: str) -> bool:
     """Recognize common FT/FDS composition-heading variants."""
     key = match_key(text)
@@ -138,7 +156,11 @@ def has_composition_marker(text: str) -> bool:
 
 def has_identity_marker(text: str) -> bool:
     """Return whether text contains an explicit active/composition identity cue."""
-    return has_active_marker(text) or has_composition_marker(text)
+    return (
+        has_active_marker(text)
+        or has_product_identity_marker(text)
+        or has_composition_marker(text)
+    )
 
 
 def _contains_any(normalized: str, markers: tuple[str, ...]) -> bool:
@@ -171,6 +193,10 @@ def _global_context_class(normalized: str) -> str:
         return INCIDENTAL
     if has_active_marker(normalized):
         return ACTIVE
+    if has_product_identity_marker(normalized):
+        return PRODUCT_IDENTITY
+    if _contains_any(normalized, _REFERENCE_MARKERS):
+        return REFERENCE
     if has_composition_marker(normalized):
         return COMPOSITION
     return UNCERTAIN
@@ -229,6 +255,9 @@ def classify_context(context: str, matched_value: str = "") -> str:
         ACTIVE: [
             i for i, item in enumerate(segments) if has_active_marker(item)
         ],
+        PRODUCT_IDENTITY: [
+            i for i, item in enumerate(segments) if has_product_identity_marker(item)
+        ],
         COMPOSITION: [
             i for i, item in enumerate(segments) if has_composition_marker(item)
         ],
@@ -243,8 +272,9 @@ def classify_context(context: str, matched_value: str = "") -> str:
         # An explicit active-ingredient label on the same semantic line is
         # stronger than a coalesced toxicology/reference section heading.
         (ACTIVE, 5, 1),
-        (REFERENCE, 2, 2),
-        (COMPOSITION, 12, 3),
+        (PRODUCT_IDENTITY, 4, 2),
+        (REFERENCE, 2, 3),
+        (COMPOSITION, 12, 4),
     )
     candidates = []
     for category, max_distance, tie_priority in specs:
