@@ -125,105 +125,36 @@ def screening_identity_summary(screening_identity: dict | None) -> str:
 
 
 def comparison_basis_summary(result: dict | None) -> str:
-    """Describe the concrete identity/basis compared in the result card.
+    """Describe what actually drove the regulatory comparison.
 
-    Prefer confirmed active-ingredient identity. If that role is not confirmed,
-    fall back to the CAS actually used for the regulatory-list match rather
-    than labeling the matched list substance as an active ingredient.
+    Regulatory matches are presented before any inferred active-ingredient
+    identity. When there is no relevant match, prefer the list-first screening
+    summary supplied by the engine. Documentary identity remains a fallback for
+    callers that do not yet provide targeted-screening metadata.
     """
     result = result or {}
-    identity = result.get("screening_identity") or {}
+    hits = list(result.get("display_hits") or [])
 
-    active_items = identity.get("active_ingredients", [])
-    if active_items:
-        values = []
-        seen = set()
-        for item in active_items:
-            name = str(item.get("name", "")).strip()
-            cas = str(item.get("cas", "")).strip()
-            key = (name.casefold(), cas)
-            if not name or key in seen:
-                continue
-            seen.add(key)
-            values.append(f"{name} (CAS {cas})" if cas else name)
-        if values:
-            label = (
-                "Ingredientes activos evaluados"
-                if len(values) > 1
-                else "Ingrediente activo evaluado"
-            )
-            return f"{label}: " + "; ".join(values)
-
-    hits = list(result.get("display_hits") or result.get("all_hits") or [])
-    active_hits = []
-    for hit in hits:
-        if getattr(hit, "channel", "") == "ACTIVE_IDENTITY" or getattr(
-            hit, "context_class", ""
-        ) == "ACTIVE":
-            active_hits.append(hit)
-
-    if active_hits:
-        values = []
-        seen = set()
-        for hit in active_hits:
-            name = str(hit.entry.ingredient or "").strip()
-            cas = str(hit.entry.cas or "").strip()
-            key = (name.casefold(), cas)
-            if not name or key in seen:
-                continue
-            seen.add(key)
-            values.append(f"{name} (CAS {cas})" if cas else name)
-        if values:
-            label = (
-                "Ingredientes activos evaluados"
-                if len(values) > 1
-                else "Ingrediente activo evaluado"
-            )
-            return f"{label}: " + "; ".join(values)
-
-    # If identity is still under review, do not call the list substance an
-    # active ingredient. Show the exact CAS used for the regulatory comparison
-    # when one exists.
     cas_values = []
     seen_cas = set()
     for hit in hits:
         if getattr(hit, "strength", "") != "validated_cas":
             continue
-        cas = str(hit.entry.cas or getattr(hit, "matched_value", "") or "").strip()
+        cas = str(
+            getattr(hit.entry, "cas", "")
+            or getattr(hit, "matched_value", "")
+            or ""
+        ).strip()
         if not cas or cas in seen_cas:
             continue
         seen_cas.add(cas)
-        name = str(hit.entry.ingredient or "").strip()
+        name = str(getattr(hit.entry, "ingredient", "") or "").strip()
         cas_values.append(f"{cas} ({name})" if name else cas)
 
     if cas_values:
         label = "CAS evaluados" if len(cas_values) > 1 else "CAS evaluado"
         return f"{label}: " + "; ".join(cas_values)
 
-    # When the document already supplied contextual CAS in active/composition
-    # evidence, prefer those concrete identifiers over an unrelated nominal
-    # list hit elsewhere in the SDS (for example hydrogen cyanide listed only
-    # as a combustion product). This is the actual chemical basis screened.
-    contextual_cas = []
-    seen_contextual_cas = set()
-    for cas in list(identity.get("document_cas", [])) + list(
-        identity.get("manual_cas", [])
-    ):
-        value = str(cas or "").strip()
-        if not value or value in seen_contextual_cas:
-            continue
-        seen_contextual_cas.add(value)
-        contextual_cas.append(value)
-
-    if contextual_cas:
-        label = "CAS evaluados" if len(contextual_cas) > 1 else "CAS evaluado"
-        return f"{label}: " + "; ".join(contextual_cas)
-
-    # Nominal/group review states still need to tell the user exactly what
-    # reference identity drove the comparison, but only if that mention is
-    # documentary support for product identity. Decomposition/combustion,
-    # toxicology/reference, negation and incidental mentions must never become
-    # the result-card identity.
     matched_entries = []
     seen_entries = set()
     has_group = False
@@ -262,8 +193,41 @@ def comparison_basis_summary(result: dict | None) -> str:
             )
         return f"{label}: " + "; ".join(matched_entries)
 
-    fallback = screening_identity_summary(identity)
-    return fallback
+    non_supporting = []
+    seen_non_supporting = set()
+    for hit in hits:
+        if getattr(hit, "context_class", "") not in NON_SUPPORTING:
+            continue
+        name = str(getattr(hit.entry, "ingredient", "") or "").strip()
+        key = name.casefold()
+        if not name or key in seen_non_supporting:
+            continue
+        seen_non_supporting.add(key)
+        non_supporting.append(name)
+    if non_supporting:
+        label = (
+            "Menciones no confirmatorias"
+            if len(non_supporting) > 1
+            else "Mención no confirmatoria"
+        )
+        return f"{label}: " + "; ".join(non_supporting)
+
+    targeted = result.get("targeted_screening") or {}
+    documents = int(targeted.get("documents_processable", 0) or 0)
+    entries = int(targeted.get("entries_screened", 0) or 0)
+    manual = int(targeted.get("manual_cas_valid", 0) or 0)
+    if entries and (documents or manual):
+        parts = [f"{entries} entradas normativas"]
+        if documents:
+            parts.append(
+                f"{documents} documento(s) con texto extraíble"
+            )
+        if manual:
+            parts.append(f"{manual} CAS manual(es) válido(s)")
+        return "Tamizaje dirigido: " + " · ".join(parts)
+
+    identity = result.get("screening_identity") or {}
+    return screening_identity_summary(identity)
 
 
 def pubchem_url(cas: str | None) -> str:
