@@ -55,4 +55,4 @@ class CompositionHeadingRegressions(unittest.TestCase):
   result=evaluate(text)
   self.assertEqual(result['evaluation'].status,STATUS_NO_MATCH)
   self.assertEqual({record.cas for record in result['evaluation'].cas_records},{'39148-24-8','14808-60-7'})
-  self.assertIn('CAS válido en contexto de ingrediente activo/composición',result['evaluation'].message)
+  self.assertIn('búsqueda dirigida',result['evaluation'].message)
