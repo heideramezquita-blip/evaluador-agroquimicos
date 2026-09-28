@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .context_classifier import classify_context
+from .context_classifier import REFERENCE_LIST, classify_context, has_reference_list_marker
 from .models import EvidenceHit, PdfDocument
 from .text_utils import match_key, phrase_present
 
@@ -69,6 +69,9 @@ def _key_present(padded_page_key: str, phrase_key: str) -> bool:
 
 def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
     hits: list[EvidenceHit] = []
+    reference_list_document = has_reference_list_marker(
+        "\n".join(page.text or "" for page in document.pages)
+    )
 
     for page in document.pages:
         if not page.text:
@@ -93,7 +96,11 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
                         document.file_name,
                         page.page,
                         context,
-                        classify_context(context, alias),
+                        (
+                            REFERENCE_LIST
+                            if reference_list_document
+                            else classify_context(context, alias)
+                        ),
                         "exact_name",
                         "Coincidencia nominal exacta/normalizada con una lista normativa.",
                     )
@@ -139,7 +146,11 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
                     document.file_name,
                     page.page,
                     context,
-                    classify_context(context, alias),
+                    (
+                        REFERENCE_LIST
+                        if reference_list_document
+                        else classify_context(context, alias)
+                    ),
                     strength,
                     "Coincidencia dirigida con un registro de grupo/familia de una lista normativa.",
                 )
@@ -160,6 +171,13 @@ def detect_candidates(
     this decision path and is used only as auxiliary documentary information.
     """
     hits: list[EvidenceHit] = []
+    reference_list_files = {
+        document.file_name
+        for document in documents
+        if has_reference_list_marker(
+            "\n".join(page.text or "" for page in document.pages)
+        )
+    }
 
     for record in cas_records:
         for entry in db.by_cas.get(record.cas, []):
@@ -172,7 +190,11 @@ def detect_candidates(
                         occurrence.source_file,
                         occurrence.page,
                         occurrence.context,
-                        classify_context(occurrence.context, record.cas),
+                        (
+                            REFERENCE_LIST
+                            if occurrence.source_file in reference_list_files
+                            else classify_context(occurrence.context, record.cas)
+                        ),
                         "validated_cas",
                         "CAS válido por checksum e incluido en una lista normativa.",
                     )
