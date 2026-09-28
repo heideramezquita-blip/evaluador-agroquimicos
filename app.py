@@ -94,7 +94,7 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
     elif ev.status==STATUS_DOCUMENT_REVIEW:
         st.caption('No existe una coincidencia demostrada. La revisión se solicita porque el documento no pudo evaluarse de forma suficiente.')
     elif ev.status==STATUS_IDENTITY_REVIEW:
-        st.caption('El PDF es legible, pero no se encontró una identidad química suficientemente clara para sostener un resultado negativo contra las listas.')
+        st.caption('No hubo contenido documental o entrada manual suficiente para ejecutar el tamizaje dirigido contra las listas.')
 
     if result['display_hits']:
         st.markdown('<div class="section-title">Evidencia relevante</div>',unsafe_allow_html=True)
