@@ -326,6 +326,32 @@ class ProhibitedEngineTests(unittest.TestCase):
   )
   self.assertNotIn('P.R',[item.name for item in r['active_ingredients']])
 
+ def test_credit_screens_only_glyphosate_not_equivalence_or_target_weeds(self):
+  r=run_text(
+   'Ingrediente Activo:\n'
+   'Glifosato 680 g/kg\n'
+   'N - (phosphonomethyl) glycine, equivalente a 747 g/kg de Glyphosate\n'
+   'Monoammonium salt, de formulacion a 20ºC,\n'
+   'Ingredientes Aditivos: c.s.p. 1 kg\n'
+   'INGREDIENTE ACTIVO:\n'
+   'GLIFOSATO\n'
+   'Liendre puerco Echinochloa colonum,\n'
+   'Falsa caminadora Ischaemum rugosum,\n'
+   '3.0 Kg/ha\n'
+   'RECOMENDACIONES DE USO - REGISTROS\n'
+  )
+  self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
+  self.assertEqual(
+   [(item.name.casefold(),item.concentration) for item in r['active_ingredients']],
+   [('glifosato','680 g/kg')],
+  )
+  self.assertFalse(any(
+   'echinochloa' in item.name.casefold()
+   or 'monoammonium' in item.name.casefold()
+   or 'equivalente' in item.name.casefold()
+   for item in r['active_ingredients']
+  ))
+
  def test_mayoral_ft_screens_imazapic_and_imazapyr_as_two_actives(self):
   r=run_text(
    'MAYORAL 350 SL\n'
