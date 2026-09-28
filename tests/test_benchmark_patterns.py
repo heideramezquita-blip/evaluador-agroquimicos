@@ -9,6 +9,7 @@ from src.context_classifier import (
     ACTIVE,
     COMPOSITION,
     PRODUCT_IDENTITY,
+    REFERENCE_LIST,
     DECOMPOSITION,
     INCIDENTAL,
     NEGATED,
@@ -16,6 +17,7 @@ from src.context_classifier import (
     classify_context,
     has_active_marker,
     has_product_identity_marker,
+    has_reference_list_marker,
     has_composition_marker,
     has_identity_marker,
 )
@@ -110,6 +112,18 @@ class BenchmarkContextPatternsTests(unittest.TestCase):
         self.assertEqual(
             classify_context(context, "Thiamethoxam"),
             PRODUCT_IDENTITY,
+        )
+
+    def test_prohibited_list_header_is_reference_not_active_identity(self):
+        context = (
+            "Anexo 1. Listado de plaguicidas prohibidos | "
+            "PLAGUICIDAS PROHIBIDOS Ingrediente activo o grupo Número CAS | "
+            "Abamectina 71751-41-2"
+        )
+        self.assertTrue(has_reference_list_marker(context))
+        self.assertEqual(
+            classify_context(context, "Abamectina"),
+            REFERENCE_LIST,
         )
 
 
