@@ -47,8 +47,8 @@ class ProhibitedEngineTests(unittest.TestCase):
   self.assertEqual(r['active_ingredients'][0].cas,'1912-24-9')
   self.assertTrue(any(
    h.entry.ingredient=='Atrazina'
-   and h.channel=='ACTIVE_IDENTITY'
-   and h.context_class=='ACTIVE'
+   and h.channel in {'CAS','NAME'}
+   and h.context_class in {'PRODUCT_IDENTITY','COMPOSITION'}
    for h in r['display_hits']
   ))
 
@@ -78,10 +78,11 @@ class ProhibitedEngineTests(unittest.TestCase):
    r=analyze([('broken.pdf',b'x')],master_path=MASTER)
   self.assertEqual(r['evaluation'].status,STATUS_DOCUMENT_REVIEW)
   self.assertTrue(any('No fue posible leer broken.pdf' in warning for warning in r['evaluation'].warnings))
- def test_readable_pdf_without_chemical_identity_requires_identity_review(self):
+ def test_readable_pdf_without_list_match_reports_targeted_no_match(self):
   r=run_text('Documento técnico legible sobre almacenamiento, transporte y recomendaciones generales del producto. No presenta una sección de composición ni identificadores químicos utilizables.')
-  self.assertEqual(r['evaluation'].status,STATUS_IDENTITY_REVIEW)
-  self.assertIn('No es válido interpretar este resultado como ausencia de coincidencias',r['evaluation'].message)
+  self.assertEqual(r['evaluation'].status,STATUS_NO_MATCH)
+  self.assertIn('búsqueda dirigida',r['evaluation'].message)
+  self.assertIn('contenido extraíble',r['evaluation'].message)
  def test_panzer_k_narrative_identity_supports_clean_no_match(self):
   r=run_text(
    'FICHA TÉCNICA\n'
@@ -230,8 +231,8 @@ class ProhibitedEngineTests(unittest.TestCase):
   )
   self.assertTrue(any(
    h.entry.ingredient=='Bifentrina'
-   and h.channel=='ACTIVE_IDENTITY'
-   and h.context_class=='ACTIVE'
+   and h.channel=='NAME'
+   and h.context_class=='PRODUCT_IDENTITY'
    for h in r['display_hits']
   ))
 
@@ -278,8 +279,8 @@ class ProhibitedEngineTests(unittest.TestCase):
   )
   self.assertTrue(any(
    h.entry.ingredient=='Tiametoxam'
-   and h.channel=='ACTIVE_IDENTITY'
-   and h.context_class=='ACTIVE'
+   and h.channel in {'CAS','NAME'}
+   and h.context_class in {'PRODUCT_IDENTITY','COMPOSITION'}
    for h in r['display_hits']
   ))
 
@@ -475,8 +476,35 @@ class ProhibitedEngineTests(unittest.TestCase):
    [(item.name,item.concentration) for item in r['active_ingredients']],
    [('Glifosato','480 g/L')],
   )
+  paraquat=[
+   h for h in r['all_hits']
+   if h.entry.ingredient.casefold()=='paraquat'
+  ]
+  self.assertTrue(paraquat)
+  self.assertTrue(all(h.context_class=='INCIDENTAL' for h in paraquat))
   self.assertFalse(any(
    h.entry.ingredient.casefold()=='paraquat'
+   for h in r['display_hits']
+  ))
+
+ def test_targeted_match_is_not_suppressed_by_different_active_identity(self):
+  r=run_text(
+   'FICHA TÉCNICA\n'
+   'Ingrediente activo: Glifosato 480 g/L.\n'
+   'SECCIÓN 3. COMPOSICIÓN/INFORMACIÓN SOBRE LOS COMPONENTES\n'
+   'Nombre químico Nº CAS Concentración\n'
+   'Fipronil 120068-37-3 5 %.\n'
+   'Información adicional de formulación y uso agrícola.'
+  )
+  self.assertEqual(r['evaluation'].status,STATUS_RA_PROHIBITED)
+  self.assertTrue(any(
+   h.entry.ingredient=='Fipronil'
+   and h.channel in {'CAS','NAME'}
+   and h.context_class=='COMPOSITION'
+   for h in r['all_hits']
+  ))
+  self.assertFalse(any(
+   h.channel=='ACTIVE_IDENTITY'
    for h in r['all_hits']
   ))
 
