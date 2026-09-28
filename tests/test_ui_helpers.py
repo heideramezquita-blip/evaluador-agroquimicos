@@ -135,6 +135,32 @@ class UiHelpersTests(unittest.TestCase):
         )
         self.assertEqual(summary, "Ingrediente activo evaluado: Glifosato")
 
+    def test_comparison_basis_prefers_targeted_screening_over_auxiliary_identity(self):
+        summary = comparison_basis_summary(
+            {
+                "targeted_screening": {
+                    "documents_processable": 1,
+                    "entries_screened": 357,
+                    "manual_cas_valid": 0,
+                },
+                "screening_identity": {
+                    "active_ingredients": [
+                        {"name": "Identidad auxiliar", "cas": ""},
+                    ],
+                    "composition_components": [],
+                    "document_cas": [],
+                    "manual_cas": [],
+                },
+                "display_hits": [],
+            }
+        )
+        self.assertEqual(
+            summary,
+            "Tamizaje dirigido: 357 entradas normativas · "
+            "1 documento(s) con texto extraíble",
+        )
+        self.assertNotIn("Identidad auxiliar", summary)
+
     def test_comparison_basis_review_uses_exact_cas_without_overclaiming_active_role(self):
         hit = SimpleNamespace(
             channel="CAS",
