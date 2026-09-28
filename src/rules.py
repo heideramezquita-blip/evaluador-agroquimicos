@@ -339,9 +339,11 @@ def evaluate_prohibited(
     warnings=None,
     unprocessables=0,
     identity_basis=None,
+    screening_basis=None,
 ):
     warnings = list(warnings or [])
     identity_basis = list(identity_basis or [])
+    screening_basis = list(screening_basis or [])
     strong_by_source = _strong_hits_by_source(hits)
 
     strong_prohibited = strong_by_source[SOURCE_PROHIBITED]
@@ -407,10 +409,25 @@ def evaluate_prohibited(
             warnings,
         )
 
+    if screening_basis:
+        basis = "; ".join(screening_basis)
+        return Evaluation(
+            STATUS_NO_MATCH,
+            "Se ejecutó una búsqueda dirigida contra las listas locales sobre "
+            + basis
+            + ", sin detectar coincidencias por CAS válido, nombre/sinónimo "
+            + "normalizado o grupo configurado. Este resultado describe "
+            + "únicamente el contenido extraíble analizado y no demuestra la "
+            + "ausencia química de una sustancia que el documento no declare.",
+            [],
+            cas_records,
+            warnings,
+        )
+
     if not identity_basis:
         return Evaluation(
             STATUS_IDENTITY_REVIEW,
-            "El PDF contiene texto extraíble, pero no se identificó un CAS válido en contexto de ingrediente/composición ni una referencia explícita a ingrediente activo. Un encabezado de composición sin contenido químico extraíble no basta para sostener un resultado negativo. No es válido interpretar este resultado como ausencia de coincidencias en las listas.",
+            "No hubo contenido documental o entrada manual suficiente para ejecutar el tamizaje dirigido.",
             [],
             cas_records,
             warnings,
@@ -421,7 +438,7 @@ def evaluate_prohibited(
         STATUS_NO_MATCH,
         "Se identificó información química utilizable para el tamizaje ("
         + basis
-        + "), pero no se detectaron coincidencias en las listas locales de referencia ni, por esta vía, con los criterios RSPO/ISCC mapeados. Resultado basado en la información disponible en los documentos analizados.",
+        + "), pero no se detectaron coincidencias en las listas locales de referencia.",
         [],
         cas_records,
         warnings,
