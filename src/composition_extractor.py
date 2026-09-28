@@ -214,7 +214,8 @@ def _row_concentration(block: PdfTextBlock, nearby: list[PdfTextBlock]) -> str:
             cas_seen = True
             continue
         if cas_seen:
-            match = _RANGE_VALUE.fullmatch(line)
+            numeric_line = re.sub(r"\s*%\s*$", "", line).strip()
+            match = _RANGE_VALUE.fullmatch(numeric_line)
             if match:
                 return match.group(1)
 
@@ -234,7 +235,8 @@ def _row_concentration(block: PdfTextBlock, nearby: list[PdfTextBlock]) -> str:
             # This one-digit cell is the CAS checksum, not a percentage.
             continue
         for line in candidate_lines[:2]:
-            match = _RANGE_VALUE.fullmatch(line)
+            numeric_line = re.sub(r"\s*%\s*$", "", line).strip()
+            match = _RANGE_VALUE.fullmatch(numeric_line)
             if match:
                 candidates.append((abs(candidate.y0 - block.y0), match.group(1)))
 
