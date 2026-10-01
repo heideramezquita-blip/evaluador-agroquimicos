@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 from .cas_utils import is_valid_cas
+from .chemical_identity import ChemicalAlias, ChemicalIdentityRegistry
 from .models import ProhibitedEntry
 from .text_utils import match_key, normalize_text
 
@@ -137,6 +138,8 @@ class ProhibitedDatabase:
         self._aliases_by_entry: dict[ProhibitedEntry, tuple[str, ...]] = {}
         self._alias_pairs_by_entry: dict[ProhibitedEntry, tuple[tuple[str, str], ...]] = {}
         self._group_rules_by_entry: dict[ProhibitedEntry, dict] = {}
+        self._alias_metadata_by_entry: dict[ProhibitedEntry, dict[str, ChemicalAlias]] = {}
+        self.identity_registry = ChemicalIdentityRegistry(self.path.parent)
 
         source_buckets = {
             "PROHIBITED": self.prohibited,
@@ -187,11 +190,24 @@ class ProhibitedDatabase:
 
     def _prepare_matching_metadata(self) -> None:
         for entry in self.entries:
-            aliases = _aliases(entry.ingredient)
-            self._aliases_by_entry[entry] = aliases
+            aliases = list(_aliases(entry.ingredient))
+            metadata: dict[str, ChemicalAlias] = {}
+
+            if entry.cas:
+                for item in self.identity_registry.enabled_aliases_for_cas(entry.cas):
+                    key = match_key(item.alias)
+                    if not key:
+                        continue
+                    metadata[key] = item
+                    if all(match_key(alias) != key for alias in aliases):
+                        aliases.append(item.alias)
+
+            alias_tuple = tuple(aliases)
+            self._aliases_by_entry[entry] = alias_tuple
             self._alias_pairs_by_entry[entry] = tuple(
-                (alias, match_key(alias)) for alias in aliases
+                (alias, match_key(alias)) for alias in alias_tuple
             )
+            self._alias_metadata_by_entry[entry] = metadata
 
         for entry in self.groups:
             if entry.source_list == "PROHIBITED":
@@ -212,6 +228,14 @@ class ProhibitedDatabase:
 
     def alias_pairs(self, entry: ProhibitedEntry) -> tuple[tuple[str, str], ...]:
         return self._alias_pairs_by_entry[entry]
+
+    def alias_metadata(self, entry: ProhibitedEntry, alias: str) -> ChemicalAlias | None:
+        return self._alias_metadata_by_entry.get(entry, {}).get(match_key(alias))
+
+    def identity_for_entry(self, entry: ProhibitedEntry):
+        if not entry.cas:
+            return None
+        return self.identity_registry.substance_for_cas(entry.cas)
 
     def group_rule(self, entry: ProhibitedEntry) -> dict:
         return self._group_rules_by_entry[entry]
