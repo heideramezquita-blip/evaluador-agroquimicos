@@ -83,7 +83,7 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
         padded_page_key = f" {match_key(page.text)} "
 
         for entry in db.specific:
-            for alias, alias_key in db.alias_pairs(entry):
+            for alias, alias_key in db.search_alias_pairs(entry):
                 if not _key_present(padded_page_key, alias_key):
                     continue
 
