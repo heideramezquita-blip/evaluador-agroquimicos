@@ -137,6 +137,7 @@ class ProhibitedDatabase:
 
         self._aliases_by_entry: dict[ProhibitedEntry, tuple[str, ...]] = {}
         self._alias_pairs_by_entry: dict[ProhibitedEntry, tuple[tuple[str, str], ...]] = {}
+        self._search_alias_pairs_by_entry: dict[ProhibitedEntry, tuple[tuple[str, str], ...]] = {}
         self._group_rules_by_entry: dict[ProhibitedEntry, dict] = {}
         self._alias_metadata_by_entry: dict[ProhibitedEntry, dict[str, ChemicalAlias]] = {}
         self.identity_registry = ChemicalIdentityRegistry(self.path.parent)
@@ -203,10 +204,13 @@ class ProhibitedDatabase:
                     if all(match_key(alias) != key for alias in search_aliases):
                         search_aliases.append(item.alias)
 
-            # Keep aliases() backwards-compatible for group rules and callers;
-            # alias_pairs() is the actual multilingual search surface.
+            # Keep the legacy alias API stable. The detector opts explicitly
+            # into the broader multilingual search surface.
             self._aliases_by_entry[entry] = legacy_aliases
             self._alias_pairs_by_entry[entry] = tuple(
+                (alias, match_key(alias)) for alias in legacy_aliases
+            )
+            self._search_alias_pairs_by_entry[entry] = tuple(
                 (alias, match_key(alias)) for alias in search_aliases
             )
             self._alias_metadata_by_entry[entry] = metadata
@@ -230,6 +234,9 @@ class ProhibitedDatabase:
 
     def alias_pairs(self, entry: ProhibitedEntry) -> tuple[tuple[str, str], ...]:
         return self._alias_pairs_by_entry[entry]
+
+    def search_alias_pairs(self, entry: ProhibitedEntry) -> tuple[tuple[str, str], ...]:
+        return self._search_alias_pairs_by_entry[entry]
 
     def alias_metadata(self, entry: ProhibitedEntry, alias: str) -> ChemicalAlias | None:
         return self._alias_metadata_by_entry.get(entry, {}).get(match_key(alias))
