@@ -179,10 +179,8 @@ def build_registry() -> tuple[list[dict], list[dict], list[dict]]:
         substance_id = _substance_id(cas, local_names[0])
         title = ""
         iupac = ""
-        synonyms: list[str] = []
         try:
             title, iupac = _pubchem_properties(cas)
-            synonyms = _pubchem_synonyms(cas)
         except Exception as exc:
             failures.append({"cas": cas, "error": repr(exc)})
 
@@ -241,25 +239,7 @@ def build_registry() -> tuple[list[dict], list[dict], list[dict]]:
                 enabled="true" if _safe_enabled_alias(iupac, alias_type="iupac") else "false",
             )
 
-        # Harvest additional synonyms for review/provenance, but do not make
-        # commercial names/codes active matching terms automatically.
-        for synonym in synonyms:
-            if synonym in {title, iupac} or not _candidate_synonym(synonym, cas):
-                continue
-            _add_alias(
-                aliases,
-                alias_seen,
-                substance_id=substance_id,
-                canonical_cas=cas,
-                alias=synonym,
-                language="und",
-                alias_type="candidate_synonym",
-                source="PubChem PUG REST",
-                confidence="candidate",
-                enabled="false",
-            )
-
-        time.sleep(0.08)
+        time.sleep(0.04)
 
     for row in groups:
         name = _clean_local_name(row["ingredient"])
