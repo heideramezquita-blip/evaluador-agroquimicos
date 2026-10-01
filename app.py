@@ -151,8 +151,8 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
                 st.write('**Tipo de evidencia:**',classes)
                 st.write('**Página(s) más relevante(s):**',pages)
                 alias_types=sorted({getattr(hit,'alias_type','') for hit in g['hit_items'] if getattr(hit,'alias_type','')})
-                alias_languages=sorted({getattr(hit,'alias_language','') for hit in g['hits'] if getattr(hit,'alias_language','')})
-                alias_sources=sorted({getattr(hit,'alias_source','') for hit in g['hits'] if getattr(hit,'alias_source','')})
+                alias_languages=sorted({getattr(hit,'alias_language','') for hit in g['hit_items'] if getattr(hit,'alias_language','')})
+                alias_sources=sorted({getattr(hit,'alias_source','') for hit in g['hit_items'] if getattr(hit,'alias_source','')})
                 if alias_types:
                     st.write('**Identificación química:**',' · '.join(alias_types))
                 if alias_languages:
