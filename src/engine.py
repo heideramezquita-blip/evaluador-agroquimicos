@@ -33,6 +33,14 @@ def _database_signature(master_path: Path) -> tuple[tuple[str, int, int], ...]:
         for name in ProhibitedDatabase.LIST_FILES[1:]
         if (master_path.parent / name).exists()
     )
+    paths.extend(
+        path
+        for path in (
+            master_path.parent / "chemical_substances.csv",
+            master_path.parent / "chemical_aliases.csv",
+        )
+        if path.exists()
+    )
     return tuple(
         (str(path.resolve()), path.stat().st_mtime_ns, path.stat().st_size)
         for path in paths
@@ -474,4 +482,9 @@ def analyze(files, *, manual_cas_text="", manual_active_confirmed=False, master_
         "prohibited_group_count": sum(not bool(entry.cas) for entry in database.prohibited),
         "obsolete_count": len(database.obsolete),
         "mitigation_count": len(database.mitigation),
+        "chemical_identity_stats": {
+            "substances": database.identity_registry.substance_count,
+            "aliases": database.identity_registry.alias_count,
+            "enabled_aliases": database.identity_registry.enabled_alias_count,
+        },
     }
