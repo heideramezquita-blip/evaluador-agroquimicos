@@ -3,6 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from src.chemical_identity import ChemicalIdentityRegistry
 from src.context_classifier import ACTIVE, COMPOSITION, classify_context
 from src.models import PdfDocument, PdfPage
 from src.prohibited_database import ProhibitedDatabase
@@ -158,6 +159,38 @@ class MultilingualChemicalIdentityTests(unittest.TestCase):
             classify_context("Active substance | Thiamethoxam", "Thiamethoxam"),
             ACTIVE,
         )
+
+
+class GeneratedRegistryTests(unittest.TestCase):
+    def setUp(self):
+        self.registry = ChemicalIdentityRegistry(
+            Path(__file__).resolve().parents[1] / "data"
+        )
+
+    def test_generated_registry_contains_english_pesticide_names(self):
+        chlorpyrifos = {
+            alias.alias
+            for alias in self.registry.enabled_aliases_for_cas("2921-88-2")
+        }
+        thiamethoxam = {
+            alias.alias
+            for alias in self.registry.enabled_aliases_for_cas("153719-23-4")
+        }
+        self.assertIn("Chlorpyrifos", chlorpyrifos)
+        self.assertIn("Thiamethoxam", thiamethoxam)
+
+    def test_curated_relationship_is_metadata_only(self):
+        paraquat_dichloride = self.registry.substance_for_cas("1910-42-5")
+        self.assertIsNotNone(paraquat_dichloride)
+        self.assertEqual(
+            paraquat_dichloride.parent_substance_id,
+            "CAS_4685_14_7",
+        )
+        self.assertEqual(paraquat_dichloride.chemical_form, "salt")
+
+    def test_registry_has_broad_multilingual_coverage(self):
+        self.assertGreaterEqual(self.registry.substance_count, 350)
+        self.assertGreater(self.registry.enabled_alias_count, 900)
 
 
 if __name__ == "__main__":
