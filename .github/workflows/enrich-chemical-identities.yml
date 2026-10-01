@@ -1,11 +1,6 @@
 name: enrich chemical identities
 
 on:
-  push:
-    branches: [feature/chemical-identities-multilingual]
-    paths:
-      - scripts/enrich_chemical_aliases.py
-      - .github/workflows/enrich-chemical-identities.yml
   workflow_dispatch:
 
 permissions:
@@ -17,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: feature/chemical-identities-multilingual
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
@@ -31,5 +26,5 @@ jobs:
             echo "Registry already up to date."
           else
             git commit -m "data: refresh chemical identity registry"
-            git push
+            git push origin HEAD:${{ github.ref_name }}
           fi
