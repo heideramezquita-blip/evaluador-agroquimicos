@@ -198,11 +198,11 @@ Una misma sustancia detectada por CAS y por nombre se consolida en una sola tarj
 - `data/chemical_substances.csv`: identidades químicas canónicas normalizadas, indexadas principalmente por CAS.
 - `data/chemical_aliases.csv`: alias multilingües y metadatos de procedencia, idioma, tipo, confianza y habilitación.
 
-El motor puede reconocer una sustancia por CAS, por el nombre de la lista regulatoria, por el nombre canónico en inglés/internacional obtenido durante el mantenimiento del registro y por un nombre IUPAC habilitado. Los sinónimos adicionales recuperados de PubChem se conservan como candidatos pero **no se habilitan automáticamente** para evitar que nombres comerciales, códigos internos o alias ambiguos creen falsos positivos.
+El motor puede reconocer una sustancia por CAS, por los nombres/sinónimos explícitos incluidos en las listas regulatorias locales, por el nombre canónico en inglés/internacional obtenido de PubChem y por un nombre IUPAC habilitado. El proceso de mantenimiento **no importa indiscriminadamente todo el listado de sinónimos de PubChem**: se evita incorporar automáticamente nombres comerciales, códigos internos o alias ambiguos que puedan crear falsos positivos.
 
 La aplicación no traduce químicamente un nombre durante el análisis ni consulta PubChem en tiempo real. El mantenimiento del registro se realiza con `scripts/enrich_chemical_aliases.py`, que consulta PubChem PUG REST por CAS y materializa el resultado dentro del repositorio. La búsqueda posterior sigue siendo local, determinística y reproducible.
 
-La separación es deliberada: **identidad química → relación química → regla normativa**. Una sal, isómero o forma relacionada no hereda automáticamente una prohibición de otra identidad salvo que la regla regulatoria lo establezca explícitamente.
+La separación es deliberada: **identidad química → relación química → regla normativa**. El registro conserva relaciones explícitas de sal/isómero cuando se han curado de forma segura (por ejemplo, dicloruro de paraquat→paraquat y determinados isómeros HCH/endosulfán). Esas relaciones son metadatos de identidad: una sal, isómero o forma relacionada no hereda automáticamente una prohibición de otra identidad salvo que la regla regulatoria lo establezca explícitamente.
 
 
 Las reglas de correspondencia entre estándares están en `src/rules.py`.
