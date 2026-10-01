@@ -54,7 +54,8 @@ La estructura se mantiene deliberadamente pequeña y separa responsabilidades si
 - `src/cas_utils.py` y `src/cas_extractor.py`: normalización, validación y extracción de CAS, incluida la reconstrucción conservadora de CAS cuyo dígito de checksum queda separado en otro bloque de una tabla PDF.
 - `src/composition_extractor.py`: extracción descriptiva de componentes en tablas estructuradas de composición de FDS; no promueve por sí sola esos componentes a ingrediente activo.
 - `src/context_classifier.py`: clasificación contextual por proximidad y normalización de variantes frecuentes de ingrediente activo, composición, identidad explícita del producto y contextos no confirmatorios.
-- `src/prohibited_database.py`: carga de las tres bases locales y metadatos de búsqueda.
+- `src/chemical_identity.py`: carga del registro local normalizado de identidades químicas y alias habilitados; nunca consulta servicios externos durante una evaluación.
+- `src/prohibited_database.py`: carga de las tres bases regulatorias locales y unión con el registro de identidades químicas.
 - `src/prohibited_detector.py`: núcleo del tamizaje dirigido por CAS, nombre/sinónimo y reglas de grupo. No depende del extractor de ingrediente activo; conserva todas las coincidencias y deja que el clasificador contextual y las reglas determinen su relevancia.
 - `src/rules.py`: decisión final y correspondencias explícitas entre RA, RSPO e ISCC.
 - `src/criteria_presentation.py`: interpretación estructurada de criterios y explicaciones mostradas al usuario.
@@ -194,6 +195,15 @@ Una misma sustancia detectada por CAS y por nombre se consolida en una sola tarj
 - `data/master_restrictions.csv`: PROHIBIDOS.
 - `data/obsolete.csv`: OBSOLETOS.
 - `data/risk_mitigation.csv`: MITIGACIÓN DE RIESGOS.
+- `data/chemical_substances.csv`: identidades químicas canónicas normalizadas, indexadas principalmente por CAS.
+- `data/chemical_aliases.csv`: alias multilingües y metadatos de procedencia, idioma, tipo, confianza y habilitación.
+
+El motor puede reconocer una sustancia por CAS, por el nombre de la lista regulatoria, por el nombre canónico en inglés/internacional obtenido durante el mantenimiento del registro y por un nombre IUPAC habilitado. Los sinónimos adicionales recuperados de PubChem se conservan como candidatos pero **no se habilitan automáticamente** para evitar que nombres comerciales, códigos internos o alias ambiguos creen falsos positivos.
+
+La aplicación no traduce químicamente un nombre durante el análisis ni consulta PubChem en tiempo real. El mantenimiento del registro se realiza con `scripts/enrich_chemical_aliases.py`, que consulta PubChem PUG REST por CAS y materializa el resultado dentro del repositorio. La búsqueda posterior sigue siendo local, determinística y reproducible.
+
+La separación es deliberada: **identidad química → relación química → regla normativa**. Una sal, isómero o forma relacionada no hereda automáticamente una prohibición de otra identidad salvo que la regla regulatoria lo establezca explícitamente.
+
 
 Las reglas de correspondencia entre estándares están en `src/rules.py`.
 
@@ -277,6 +287,19 @@ La versión local y la versión desplegada en Streamlit utilizan el **mismo moto
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+La suite incluye regresiones específicas para reconocimiento en español e inglés, alias habilitados/no habilitados y encabezados como `Active substance`, `Chemical name`, `Common name` e `IUPAC name`.
+
+### Mantenimiento del registro químico
+
+Para regenerar deliberadamente el registro de identidades y alias:
+
+```bash
+python scripts/enrich_chemical_aliases.py
+```
+
+La generación consulta PubChem; la ejecución normal de Streamlit no lo hace. El workflow `.github/workflows/enrich-chemical-identities.yml` permite reproducir el mismo proceso de mantenimiento en GitHub Actions.
+
 
 La suite incluye regresiones del motor, clasificación contextual, interpretación de criterios, presentación de evidencia, coherencia documental y un smoke test de Streamlit en CI.
 
