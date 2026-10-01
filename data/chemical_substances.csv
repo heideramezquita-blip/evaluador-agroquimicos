@@ -111,7 +111,7 @@ CAS_187166_40_1,Spinetoram J,187166-40-1,,,PubChem title + local regulatory list
 CAS_18854_01_8,Isoxathion,18854-01-8,,,PubChem title + local regulatory lists
 CAS_1897_45_6,Chlorothalonil,1897-45-6,,,PubChem title + local regulatory lists
 CAS_19044_88_3,Oryzalin,19044-88-3,,,PubChem title + local regulatory lists
-CAS_1910_42_5,Paraquat dichloride,1910-42-5,,,PubChem title + local regulatory lists
+CAS_1910_42_5,Paraquat dichloride,1910-42-5,CAS_4685_14_7,salt,PubChem title + local regulatory lists
 CAS_1912_24_9,Atrazine,1912-24-9,,,PubChem title + local regulatory lists
 CAS_1928_43_4,"2-Ethylhexyl (2,4-dichlorophenoxy)acetate",1928-43-4,,,PubChem title + local regulatory lists
 CAS_19666_30_9,Oxadiazon,19666-30-9,,,PubChem title + local regulatory lists
@@ -171,12 +171,12 @@ CAS_30560_19_1,Acephate,30560-19-1,,,PubChem title + local regulatory lists
 CAS_309_00_2,Aldrin,309-00-2,,,PubChem title + local regulatory lists
 CAS_31218_83_4,Propetamphos,31218-83-4,,,PubChem title + local regulatory lists
 CAS_314_40_9,Bromacil,314-40-9,,,PubChem title + local regulatory lists
-CAS_319_84_6,Hexachlorocyclohexane,319-84-6,,,PubChem title + local regulatory lists
-CAS_319_85_7,Hexachlorocyclohexane,319-85-7,,,PubChem title + local regulatory lists
+CAS_319_84_6,Hexachlorocyclohexane,319-84-6,CAS_608_73_1,isomer,PubChem title + local regulatory lists
+CAS_319_85_7,Hexachlorocyclohexane,319-85-7,CAS_608_73_1,isomer,PubChem title + local regulatory lists
 CAS_330_54_1,Diuron,330-54-1,,,PubChem title + local regulatory lists
 CAS_330_55_2,Linuron,330-55-2,,,PubChem title + local regulatory lists
 CAS_33089_61_1,Amitraz,33089-61-1,,,PubChem title + local regulatory lists
-CAS_33213_65_9,alpha-Endosulfan,33213-65-9,,,PubChem title + local regulatory lists
+CAS_33213_65_9,alpha-Endosulfan,33213-65-9,CAS_115_29_7,isomer,PubChem title + local regulatory lists
 CAS_333_41_5,Diazinon,333-41-5,,,PubChem title + local regulatory lists
 CAS_34256_82_1,Acetochlor,34256-82-1,,,PubChem title + local regulatory lists
 CAS_34681_10_2,Butocarboxim,34681-10-2,,,PubChem title + local regulatory lists
@@ -236,7 +236,7 @@ CAS_57_24_9,Strychnine,57-24-9,,,PubChem title + local regulatory lists
 CAS_57213_69_1,Triclopyr triethylamine,57213-69-1,,,PubChem title + local regulatory lists
 CAS_57837_19_1,Metalaxyl,57837-19-1,,,PubChem title + local regulatory lists
 CAS_57960_19_7,Acequinocyl,57960-19-7,,,PubChem title + local regulatory lists
-CAS_58_89_9,Hexachlorocyclohexane,58-89-9,,,PubChem title + local regulatory lists
+CAS_58_89_9,Hexachlorocyclohexane,58-89-9,CAS_608_73_1,isomer,PubChem title + local regulatory lists
 CAS_5836_29_3,Coumatetralyl,5836-29-3,,,PubChem title + local regulatory lists
 CAS_584_79_2,Allethrins,584-79-2,,,PubChem title + local regulatory lists
 CAS_592_01_8,Calcium cyanide,592-01-8,,,PubChem title + local regulatory lists
@@ -337,7 +337,7 @@ CAS_94361_06_5,Cyproconazole,94361-06-5,,,PubChem title + local regulatory lists
 CAS_950_37_8,Methidathion,950-37-8,,,PubChem title + local regulatory lists
 CAS_951659_40_8,Flupyradifurone,951659-40-8,,,PubChem title + local regulatory lists
 CAS_95465_99_9,Cadusafos,95465-99-9,,,PubChem title + local regulatory lists
-CAS_959_98_8,alpha-Endosulfan,959-98-8,,,PubChem title + local regulatory lists
+CAS_959_98_8,alpha-Endosulfan,959-98-8,CAS_115_29_7,isomer,PubChem title + local regulatory lists
 CAS_95977_29_0,Haloxyfop-P,95977-29-0,,,PubChem title + local regulatory lists
 CAS_96_12_8,"1,2-Dibromo-3-Chloropropane",96-12-8,,,PubChem title + local regulatory lists
 CAS_96_24_2,"3-Chloro-1,2-propanediol",96-24-2,,,PubChem title + local regulatory lists
