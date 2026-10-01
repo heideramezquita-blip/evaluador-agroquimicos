@@ -190,7 +190,8 @@ class ProhibitedDatabase:
 
     def _prepare_matching_metadata(self) -> None:
         for entry in self.entries:
-            aliases = list(_aliases(entry.ingredient))
+            legacy_aliases = _aliases(entry.ingredient)
+            search_aliases = list(legacy_aliases)
             metadata: dict[str, ChemicalAlias] = {}
 
             if entry.cas:
@@ -199,13 +200,14 @@ class ProhibitedDatabase:
                     if not key:
                         continue
                     metadata[key] = item
-                    if all(match_key(alias) != key for alias in aliases):
-                        aliases.append(item.alias)
+                    if all(match_key(alias) != key for alias in search_aliases):
+                        search_aliases.append(item.alias)
 
-            alias_tuple = tuple(aliases)
-            self._aliases_by_entry[entry] = alias_tuple
+            # Keep aliases() backwards-compatible for group rules and callers;
+            # alias_pairs() is the actual multilingual search surface.
+            self._aliases_by_entry[entry] = legacy_aliases
             self._alias_pairs_by_entry[entry] = tuple(
-                (alias, match_key(alias)) for alias in alias_tuple
+                (alias, match_key(alias)) for alias in search_aliases
             )
             self._alias_metadata_by_entry[entry] = metadata
 
