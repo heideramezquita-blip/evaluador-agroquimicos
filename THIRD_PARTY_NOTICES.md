@@ -4,7 +4,7 @@ El código fuente original de este repositorio se distribuye bajo la licencia MI
 
 ## Datos y fuentes normativas
 
-Los archivos del directorio `data/` contienen listas normalizadas elaboradas a partir de fuentes externas, principalmente documentación de Rainforest Alliance. La licencia MIT del código **no pretende relicenciar ni modificar los derechos aplicables al material fuente de terceros**.
+Los archivos del directorio `data/` contienen listas normalizadas elaboradas a partir de fuentes externas, principalmente documentación de Rainforest Alliance. `chemical_substances.csv` y `chemical_aliases.csv` incorporan además nombres químicos obtenidos mediante PubChem PUG REST a partir de los CAS de esas listas. La licencia MIT del código **no pretende relicenciar ni modificar los derechos aplicables al material fuente de terceros**.
 
 Quien reutilice, redistribuya o incorpore estos datos en otro producto debe revisar las condiciones aplicables de las fuentes originales y mantener la atribución correspondiente cuando proceda.
 
