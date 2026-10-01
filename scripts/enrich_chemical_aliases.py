@@ -19,6 +19,7 @@ ALIASES_PATH = DATA / "chemical_aliases.csv"
 
 PUBCHEM = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{identifier}/{endpoint}/JSON"
 USER_AGENT = "evaluador-agroquimicos/chemical-identity-maintenance"
+# PubChem is used only here; runtime screening remains offline and deterministic.
 
 # These are candidate-quality filters, not regulatory rules. General PubChem
 # synonyms are retained for provenance but disabled unless promoted by a
