@@ -21,17 +21,16 @@ PUBCHEM = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{identifier}/
 USER_AGENT = "evaluador-agroquimicos/chemical-identity-maintenance"
 # PubChem is used only here; runtime screening remains offline and deterministic.
 
-# These are candidate-quality filters, not regulatory rules. General PubChem
-# synonyms are retained for provenance but disabled unless promoted by a
-# deliberately conservative rule below.
-CODE_PREFIXES = (
-    "dtxsid", "dtxcid", "nsc-", "nsc ", "chebi:", "chembl", "schembl",
-    "akos", "unii", "refchem", "hms", "hy-", "cs-", "orb", "l-", "mk-",
-)
-NOISY_TERMS = (
-    "standard", "reference standard", "fda", "mixture of", "component b",
-    "ec)", " sc", " wp", " wg", " sl", " formulation",
-)
+# Explicit structural relationships used only as identity metadata. They do
+# not propagate or alter any regulatory decision.
+CURATED_RELATIONSHIPS = {
+    "1910-42-5": ("4685-14-7", "salt"),       # paraquat dichloride -> paraquat
+    "959-98-8": ("115-29-7", "isomer"),       # alpha-endosulfan -> endosulfan
+    "33213-65-9": ("115-29-7", "isomer"),     # beta-endosulfan -> endosulfan
+    "319-84-6": ("608-73-1", "isomer"),       # alpha-HCH -> mixed HCH
+    "319-85-7": ("608-73-1", "isomer"),       # beta-HCH -> mixed HCH
+    "58-89-9": ("608-73-1", "isomer"),        # gamma-HCH/lindane -> mixed HCH
+}
 
 
 def _fold(value: str) -> str:
@@ -95,14 +94,6 @@ def _pubchem_properties(cas: str) -> tuple[str, str]:
     return (row.get("Title") or "").strip(), (row.get("IUPACName") or "").strip()
 
 
-def _pubchem_synonyms(cas: str) -> list[str]:
-    data = _fetch_json(cas, "synonyms")
-    rows = data.get("InformationList", {}).get("Information", [])
-    if not rows:
-        return []
-    return [str(value).strip() for value in rows[0].get("Synonym", []) if str(value).strip()]
-
-
 def _safe_enabled_alias(alias: str, *, alias_type: str) -> bool:
     key = _fold(alias)
     if len(key) < 4:
@@ -112,23 +103,6 @@ def _safe_enabled_alias(alias: str, *, alias_type: str) -> bool:
     if alias_type == "iupac":
         return len(alias) <= 180
     return False
-
-
-def _candidate_synonym(alias: str, cas: str) -> bool:
-    raw = alias.strip()
-    key = _fold(raw)
-    if not key or key == _fold(cas):
-        return False
-    if len(raw) > 100 or len(key) < 4:
-        return False
-    lowered = raw.lower()
-    if any(lowered.startswith(prefix) for prefix in CODE_PREFIXES):
-        return False
-    if any(term in lowered for term in NOISY_TERMS):
-        return False
-    if re.fullmatch(r"[0-9\- ]+", raw):
-        return False
-    return True
 
 
 def _add_alias(rows: list[dict], seen: set[tuple[str, str]], **row) -> None:
@@ -154,11 +128,6 @@ def load_regulatory_rows() -> list[dict]:
 
 def build_registry() -> tuple[list[dict], list[dict], list[dict]]:
     regulatory = load_regulatory_rows()
-    grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
-    for row in regulatory:
-        key = (row["cas"], _clean_local_name(row["ingredient"]))
-        grouped[key].append(row)
-
     substances: list[dict] = []
     aliases: list[dict] = []
     failures: list[dict] = []
@@ -185,13 +154,14 @@ def build_registry() -> tuple[list[dict], list[dict], list[dict]]:
             failures.append({"cas": cas, "error": repr(exc)})
 
         canonical_name = title or local_names[0]
+        parent_cas, chemical_form = CURATED_RELATIONSHIPS.get(cas, ("", ""))
         substances.append(
             {
                 "substance_id": substance_id,
                 "canonical_name": canonical_name,
                 "canonical_cas": cas,
-                "parent_substance_id": "",
-                "chemical_form": "",
+                "parent_substance_id": _substance_id(parent_cas, "") if parent_cas else "",
+                "chemical_form": chemical_form,
                 "source": "PubChem title + local regulatory lists" if title else "local regulatory lists",
             }
         )
