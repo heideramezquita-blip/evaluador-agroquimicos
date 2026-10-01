@@ -5,33 +5,7 @@ on:
     branches: [main]
   pull_request:
 
-permissions:
-  contents: write
-
 jobs:
-  enrich-feature-registry:
-    if: github.event_name == 'pull_request' && github.head_ref == 'feature/chemical-identities-multilingual'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: feature/chemical-identities-multilingual
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.12'
-      - run: python scripts/enrich_chemical_aliases.py
-      - name: Commit generated registry
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/chemical_substances.csv data/chemical_aliases.csv
-          if git diff --cached --quiet; then
-            echo "Registry already generated."
-          else
-            git commit -m "data: materialize multilingual chemical registry"
-            git push origin HEAD:feature/chemical-identities-multilingual
-          fi
-
   test:
     runs-on: ubuntu-latest
     steps:
