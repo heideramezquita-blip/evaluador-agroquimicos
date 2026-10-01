@@ -18,6 +18,7 @@ _ACTIVE_PATTERNS = (
     re.compile(r"\bingrediente(?:s|\s+s)?\s+activo(?:s|\s+s)?\b"),
     re.compile(r"\bprincipio(?:s|\s+s)?\s+activo(?:s|\s+s)?\b"),
     re.compile(r"\bactive\s+ingredient(?:s|\s+s)?\b"),
+    re.compile(r"\bactive\s+substance(?:s|\s+s)?\b"),
 )
 _IA_MARKER = re.compile(
     r"(?:^|[^a-z0-9])i\s*\.?\s*a\s*\.?(?:$|[^a-z0-9])"
@@ -169,6 +170,11 @@ def has_composition_marker(text: str) -> bool:
             "analisis garantizado",
             "composition information on ingredients",
             "composition information on components",
+            "chemical name",
+            "common name",
+            "iupac name",
+            "nombre quimico",
+            "nombre comun",
         )
     ):
         return True
