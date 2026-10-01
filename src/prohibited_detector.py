@@ -88,6 +88,8 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
                     continue
 
                 context = _line_context(page.text, alias)
+                alias_meta = db.alias_metadata(entry, alias)
+                identity = db.identity_for_entry(entry)
                 hits.append(
                     EvidenceHit(
                         entry,
@@ -103,6 +105,11 @@ def _name_hits(document: PdfDocument, db) -> list[EvidenceHit]:
                         ),
                         "exact_name",
                         "Coincidencia nominal exacta/normalizada con una lista normativa.",
+                        substance_id=(alias_meta.substance_id if alias_meta else (identity.substance_id if identity else "")),
+                        canonical_name=(identity.canonical_name if identity else entry.ingredient),
+                        alias_language=(alias_meta.language if alias_meta else "es"),
+                        alias_type=(alias_meta.alias_type if alias_meta else "regulatory_name"),
+                        alias_source=(alias_meta.source if alias_meta else "local regulatory list"),
                     )
                 )
                 break
@@ -196,6 +203,7 @@ def detect_candidates(
     for record in cas_records:
         for entry in db.by_cas.get(record.cas, []):
             for occurrence in record.occurrences:
+                identity = db.identity_for_entry(entry)
                 hits.append(
                     EvidenceHit(
                         entry,
@@ -211,6 +219,11 @@ def detect_candidates(
                         ),
                         "validated_cas",
                         "CAS válido por checksum e incluido en una lista normativa.",
+                        substance_id=(identity.substance_id if identity else ""),
+                        canonical_name=(identity.canonical_name if identity else entry.ingredient),
+                        alias_language="",
+                        alias_type="cas",
+                        alias_source=(identity.source if identity else "local regulatory list"),
                     )
                 )
 
