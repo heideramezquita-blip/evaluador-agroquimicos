@@ -1,0 +1,986 @@
+substance_id,canonical_cas,alias,language,alias_type,source,confidence,enabled
+CAS_10043_35_3,10043-35-3,Ácido bórico,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_10043_35_3,10043-35-3,Boric Acid,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_101_05_3,101-05-3,Anilazina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_101_05_3,101-05-3,Anilazine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_101_05_3,101-05-3,"4,6-dichloro-N-(2-chlorophenyl)-1,3,5-triazin-2-amine",international,iupac,PubChem PUG REST,high,true
+CAS_10265_92_6,10265-92-6,Metamidofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_10265_92_6,10265-92-6,Methamidophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_10265_92_6,10265-92-6,[amino(methylsulfanyl)phosphoryl]oxymethane,international,iupac,PubChem PUG REST,high,true
+CAS_103055_07_8,103055-07-8,Lufenurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_103055_07_8,103055-07-8,"N-[[2,5-dichloro-4-(1,1,2,3,3,3-hexafluoropropoxy)phenyl]carbamoyl]-2,6-difluorobenzamide",international,iupac,PubChem PUG REST,high,true
+CAS_103112_35_2,103112-35-2,Fenclorazol-etilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_103112_35_2,103112-35-2,Fenchlorazole-ethyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_103112_35_2,103112-35-2,"ethyl 1-(2,4-dichlorophenyl)-5-(trichloromethyl)-1,2,4-triazole-3-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_103361_09_7,103361-09-7,Flumioxazina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_103361_09_7,103361-09-7,Flumioxazin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_103361_09_7,103361-09-7,"2-(7-fluoro-3-oxo-4-prop-2-ynyl-1,4-benzoxazin-6-yl)-4,5,6,7-tetrahydroisoindole-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_10453_86_8,10453-86-8,Resmetrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_10453_86_8,10453-86-8,Resmethrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_10453_86_8,10453-86-8,"(5-benzylfuran-3-yl)methyl 2,2-dimethyl-3-(2-methylprop-1-enyl)cyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_104653_34_1,104653-34-1,Difetialona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_104653_34_1,104653-34-1,Difethialone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_104653_34_1,104653-34-1,"3-[3-[4-(4-bromophenyl)phenyl]-1,2,3,4-tetrahydronaphthalen-1-yl]-2-hydroxythiochromen-4-one",international,iupac,PubChem PUG REST,high,true
+CAS_105024_66_6,105024-66-6,Silafluofeno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_105024_66_6,105024-66-6,Silafluofen,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_105024_66_6,105024-66-6,(4-ethoxyphenyl)-[3-(4-fluoro-3-phenoxyphenyl)propyl]-dimethylsilane,international,iupac,PubChem PUG REST,high,true
+CAS_106_89_8,106-89-8,Epiclorhidrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_106_89_8,106-89-8,Epichlorohydrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_106_89_8,106-89-8,2-(chloromethyl)oxirane,international,iupac,PubChem PUG REST,high,true
+CAS_106_93_4,106-93-4,Dibromuro de etileno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_106_93_4,106-93-4,"1,2-dibrometano",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_106_93_4,106-93-4,"1,2-Dibromoethane",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_10605_21_7,10605-21-7,Carbendazim,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_10605_21_7,10605-21-7,methyl N-(1H-benzimidazol-2-yl)carbamate,international,iupac,PubChem PUG REST,high,true
+CAS_107_02_8,107-02-8,Acroleína,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_107_02_8,107-02-8,Acrolein,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_107_02_8,107-02-8,prop-2-enal,international,iupac,PubChem PUG REST,high,true
+CAS_107_06_2,107-06-2,Dicloruro de etileno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_107_06_2,107-06-2,"1,2-dicloroetano",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_107_06_2,107-06-2,"1,2-Dichloroethane",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_108731_70_0,108731-70-0,Fomesafeno sódico,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_108731_70_0,108731-70-0,Fomesafen sodium,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_108731_70_0,108731-70-0,sodium (1Z)-5-[2-chloro-4-(trifluoromethyl)phenoxy]-N-methylsulfonyl-2-nitrobenzenecarboximidate,international,iupac,PubChem PUG REST,high,true
+CAS_110488_70_5,110488-70-5,Dimetomorfo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_110488_70_5,110488-70-5,Dimethomorph,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_110488_70_5,110488-70-5,"3-(4-chlorophenyl)-3-(3,4-dimethoxyphenyl)-1-morpholin-4-ylprop-2-en-1-one",international,iupac,PubChem PUG REST,high,true
+CAS_1113_02_6,1113-02-6,Ometoato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1113_02_6,1113-02-6,Omethoate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1113_02_6,1113-02-6,2-dimethoxyphosphorylsulfanyl-N-methylacetamide,international,iupac,PubChem PUG REST,high,true
+CAS_111988_49_9,111988-49-9,Tiacloprid,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_111988_49_9,111988-49-9,"(3-((6-Chloropyridin-3-yl)methyl)-1,3-thiazolidin-2-ylidene)cyanamide",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_111988_49_9,111988-49-9,"[3-[(6-chloro-3-pyridinyl)methyl]-1,3-thiazolidin-2-ylidene]cyanamide",international,iupac,PubChem PUG REST,high,true
+CAS_112143_82_5,112143-82-5,Triazamato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_112143_82_5,112143-82-5,Triazamate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_112143_82_5,112143-82-5,"ethyl 2-[[5-tert-butyl-2-(dimethylcarbamoyl)-1,2,4-triazol-3-yl]sulfanyl]acetate",international,iupac,PubChem PUG REST,high,true
+CAS_112281_77_3,112281-77-3,Tetraconazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_112281_77_3,112281-77-3,Tetraconazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_112281_77_3,112281-77-3,"1-[2-(2,4-dichlorophenyl)-3-(1,1,2,2-tetrafluoroethoxy)propyl]-1,2,4-triazole",international,iupac,PubChem PUG REST,high,true
+CAS_1134_23_2,1134-23-2,Cicloato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1134_23_2,1134-23-2,Cycloate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1134_23_2,1134-23-2,S-ethyl N-cyclohexyl-N-ethylcarbamothioate,international,iupac,PubChem PUG REST,high,true
+CAS_114_26_1,114-26-1,Propoxur,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_114_26_1,114-26-1,(2-propan-2-yloxyphenyl) N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_115_29_7,115-29-7,Endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_115_29_7,115-29-7,alfa-endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_115_29_7,115-29-7,beta endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_115_29_7,115-29-7,"1,9,10,11,12,12-hexachloro-4,6-dioxa-5lambda4-thiatricyclo[7.2.1.02,8]dodec-10-ene 5-oxide",international,iupac,PubChem PUG REST,high,true
+CAS_115_32_2,115-32-2,Dicofol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_115_32_2,115-32-2,"2,2,2-trichloro-1,1-bis(4-chlorophenyl)ethanol",international,iupac,PubChem PUG REST,high,true
+CAS_116_06_3,116-06-3,Aldicarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_116_06_3,116-06-3,[(E)-(2-methyl-2-methylsulfanylpropylidene)amino] N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_116714_46_6,116714-46-6,Novalurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_116714_46_6,116714-46-6,"N-[[3-chloro-4-[1,1,2-trifluoro-2-(trifluoromethoxy)ethoxy]phenyl]carbamoyl]-2,6-difluorobenzamide",international,iupac,PubChem PUG REST,high,true
+CAS_117_18_0,117-18-0,Tecnaceno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_117_18_0,117-18-0,"1,2,4,5-Tetrachloro-3-nitrobenzene",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_118_74_1,118-74-1,Hexaclorobenceno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_118_74_1,118-74-1,Hexachlorobenzene,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_118_74_1,118-74-1,"1,2,3,4,5,6-hexachlorobenzene",international,iupac,PubChem PUG REST,high,true
+CAS_118_75_2,118-75-2,Cloranilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_118_75_2,118-75-2,Chloranil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_118_75_2,118-75-2,"2,3,5,6-tetrachlorocyclohexa-2,5-diene-1,4-dione",international,iupac,PubChem PUG REST,high,true
+CAS_1194_65_6,1194-65-6,Diclobenilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1194_65_6,1194-65-6,Dichlobenil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1194_65_6,1194-65-6,"2,6-dichlorobenzonitrile",international,iupac,PubChem PUG REST,high,true
+CAS_119738_06_6,119738-06-6,Quizalofop-p-tefuril,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_119738_06_6,119738-06-6,Quizalofop-tefuryl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_119738_06_6,119738-06-6,oxolan-2-ylmethyl 2-[4-(6-chloroquinoxalin-2-yl)oxyphenoxy]propanoate,international,iupac,PubChem PUG REST,high,true
+CAS_120068_37_3,120068-37-3,Fipronil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_120068_37_3,120068-37-3,"5-amino-1-[2,6-dichloro-4-(trifluoromethyl)phenyl]-4-(trifluoromethylsulfinyl)pyrazole-3-carbonitrile",international,iupac,PubChem PUG REST,high,true
+CAS_12057_74_8,12057-74-8,Fosfuro de magnesio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_12057_74_8,12057-74-8,Magnesium phosphide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_12057_74_8,12057-74-8,trimagnesium bis(phosphorus(3-)),international,iupac,PubChem PUG REST,high,true
+CAS_121_75_5,121-75-5,Malatión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_121_75_5,121-75-5,Malathion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_121_75_5,121-75-5,diethyl 2-dimethoxyphosphinothioylsulfanylbutanedioate,international,iupac,PubChem PUG REST,high,true
+CAS_12122_67_7,12122-67-7,Zineb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_12122_67_7,12122-67-7,zinc N-[2-(sulfidocarbothioylamino)ethyl]carbamodithioate,international,iupac,PubChem PUG REST,high,true
+CAS_122_14_5,122-14-5,Fenitrotión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_122_14_5,122-14-5,Fenitrothion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_122_14_5,122-14-5,dimethoxy-(3-methyl-4-nitrophenoxy)-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_122_34_9,122-34-9,Simazina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_122_34_9,122-34-9,Simazine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_122_34_9,122-34-9,"6-chloro-2-N,4-N-diethyl-1,3,5-triazine-2,4-diamine",international,iupac,PubChem PUG REST,high,true
+CAS_122_42_9,122-42-9,Profam,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_122_42_9,122-42-9,Propham,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_122_42_9,122-42-9,propan-2-yl N-phenylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_122453_73_0,122453-73-0,Clorfenapir,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_122453_73_0,122453-73-0,Chlorfenapyr,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_122453_73_0,122453-73-0,4-bromo-2-(4-chlorophenyl)-1-(ethoxymethyl)-5-(trifluoromethyl)pyrrole-3-carbonitrile,international,iupac,PubChem PUG REST,high,true
+CAS_122836_35_5,122836-35-5,Sulfentrazona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_122836_35_5,122836-35-5,Sulfentrazone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_122836_35_5,122836-35-5,"N-[2,4-dichloro-5-[4-(difluoromethyl)-3-methyl-5-oxo-1,2,4-triazol-1-yl]phenyl]methanesulfonamide",international,iupac,PubChem PUG REST,high,true
+CAS_123_33_1,123-33-1,Hidrazida maléica,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_123_33_1,123-33-1,Maleic Hydrazide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_123_33_1,123-33-1,"1,2-dihydropyridazine-3,6-dione",international,iupac,PubChem PUG REST,high,true
+CAS_12427_38_2,12427-38-2,Maneb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_12427_38_2,12427-38-2,manganese(2+);N-[2-(sulfidocarbothioylamino)ethyl]carbamodithioate,international,iupac,PubChem PUG REST,high,true
+CAS_125116_23_6,125116-23-6,Metconazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_125116_23_6,125116-23-6,Metconazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_125116_23_6,125116-23-6,"5-[(4-chlorophenyl)methyl]-2,2-dimethyl-1-(1,2,4-triazol-1-ylmethyl)cyclopentan-1-ol",international,iupac,PubChem PUG REST,high,true
+CAS_126_15_8,126-15-8,"2,3,4,5-Bistetrahidro-2- furaldehido",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_126_15_8,126-15-8,"2,3:4,5-Di(2-butenyl)tetrahydrofurfural",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_126_15_8,126-15-8,"4,5a,6,9,9a,9b-hexahydro-1H-dibenzofuran-4a-carbaldehyde",international,iupac,PubChem PUG REST,high,true
+CAS_12789_03_6,12789-03-6,Clordano,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_12789_03_6,12789-03-6,"Chlordane, technical",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_12789_03_6,12789-03-6,"1,3,4,7,8,9,10,10-octachlorotricyclo[5.2.1.02,6]dec-8-ene",international,iupac,PubChem PUG REST,high,true
+CAS_129558_76_5,129558-76-5,Tolfenpirad,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_129558_76_5,129558-76-5,Tolfenpyrad,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_129558_76_5,129558-76-5,4-chloro-3-ethyl-1-methyl-N-[[4-(4-methylphenoxy)phenyl]methyl]pyrazole-5-carboxamide,international,iupac,PubChem PUG REST,high,true
+CAS_13071_79_9,13071-79-9,Terbufós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_13071_79_9,13071-79-9,tert-butylsulfanylmethylsulfanyl-diethoxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_1314_84_7,1314-84-7,Fosfuro de zinc,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1314_84_7,1314-84-7,Zinc Phosphide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1314_84_7,1314-84-7,trizinc bis(phosphorus(3-)),international,iupac,PubChem PUG REST,high,true
+CAS_1317_38_0,1317-38-0,Óxido de cobre (ic),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1317_38_0,1317-38-0,Copper oxide (CuO),en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1317_38_0,1317-38-0,copper oxygen(2-),international,iupac,PubChem PUG REST,high,true
+CAS_1317_39_1,1317-39-1,Óxido de cobre (ous),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1317_39_1,1317-39-1,Copper oxide (Cu2O),en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1317_39_1,1317-39-1,copper;oxocopper,international,iupac,PubChem PUG REST,high,true
+CAS_13171_21_6,13171-21-6,Fosfamidón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_13171_21_6,13171-21-6,Phosphamidon,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_13171_21_6,13171-21-6,[3-chloro-4-(diethylamino)-4-oxobut-2-en-2-yl] dimethyl phosphate,international,iupac,PubChem PUG REST,high,true
+CAS_131807_57_3,131807-57-3,Famoxadona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_131807_57_3,131807-57-3,Famoxadone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_131807_57_3,131807-57-3,"3-anilino-5-methyl-5-(4-phenoxyphenyl)-1,3-oxazolidine-2,4-dione",international,iupac,PubChem PUG REST,high,true
+CAS_131860_33_8,131860-33-8,Azoxistrobina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_131860_33_8,131860-33-8,Azoxystrobin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_131860_33_8,131860-33-8,methyl (E)-2-[2-[6-(2-cyanophenoxy)pyrimidin-4-yl]oxyphenyl]-3-methoxyprop-2-enoate,international,iupac,PubChem PUG REST,high,true
+CAS_131929_60_7,131929-60-7,Spinosad (mezcla de Factores A y D),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_131929_60_7,131929-60-7,Spinosyn A,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_131929_60_7,131929-60-7,"(1S,2R,5S,7R,9R,10S,14R,15S,19S)-15-[(2R,5S,6R)-5-(dimethylamino)-6-methyloxan-2-yl]oxy-19-ethyl-14-methyl-7-[(2R,3R,4R,5S,6S)-3,4,5-trimethoxy-6-methyloxan-2-yl]oxy-20-oxatetracyclo[10.10.0.02,10.05,9]docosa-3,11-diene-13,21-dione",international,iupac,PubChem PUG REST,high,false
+CAS_13194_48_4,13194-48-4,Etoprofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_13194_48_4,13194-48-4,etoprop,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_13194_48_4,13194-48-4,Ethoprophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_13194_48_4,13194-48-4,1-[ethoxy(propylsulfanyl)phosphoryl]sulfanylpropane,international,iupac,PubChem PUG REST,high,true
+CAS_131983_72_7,131983-72-7,Triticonazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_131983_72_7,131983-72-7,Triticonazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_131983_72_7,131983-72-7,"(5E)-5-[(4-chlorophenyl)methylidene]-2,2-dimethyl-1-(1,2,4-triazol-1-ylmethyl)cyclopentan-1-ol",international,iupac,PubChem PUG REST,high,true
+CAS_133_06_2,133-06-2,Captán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_133_06_2,133-06-2,"2-(trichloromethylsulfanyl)-3a,4,7,7a-tetrahydroisoindole-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_133_07_3,133-07-3,Folpet,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_133_07_3,133-07-3,"2-(trichloromethylsulfanyl)isoindole-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_1332_40_7,1332-40-7,Oxicloruro de cobre,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1332_40_7,1332-40-7,Copper oxychloride,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1332_40_7,1332-40-7,dicopper;chloride;trihydroxide,international,iupac,PubChem PUG REST,high,true
+CAS_13356_08_6,13356-08-6,Fenbutatina-óxido,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_13356_08_6,13356-08-6,Fenbutatin oxide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_13356_08_6,13356-08-6,tris(2-methyl-2-phenylpropyl)-tris(2-methyl-2-phenylpropyl)stannyloxystannane,international,iupac,PubChem PUG REST,high,true
+CAS_133855_98_8,133855-98-8,Epoxiconazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_133855_98_8,133855-98-8,Epoxiconazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_133855_98_8,133855-98-8,"1-[[(2S,3R)-3-(2-chlorophenyl)-2-(4-fluorophenyl)oxiran-2-yl]methyl]-1,2,4-triazole",international,iupac,PubChem PUG REST,high,true
+CAS_134098_61_6,134098-61-6,Fenpiroximato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_134098_61_6,134098-61-6,Fenpyroximate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_134098_61_6,134098-61-6,"tert-butyl 4-[[(E)-(1,3-dimethyl-5-phenoxypyrazol-4-yl)methylideneamino]oxymethyl]benzoate",international,iupac,PubChem PUG REST,high,true
+CAS_1344_81_6,1344-81-6,Cal-azufre,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1344_81_6,1344-81-6,Calcium polysulfide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_13457_18_6,13457-18-6,Pirazofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_13457_18_6,13457-18-6,Pyrazophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_13457_18_6,13457-18-6,"ethyl 2-diethoxyphosphinothioyloxy-5-methylpyrazolo[1,5-a]pyrimidine-6-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_135410_20_7,135410-20-7,Acetamiprid,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_135410_20_7,135410-20-7,N-((6-Chloro-3-pyridinyl)methyl)-N'-cyano-N-methylethanimidamide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_137_30_4,137-30-4,Ziram,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_137_30_4,137-30-4,"zinc bis(N,N-dimethylcarbamodithioate)",international,iupac,PubChem PUG REST,high,true
+CAS_137_41_7,137-41-7,Metam potasio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_137_41_7,137-41-7,Monopotassium methyldithiocarbamate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_137_41_7,137-41-7,potassium N-methylcarbamodithioate,international,iupac,PubChem PUG REST,high,true
+CAS_137_42_8,137-42-8,Metam-sodio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_137_42_8,137-42-8,Metam-sodium,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_137_42_8,137-42-8,sodium N-methylcarbamodithioate,international,iupac,PubChem PUG REST,high,true
+CAS_137512_74_4,137512-74-4,Benzoato de emamectina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_137512_74_4,137512-74-4,Emamectin Benzoate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_137512_74_4,137512-74-4,"benzoic acid;(1'R,2R,3S,4'S,6S,8'R,10'E,12'S,13'S,14'E,16'E,20'R,21'R,24'S)-2-[(2S)-butan-2-yl]-21',24'-dihydroxy-12'-[(2R,4S,5S,6S)-4-methoxy-5-[(2S,4S,5S,6S)-4-methoxy-6-methyl-5-(methylamino)oxan-2-yl]oxy-6-methyloxan-2-yl]oxy-3,11',13',22'-tetramethylspiro[2,3-dihydropyran-6,6'-3,7,19-trioxatetracyclo[15.6.1.14,8.020,24]pentacosa-10,14,16,22-tetraene]-2'-one",international,iupac,PubChem PUG REST,high,false
+CAS_138261_41_3,138261-41-3,Imidacloprid,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_138261_41_3,138261-41-3,(NE)-N-[1-[(6-chloro-3-pyridinyl)methyl]imidazolidin-2-ylidene]nitramide,international,iupac,PubChem PUG REST,high,true
+CAS_139001_49_3,139001-49-3,Profoxidim,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_139001_49_3,139001-49-3,Profoxydim,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_139001_49_3,139001-49-3,2-[N-[2-(4-chlorophenoxy)propoxy]-C-propylcarbonimidoyl]-3-hydroxy-5-(thian-3-yl)cyclohex-2-en-1-one,international,iupac,PubChem PUG REST,high,true
+CAS_141_66_2,141-66-2,Dicrotofos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_141_66_2,141-66-2,Dicrotophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_141_66_2,141-66-2,[(E)-4-(dimethylamino)-4-oxobut-2-en-2-yl] dimethyl phosphate,international,iupac,PubChem PUG REST,high,true
+CAS_141517_21_7,141517-21-7,Trifloxistrobina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_141517_21_7,141517-21-7,Trifloxystrobin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_141517_21_7,141517-21-7,methyl (2E)-2-methoxyimino-2-[2-[[(E)-1-[3-(trifluoromethyl)phenyl]ethylideneamino]oxymethyl]phenyl]acetate,international,iupac,PubChem PUG REST,high,true
+CAS_1420_07_1,1420-07-1,Dinoterb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1420_07_1,1420-07-1,"2-tert-butyl-4,6-dinitrophenol",international,iupac,PubChem PUG REST,high,true
+CAS_142459_58_3,142459-58-3,Flufenacet,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_142459_58_3,142459-58-3,"N-(4-fluorophenyl)-N-propan-2-yl-2-[[5-(trifluoromethyl)-1,3,4-thiadiazol-2-yl]oxy]acetamide",international,iupac,PubChem PUG REST,high,true
+CAS_143_33_9,143-33-9,Cianuro de sodio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_143_33_9,143-33-9,Sodium Cyanide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_143_50_0,143-50-0,Clordecona (Kepone),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_143_50_0,143-50-0,Chlordecone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_143_50_0,143-50-0,"1,2,3,4,6,7,8,9,10,10-decachloropentacyclo[5.3.0.02,6.03,9.04,8]decan-5-one",international,iupac,PubChem PUG REST,high,true
+CAS_144_54_7,144-54-7,Metam,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_144_54_7,144-54-7,methylcarbamodithioic acid,international,iupac,PubChem PUG REST,high,true
+CAS_144550_36_7,144550-36-7,"Yodosulfurón metilo, sal de sodio",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_144550_36_7,144550-36-7,Iodosulfuron-methyl-sodium,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_144550_36_7,144550-36-7,"sodium (5-iodo-2-methoxycarbonylphenyl)sulfonyl-[(4-methoxy-6-methyl-1,3,5-triazin-2-yl)carbamoyl]azanide",international,iupac,PubChem PUG REST,high,true
+CAS_14484_64_1,14484-64-1,Ferbam,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_14484_64_1,14484-64-1,"tris(N,N-dimethylcarbamodithioate);iron(3+)",international,iupac,PubChem PUG REST,high,true
+CAS_148_79_8,148-79-8,Tiabendazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_148_79_8,148-79-8,Thiabendazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_148_79_8,148-79-8,"4-(1H-benzimidazol-2-yl)-1,3-thiazole",international,iupac,PubChem PUG REST,high,true
+CAS_148477_71_8,148477-71-8,Espirodiclofeno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_148477_71_8,148477-71-8,Spirodiclofen,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_148477_71_8,148477-71-8,"[3-(2,4-dichlorophenyl)-2-oxo-1-oxaspiro[4.5]dec-3-en-4-yl] 2,2-dimethylbutanoate",international,iupac,PubChem PUG REST,high,true
+CAS_149961_52_4,149961-52-4,Dimoxistrobina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_149961_52_4,149961-52-4,Dimoxystrobin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_149961_52_4,149961-52-4,"(2E)-2-[2-[(2,5-dimethylphenoxy)methyl]phenyl]-2-methoxyimino-N-methylacetamide",international,iupac,PubChem PUG REST,high,true
+CAS_149979_41_9,149979-41-9,Tepraloxidim,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_149979_41_9,149979-41-9,Tepraloxydim,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_149979_41_9,149979-41-9,2-[(E)-N-[(E)-3-chloroprop-2-enoxy]-C-ethylcarbonimidoyl]-3-hydroxy-5-(oxan-4-yl)cyclohex-2-en-1-one,international,iupac,PubChem PUG REST,high,true
+CAS_152_16_9,152-16-9,Octametilpirofosforamida (OMPA),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_152_16_9,152-16-9,Schradan,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_152_16_9,152-16-9,N-[bis(dimethylamino)phosphoryloxy-(dimethylamino)phosphoryl]-N-methylmethanamine,international,iupac,PubChem PUG REST,high,true
+CAS_15263_53_3,15263-53-3,Cartap,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_15263_53_3,15263-53-3,S-[3-carbamoylsulfanyl-2-(dimethylamino)propyl] carbamothioate,international,iupac,PubChem PUG REST,high,true
+CAS_15299_99_7,15299-99-7,Napropamida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_15299_99_7,15299-99-7,Napropamide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_15299_99_7,15299-99-7,"N,N-diethyl-2-naphthalen-1-yloxypropanamide",international,iupac,PubChem PUG REST,high,true
+CAS_153233_91_1,153233-91-1,Etoxazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_153233_91_1,153233-91-1,Etoxazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_153233_91_1,153233-91-1,"4-(4-tert-butyl-2-ethoxyphenyl)-2-(2,6-difluorophenyl)-4,5-dihydro-1,3-oxazole",international,iupac,PubChem PUG REST,high,true
+CAS_153719_23_4,153719-23-4,Tiametoxam,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_153719_23_4,153719-23-4,Thiamethoxam,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_153719_23_4,153719-23-4,"(NE)-N-[3-[(2-chloro-1,3-thiazol-5-yl)methyl]-5-methyl-1,3,5-oxadiazinan-4-ylidene]nitramide",international,iupac,PubChem PUG REST,high,true
+CAS_15545_48_9,15545-48-9,Clorotolurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_15545_48_9,15545-48-9,Chlortoluron,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_15545_48_9,15545-48-9,"3-(3-chloro-4-methylphenyl)-1,1-dimethylurea",international,iupac,PubChem PUG REST,high,true
+CAS_1563_66_2,1563-66-2,Carbofurano,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1563_66_2,1563-66-2,Carbofuran,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1563_66_2,1563-66-2,"(2,2-dimethyl-3H-1-benzofuran-7-yl) N-methylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_1582_09_8,1582-09-8,Trifluralina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1582_09_8,1582-09-8,Trifluralin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1582_09_8,1582-09-8,"2,6-dinitro-N,N-dipropyl-4-(trifluoromethyl)aniline",international,iupac,PubChem PUG REST,high,true
+CAS_15972_60_8,15972-60-8,Alacloro,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_15972_60_8,15972-60-8,Alachlor,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_15972_60_8,15972-60-8,"2-chloro-N-(2,6-diethylphenyl)-N-(methoxymethyl)acetamide",international,iupac,PubChem PUG REST,high,true
+CAS_16118_49_3,16118-49-3,Carbetamida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_16118_49_3,16118-49-3,Carbetamide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_16118_49_3,16118-49-3,[(2R)-1-(ethylamino)-1-oxopropan-2-yl] N-phenylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_163515_14_8,163515-14-8,Dimetenamida-P,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_163515_14_8,163515-14-8,S-Dimetenamida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_163515_14_8,163515-14-8,Dimethenamid-P,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_163515_14_8,163515-14-8,"2-chloro-N-(2,4-dimethylthiophen-3-yl)-N-[(2S)-1-methoxypropan-2-yl]acetamide",international,iupac,PubChem PUG REST,high,true
+CAS_165252_70_0,165252-70-0,Dinotefurano,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_165252_70_0,165252-70-0,Dinotefuran,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_165252_70_0,165252-70-0,2-methyl-1-nitro-3-(oxolan-3-ylmethyl)guanidine,international,iupac,PubChem PUG REST,high,true
+CAS_16752_77_5,16752-77-5,Metomilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_16752_77_5,16752-77-5,Methomyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_16752_77_5,16752-77-5,methyl N-(methylcarbamoyloxy)ethanimidothioate,international,iupac,PubChem PUG REST,high,true
+CAS_168316_95_8,168316-95-8,Spinosad (mezcla de Factores A y D),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_168316_95_8,168316-95-8,Spinosad,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_168316_95_8,168316-95-8,"(1S,2S,5R,7S,9S,10S,14R,15S,19S)-15-[(2R,5S,6R)-5-(dimethylamino)-6-methyloxan-2-yl]oxy-19-ethyl-4,14-dimethyl-7-[(2R,3R,4R,5S,6S)-3,4,5-trimethoxy-6-methyloxan-2-yl]oxy-20-oxatetracyclo[10.10.0.02,10.05,9]docosa-3,11-diene-13,21-dione;(1S,2R,5S,7R,9R,10S,14R,15S,19S)-15-[(2R,5S,6R)-5-(dimethylamino)-6-methyloxan-2-yl]oxy-19-ethyl-14-methyl-7-[(2R,3R,4R,5S,6S)-3,4,5-trimethoxy-6-methyloxan-2-yl]oxy-20-oxatetracyclo[10.10.0.02,10.05,9]docosa-3,11-diene-13,21-dione",international,iupac,PubChem PUG REST,high,false
+CAS_1689_84_5,1689-84-5,Bromoxinil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1689_84_5,1689-84-5,Bromoxynil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1689_84_5,1689-84-5,"3,5-dibromo-4-hydroxybenzonitrile",international,iupac,PubChem PUG REST,high,true
+CAS_1689_99_2,1689-99-2,Actanoato de bromoxinil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1689_99_2,1689-99-2,Bromoxynil octanoate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1689_99_2,1689-99-2,"(2,6-dibromo-4-cyanophenyl) octanoate",international,iupac,PubChem PUG REST,high,true
+CAS_17109_49_8,17109-49-8,Edifenfos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_17109_49_8,17109-49-8,Edifenphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_17109_49_8,17109-49-8,[ethoxy(phenylsulfanyl)phosphoryl]sulfanylbenzene,international,iupac,PubChem PUG REST,high,true
+CAS_173584_44_6,173584-44-6,"Indoxacarb, S-isómero",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_173584_44_6,173584-44-6,Indoxacarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_173584_44_6,173584-44-6,"methyl (4aS)-7-chloro-2-[methoxycarbonyl-[4-(trifluoromethoxy)phenyl]carbamoyl]-3,5-dihydroindeno[1,2-e][1,3,4]oxadiazine-4a-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_1746_81_2,1746-81-2,Monolinurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1746_81_2,1746-81-2,3-(4-chlorophenyl)-1-methoxy-1-methylurea,international,iupac,PubChem PUG REST,high,true
+CAS_175013_18_0,175013-18-0,Piraclostrobina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_175013_18_0,175013-18-0,Pyraclostrobin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_175013_18_0,175013-18-0,methyl N-[2-[[1-(4-chlorophenyl)pyrazol-3-yl]oxymethyl]phenyl]-N-methoxycarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_17804_35_2,17804-35-2,Benomilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_17804_35_2,17804-35-2,Benomyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_17804_35_2,17804-35-2,methyl N-[1-(butylcarbamoyl)benzimidazol-2-yl]carbamate,international,iupac,PubChem PUG REST,high,true
+CAS_179101_81_6,179101-81-6,Piridalilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_179101_81_6,179101-81-6,Pyridalyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_179101_81_6,179101-81-6,"2-[3-[2,6-dichloro-4-(3,3-dichloroprop-2-enoxy)phenoxy]propoxy]-5-(trifluoromethyl)pyridine",international,iupac,PubChem PUG REST,high,true
+CAS_1836_75_5,1836-75-5,Nitrofeno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1836_75_5,1836-75-5,Nitrofen,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1836_75_5,1836-75-5,"2,4-dichloro-1-(4-nitrophenoxy)benzene",international,iupac,PubChem PUG REST,high,true
+CAS_1861_40_1,1861-40-1,Benfluralina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1861_40_1,1861-40-1,Benfluralin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1861_40_1,1861-40-1,"N-butyl-N-ethyl-2,6-dinitro-4-(trifluoromethyl)aniline",international,iupac,PubChem PUG REST,high,true
+CAS_187166_40_1,187166-40-1,Espinetoram (XDE-175-J),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_187166_40_1,187166-40-1,Spinetoram J,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_187166_40_1,187166-40-1,"(1S,2R,5R,7R,9R,10S,14R,15S,19S)-15-[(2R,5S,6R)-5-(dimethylamino)-6-methyloxan-2-yl]oxy-7-[(2R,3R,4R,5S,6S)-4-ethoxy-3,5-dimethoxy-6-methyloxan-2-yl]oxy-19-ethyl-14-methyl-20-oxatetracyclo[10.10.0.02,10.05,9]docos-11-ene-13,21-dione",international,iupac,PubChem PUG REST,high,false
+CAS_18854_01_8,18854-01-8,Isoxatión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_18854_01_8,18854-01-8,Isoxathion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_18854_01_8,18854-01-8,"diethoxy-[(5-phenyl-1,2-oxazol-3-yl)oxy]-sulfanylidene-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_1897_45_6,1897-45-6,Clorotalonil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1897_45_6,1897-45-6,Chlorothalonil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1897_45_6,1897-45-6,"2,4,5,6-tetrachlorobenzene-1,3-dicarbonitrile",international,iupac,PubChem PUG REST,high,true
+CAS_19044_88_3,19044-88-3,Orizalin,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_19044_88_3,19044-88-3,Oryzalin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_19044_88_3,19044-88-3,"4-(dipropylamino)-3,5-dinitrobenzenesulfonamide",international,iupac,PubChem PUG REST,high,true
+CAS_1910_42_5,1910-42-5,Dicloruro de paraquat,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1910_42_5,1910-42-5,Paraquat dichloride,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1910_42_5,1910-42-5,1-methyl-4-(1-methylpyridin-1-ium-4-yl)pyridin-1-ium dichloride,international,iupac,PubChem PUG REST,high,true
+CAS_1912_24_9,1912-24-9,Atrazina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1912_24_9,1912-24-9,Atrazine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1912_24_9,1912-24-9,"6-chloro-4-N-ethyl-2-N-propan-2-yl-1,3,5-triazine-2,4-diamine",international,iupac,PubChem PUG REST,high,true
+CAS_1928_43_4,1928-43-4,"2,4-D, 2-Etilhexil éster",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_1928_43_4,1928-43-4,"2-Ethylhexyl (2,4-dichlorophenoxy)acetate",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_1928_43_4,1928-43-4,"2-ethylhexyl 2-(2,4-dichlorophenoxy)acetate",international,iupac,PubChem PUG REST,high,true
+CAS_19666_30_9,19666-30-9,Oxadiazon,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_19666_30_9,19666-30-9,"5-tert-butyl-3-(2,4-dichloro-5-propan-2-yloxyphenyl)-1,3,4-oxadiazol-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_2032_65_7,2032-65-7,Metiocarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2032_65_7,2032-65-7,Methiocarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2032_65_7,2032-65-7,"(3,5-dimethyl-4-methylsulfanylphenyl) N-methylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_20427_59_2,20427-59-2,Hidróxido de cobre,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_20427_59_2,20427-59-2,Copper dihydroxide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2079_00_7,2079-00-7,Blasticidina-S,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2079_00_7,2079-00-7,Blasticidin S,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2079_00_7,2079-00-7,"(2S,3S,6R)-3-[[(3S)-3-amino-5-[carbamimidoyl(methyl)amino]pentanoyl]amino]-6-(4-amino-2-oxopyrimidin-1-yl)-3,6-dihydro-2H-pyran-2-carboxylic acid",international,iupac,PubChem PUG REST,high,true
+CAS_20859_73_8,20859-73-8,Fosfuro de aluminio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_20859_73_8,20859-73-8,Aluminum Phosphide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_20859_73_8,20859-73-8,aluminum phosphorus(3-),international,iupac,PubChem PUG REST,high,true
+CAS_2104_64_5,2104-64-5,EPN 300,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2104_64_5,2104-64-5,Ethyl p-nitrophenyl benzenethiophosphonate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2104_64_5,2104-64-5,ethoxy-(4-nitrophenoxy)-phenyl-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_21087_64_9,21087-64-9,Metribuzín,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_21087_64_9,21087-64-9,"4-amino-6-tert-butyl-3-methylsulfanyl-1,2,4-triazin-5-one",international,iupac,PubChem PUG REST,high,true
+CAS_210880_92_5,210880-92-5,Clotianidina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_210880_92_5,210880-92-5,Clothianidin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_210880_92_5,210880-92-5,"1-[(2-chloro-1,3-thiazol-5-yl)methyl]-3-methyl-2-nitroguanidine",international,iupac,PubChem PUG REST,high,true
+CAS_21609_90_5,21609-90-5,Leptofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_21609_90_5,21609-90-5,Leptophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_21609_90_5,21609-90-5,"(4-bromo-2,5-dichlorophenoxy)-methoxy-phenyl-sulfanylidene-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_2164_08_1,2164-08-1,Lenacil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2164_08_1,2164-08-1,"3-cyclohexyl-1,5,6,7-tetrahydrocyclopenta[d]pyrimidine-2,4-dione",international,iupac,PubChem PUG REST,high,true
+CAS_21725_46_2,21725-46-2,Cianazina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_21725_46_2,21725-46-2,Cyanazine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_21725_46_2,21725-46-2,"2-[[4-chloro-6-(ethylamino)-1,3,5-triazin-2-yl]amino]-2-methylpropanenitrile",international,iupac,PubChem PUG REST,high,true
+CAS_2212_67_1,2212-67-1,Molinato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2212_67_1,2212-67-1,Molinate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2212_67_1,2212-67-1,S-ethyl azepane-1-carbothioate,international,iupac,PubChem PUG REST,high,true
+CAS_22224_92_6,22224-92-6,Fenamifos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_22224_92_6,22224-92-6,Fenamiphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_22224_92_6,22224-92-6,N-[ethoxy-(3-methyl-4-methylsulfanylphenoxy)phosphoryl]propan-2-amine,international,iupac,PubChem PUG REST,high,true
+CAS_22248_79_9,22248-79-9,"Tetraclorvinfos, isómero Z",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_22248_79_9,22248-79-9,Tetrachlorvinphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_22248_79_9,22248-79-9,"[(Z)-2-chloro-1-(2,4,5-trichlorophenyl)ethenyl] dimethyl phosphate",international,iupac,PubChem PUG REST,high,true
+CAS_22259_30_9,22259-30-9,Formetanato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_22259_30_9,22259-30-9,Formetanate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_22259_30_9,22259-30-9,[3-(dimethylaminomethylideneamino)phenyl] N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_2275_23_2,2275-23-2,Vamidotión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2275_23_2,2275-23-2,Vamidothion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2275_23_2,2275-23-2,2-(2-dimethoxyphosphorylsulfanylethylsulfanyl)-N-methylpropanamide,international,iupac,PubChem PUG REST,high,true
+CAS_22781_23_3,22781-23-3,Bendiocarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_22781_23_3,22781-23-3,"(2,2-dimethyl-1,3-benzodioxol-4-yl) N-methylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_2303_17_5,2303-17-5,Triallate,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2303_17_5,2303-17-5,"S-(2,3,3-trichloroprop-2-enyl) N,N-di(propan-2-yl)carbamothioate",international,iupac,PubChem PUG REST,high,true
+CAS_2310_17_0,2310-17-0,Fosalona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2310_17_0,2310-17-0,Phosalone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2310_17_0,2310-17-0,"6-chloro-3-(diethoxyphosphinothioylsulfanylmethyl)-1,3-benzoxazol-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_23103_98_2,23103-98-2,Pirimicarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_23103_98_2,23103-98-2,"[2-(dimethylamino)-5,6-dimethylpyrimidin-4-yl] N,N-dimethylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_2312_35_8,2312-35-8,Propargita,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2312_35_8,2312-35-8,Propargite,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2312_35_8,2312-35-8,[2-(4-tert-butylphenoxy)cyclohexyl] prop-2-ynyl sulfite,international,iupac,PubChem PUG REST,high,true
+CAS_23135_22_0,23135-22-0,Oxamil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_23135_22_0,23135-22-0,Oxamyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_23135_22_0,23135-22-0,methyl 2-(dimethylamino)-N-(methylcarbamoyloxy)-2-oxoethanimidothioate,international,iupac,PubChem PUG REST,high,true
+CAS_23422_53_9,23422-53-9,Clorhidrato de formetanato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_23422_53_9,23422-53-9,Formetanate hydrochloride,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_23422_53_9,23422-53-9,[3-(dimethylaminomethylideneamino)phenyl] N-methylcarbamate;hydrochloride,international,iupac,PubChem PUG REST,high,true
+CAS_23560_59_0,23560-59-0,Heptenofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_23560_59_0,23560-59-0,Heptenophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_23560_59_0,23560-59-0,"(7-chloro-6-bicyclo[3.2.0]hepta-2,6-dienyl) dimethyl phosphate",international,iupac,PubChem PUG REST,high,true
+CAS_23564_05_8,23564-05-8,Tiofanato-metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_23564_05_8,23564-05-8,Thiophanate-Methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_23564_05_8,23564-05-8,methyl N-[[2-(methoxycarbonylcarbamothioylamino)phenyl]carbamothioyl]carbamate,international,iupac,PubChem PUG REST,high,true
+CAS_23783_98_4,23783-98-4,Z-fosfamidón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_23783_98_4,23783-98-4,cis-Phosphamidon,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_23783_98_4,23783-98-4,[(Z)-3-chloro-4-(diethylamino)-4-oxobut-2-en-2-yl] dimethyl phosphate,international,iupac,PubChem PUG REST,high,true
+CAS_2385_85_5,2385-85-5,Mirex,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2385_85_5,2385-85-5,"1,2,3,4,5,5,6,7,8,9,10,10-dodecachloropentacyclo[5.3.0.02,6.03,9.04,8]decane",international,iupac,PubChem PUG REST,high,true
+CAS_24017_47_8,24017-47-8,Triazofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_24017_47_8,24017-47-8,Triazophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_24017_47_8,24017-47-8,"diethoxy-[(1-phenyl-1,2,4-triazol-3-yl)oxy]-sulfanylidene-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_2425_06_1,2425-06-1,Captafol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2425_06_1,2425-06-1,"2-(1,1,2,2-tetrachloroethylsulfanyl)-3a,4,7,7a-tetrahydroisoindole-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_2439_01_2,2439-01-2,Oxitioquinox,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2439_01_2,2439-01-2,quinometionato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2439_01_2,2439-01-2,Chinomethionat,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2439_01_2,2439-01-2,"6-methyl-[1,3]dithiolo[4,5-b]quinoxalin-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_2439_10_3,2439-10-3,Dodina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2439_10_3,2439-10-3,Dodine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2439_10_3,2439-10-3,acetic acid;2-dodecylguanidine,international,iupac,PubChem PUG REST,high,true
+CAS_24934_91_6,24934-91-6,Clormefos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_24934_91_6,24934-91-6,Chlormephos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_24934_91_6,24934-91-6,chloromethylsulfanyl-diethoxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_25606_41_1,25606-41-1,Clorhidrato de propamocarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_25606_41_1,25606-41-1,Propamocarb hydrochloride,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_25606_41_1,25606-41-1,propyl N-[3-(dimethylamino)propyl]carbamate;hydrochloride,international,iupac,PubChem PUG REST,high,true
+CAS_2593_15_9,2593-15-9,Terrazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2593_15_9,2593-15-9,etridiazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2593_15_9,2593-15-9,Etridiazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2593_15_9,2593-15-9,"5-ethoxy-3-(trichloromethyl)-1,2,4-thiadiazole",international,iupac,PubChem PUG REST,high,true
+CAS_2595_54_2,2595-54-2,Mecarbam,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2595_54_2,2595-54-2,ethyl N-(2-diethoxyphosphinothioylsulfanylacetyl)-N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_2642_71_9,2642-71-9,Azinfos-etilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2642_71_9,2642-71-9,Azinphos-Ethyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2642_71_9,2642-71-9,"3-(diethoxyphosphinothioylsulfanylmethyl)-1,2,3-benzotriazin-4-one",international,iupac,PubChem PUG REST,high,true
+CAS_26544_20_7,26544-20-7,"MCPA, éster isooctilo",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_26544_20_7,26544-20-7,(4-Chloro-2-methylphenoxy)acetic acid isooctyl ester,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_26544_20_7,26544-20-7,6-methylheptyl 2-(4-chloro-2-methylphenoxy)acetate,international,iupac,PubChem PUG REST,high,true
+CAS_26644_46_2,26644-46-2,Triforina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_26644_46_2,26644-46-2,Triforine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_26644_46_2,26644-46-2,"N-[2,2,2-trichloro-1-[4-(2,2,2-trichloro-1-formamidoethyl)piperazin-1-yl]ethyl]formamide",international,iupac,PubChem PUG REST,high,true
+CAS_27314_13_2,27314-13-2,Norflurazón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_27314_13_2,27314-13-2,4-chloro-5-(methylamino)-2-[3-(trifluoromethyl)phenyl]pyridazin-3-one,international,iupac,PubChem PUG REST,high,true
+CAS_2764_72_9,2764-72-9,Ión diquat,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2764_72_9,2764-72-9,Diquat,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2764_72_9,2764-72-9,"7,10-diazoniatricyclo[8.4.0.02,7]tetradeca-1(14),2,4,6,10,12-hexaene",international,iupac,PubChem PUG REST,high,true
+CAS_28249_77_6,28249-77-6,Tiobencarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_28249_77_6,28249-77-6,Thiobencarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_28249_77_6,28249-77-6,"S-[(4-chlorophenyl)methyl] N,N-diethylcarbamothioate",international,iupac,PubChem PUG REST,high,true
+CAS_28382_15_2,28382-15-2,"Hidrazida maleica, sal de potasio",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_28382_15_2,28382-15-2,"Potassium 1,2-dihydro-3,6-pyridazinedione",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_28382_15_2,28382-15-2,"potassium 1H-pyridazin-2-ide-3,6-dione",international,iupac,PubChem PUG REST,high,true
+CAS_28772_56_7,28772-56-7,Bromadiolona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_28772_56_7,28772-56-7,Bromadiolone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_28772_56_7,28772-56-7,3-[3-[4-(4-bromophenyl)phenyl]-3-hydroxy-1-phenylpropyl]-4-hydroxychromen-2-one,international,iupac,PubChem PUG REST,high,true
+CAS_2921_88_2,2921-88-2,Clorpirifos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_2921_88_2,2921-88-2,Chlorpyrifos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_2921_88_2,2921-88-2,"diethoxy-sulfanylidene-[(3,5,6-trichloro-2-pyridinyl)oxy]-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_29232_93_7,29232-93-7,Pirimifós metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_29232_93_7,29232-93-7,Pirimiphos-methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_29232_93_7,29232-93-7,"4-dimethoxyphosphinothioyloxy-N,N-diethyl-6-methylpyrimidin-2-amine",international,iupac,PubChem PUG REST,high,true
+CAS_29450_45_1,29450-45-1,"MCPA, éster 2-etilhexílico",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_29450_45_1,29450-45-1,MCPA-2-ethylhexyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_29450_45_1,29450-45-1,2-ethylhexyl 2-(4-chloro-2-methylphenoxy)acetate,international,iupac,PubChem PUG REST,high,true
+CAS_297_99_4,297-99-4,E-fosfamidón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_297_99_4,297-99-4,trans-Phosphamidon,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_297_99_4,297-99-4,[(E)-3-chloro-4-(diethylamino)-4-oxobut-2-en-2-yl] dimethyl phosphate,international,iupac,PubChem PUG REST,high,true
+CAS_298_00_0,298-00-0,Paratión-metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_298_00_0,298-00-0,Methyl Parathion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_298_00_0,298-00-0,dimethoxy-(4-nitrophenoxy)-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_298_02_2,298-02-2,Forato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_298_02_2,298-02-2,Phorate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_298_02_2,298-02-2,diethoxy-(ethylsulfanylmethylsulfanyl)-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_298_04_4,298-04-4,Disulfotón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_298_04_4,298-04-4,diethoxy-(2-ethylsulfanylethylsulfanyl)-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_29973_13_5,29973-13-5,Etiofencarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_29973_13_5,29973-13-5,Ethiofencarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_29973_13_5,29973-13-5,[2-(ethylsulfanylmethyl)phenyl] N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_300_76_5,300-76-5,Naled,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_300_76_5,300-76-5,"(1,2-dibromo-2,2-dichloroethyl) dimethyl phosphate",international,iupac,PubChem PUG REST,high,true
+CAS_301_12_2,301-12-2,Oxidemetón-metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_301_12_2,301-12-2,Oxydemeton-methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_301_12_2,301-12-2,1-dimethoxyphosphorylsulfanyl-2-ethylsulfinylethane,international,iupac,PubChem PUG REST,high,true
+CAS_30560_19_1,30560-19-1,Acefato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_30560_19_1,30560-19-1,Acephate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_30560_19_1,30560-19-1,N-[methoxy(methylsulfanyl)phosphoryl]acetamide,international,iupac,PubChem PUG REST,high,true
+CAS_309_00_2,309-00-2,Aldrín,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_309_00_2,309-00-2,"(1S,2S,3S,6R,7R,8R)-1,8,9,10,11,11-hexachlorotetracyclo[6.2.1.13,6.02,7]dodeca-4,9-diene",international,iupac,PubChem PUG REST,high,true
+CAS_31218_83_4,31218-83-4,Propetamfós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_31218_83_4,31218-83-4,Propetamphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_31218_83_4,31218-83-4,propan-2-yl (E)-3-[ethylamino(methoxy)phosphinothioyl]oxybut-2-enoate,international,iupac,PubChem PUG REST,high,true
+CAS_314_40_9,314-40-9,Bromacilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_314_40_9,314-40-9,Bromacil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_314_40_9,314-40-9,"5-bromo-3-butan-2-yl-6-methyl-1H-pyrimidine-2,4-dione",international,iupac,PubChem PUG REST,high,true
+CAS_319_84_6,319-84-6,Alfa-BHC,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_319_84_6,319-84-6,alfa-HCH,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_319_84_6,319-84-6,Hexachlorocyclohexane,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_319_84_6,319-84-6,"1,2,3,4,5,6-hexachlorocyclohexane",international,iupac,PubChem PUG REST,high,true
+CAS_319_85_7,319-85-7,Beta-HCH,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_319_85_7,319-85-7,beta-BCH,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_319_85_7,319-85-7,Hexachlorocyclohexane,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_319_85_7,319-85-7,"1,2,3,4,5,6-hexachlorocyclohexane",international,iupac,PubChem PUG REST,high,true
+CAS_330_54_1,330-54-1,Diurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_330_54_1,330-54-1,"3-(3,4-dichlorophenyl)-1,1-dimethylurea",international,iupac,PubChem PUG REST,high,true
+CAS_330_55_2,330-55-2,Linurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_330_55_2,330-55-2,"3-(3,4-dichlorophenyl)-1-methoxy-1-methylurea",international,iupac,PubChem PUG REST,high,true
+CAS_33089_61_1,33089-61-1,Amitraz,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_33089_61_1,33089-61-1,"N'-(2,4-dimethylphenyl)-N-[(2,4-dimethylphenyl)iminomethyl]-N-methylmethanimidamide",international,iupac,PubChem PUG REST,high,true
+CAS_33213_65_9,33213-65-9,Endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_33213_65_9,33213-65-9,alfa-endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_33213_65_9,33213-65-9,beta endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_33213_65_9,33213-65-9,alpha-Endosulfan,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_33213_65_9,33213-65-9,"(1R,2S,8R,9S)-1,9,10,11,12,12-hexachloro-4,6-dioxa-5lambda4-thiatricyclo[7.2.1.02,8]dodec-10-ene 5-oxide",international,iupac,PubChem PUG REST,high,true
+CAS_333_41_5,333-41-5,Diazinón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_333_41_5,333-41-5,diethoxy-(6-methyl-2-propan-2-ylpyrimidin-4-yl)oxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_34256_82_1,34256-82-1,Acetoclor,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_34256_82_1,34256-82-1,Acetochlor,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_34256_82_1,34256-82-1,2-chloro-N-(ethoxymethyl)-N-(2-ethyl-6-methylphenyl)acetamide,international,iupac,PubChem PUG REST,high,true
+CAS_34681_10_2,34681-10-2,Butocarboxim,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_34681_10_2,34681-10-2,(3-methylsulfanylbutan-2-ylideneamino) N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_34681_23_7,34681-23-7,Butoxicarboxim,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_34681_23_7,34681-23-7,Butoxycarboxim,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_34681_23_7,34681-23-7,(3-methylsulfonylbutan-2-ylideneamino) N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_35367_38_5,35367-38-5,Diflubenzurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_35367_38_5,35367-38-5,"N-[(4-chlorophenyl)carbamoyl]-2,6-difluorobenzamide",international,iupac,PubChem PUG REST,high,true
+CAS_35471_43_3,35471-43-3,"2,4,5-TCP, sal de potasio",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_35471_43_3,35471-43-3,"Potassium 2,4,5-trichlorophenolate",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_36734_19_7,36734-19-7,Iprodiona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_36734_19_7,36734-19-7,Iprodione,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_36734_19_7,36734-19-7,"3-(3,5-dichlorophenyl)-2,4-dioxo-N-propan-2-ylimidazolidine-1-carboxamide",international,iupac,PubChem PUG REST,high,true
+CAS_3689_24_5,3689-24-5,Sulfotep,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_3689_24_5,3689-24-5,diethoxyphosphinothioyloxy-diethoxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_3691_35_8,3691-35-8,Clorofacinona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_3691_35_8,3691-35-8,Chlorophacinone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_3691_35_8,3691-35-8,"2-[2-(4-chlorophenyl)-2-phenylacetyl]indene-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_3861_41_4,3861-41-4,Butirato de bromoxinil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_3861_41_4,3861-41-4,Bromoxynil butyrate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_3861_41_4,3861-41-4,"(2,6-dibromo-4-cyanophenyl) butanoate",international,iupac,PubChem PUG REST,high,true
+CAS_38641_94_0,38641-94-0,"Glifosato, sal de isopropilamina",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_38641_94_0,38641-94-0,Roundup,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_38641_94_0,38641-94-0,2-(phosphonomethylamino)acetic acid;propan-2-amine,international,iupac,PubChem PUG REST,high,true
+CAS_39196_18_4,39196-18-4,Tiofanox,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_39196_18_4,39196-18-4,Thiofanox,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_39196_18_4,39196-18-4,"[(3,3-dimethyl-1-methylsulfanylbutan-2-ylidene)amino] N-methylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_39300_45_3,39300-45-3,Dinocap,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_39300_45_3,39300-45-3,(2-nitrophenyl) (E)-but-2-enoate;nitrous acid;octane,international,iupac,PubChem PUG REST,high,true
+CAS_39515_41_8,39515-41-8,Fenpropatrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_39515_41_8,39515-41-8,Fenpropathrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_39515_41_8,39515-41-8,"[cyano-(3-phenoxyphenyl)methyl] 2,2,3,3-tetramethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_40487_42_1,40487-42-1,Pendimetalina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_40487_42_1,40487-42-1,Pendimethalin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_40487_42_1,40487-42-1,"3,4-dimethyl-2,6-dinitro-N-pentan-3-ylaniline",international,iupac,PubChem PUG REST,high,true
+CAS_40596_69_8,40596-69-8,Metopreno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_40596_69_8,40596-69-8,Methoprene,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_40596_69_8,40596-69-8,"propan-2-yl (2E,4E)-11-methoxy-3,7,11-trimethyldodeca-2,4-dienoate",international,iupac,PubChem PUG REST,high,true
+CAS_41198_08_7,41198-08-7,Profenofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_41198_08_7,41198-08-7,4-bromo-2-chloro-1-[ethoxy(propylsulfanyl)phosphoryl]oxybenzene,international,iupac,PubChem PUG REST,high,true
+CAS_4151_50_2,4151-50-2,Sulfluramida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_4151_50_2,4151-50-2,Volcano,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_4151_50_2,4151-50-2,"N-ethyl-1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,8-heptadecafluorooctane-1-sulfonamide",international,iupac,PubChem PUG REST,high,true
+CAS_42874_03_3,42874-03-3,Oxifluorfeno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_42874_03_3,42874-03-3,Oxyfluorfen,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_42874_03_3,42874-03-3,2-chloro-1-(3-ethoxy-4-nitrophenoxy)-4-(trifluoromethyl)benzene,international,iupac,PubChem PUG REST,high,true
+CAS_43222_48_6,43222-48-6,Sulfato de metilo de difenzoquat,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_43222_48_6,43222-48-6,Difenzoquat metilsulfate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_43222_48_6,43222-48-6,"1,2-dimethyl-3,5-diphenylpyrazol-2-ium;methyl sulfate",international,iupac,PubChem PUG REST,high,true
+CAS_4685_14_7,4685-14-7,Paraquat,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_4685_14_7,4685-14-7,1-methyl-4-(1-methylpyridin-1-ium-4-yl)pyridin-1-ium,international,iupac,PubChem PUG REST,high,true
+CAS_470_90_6,470-90-6,Clorfenvinfos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_470_90_6,470-90-6,Chlorfenvinphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_470_90_6,470-90-6,"[2-chloro-1-(2,4-dichlorophenyl)ethenyl] diethyl phosphate",international,iupac,PubChem PUG REST,high,true
+CAS_4824_78_6,4824-78-6,Bromofos-etilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_4824_78_6,4824-78-6,Bromophos-ethyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_4824_78_6,4824-78-6,"(4-bromo-2,5-dichlorophenoxy)-diethoxy-sulfanylidene-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_485_31_4,485-31-4,Binapacril,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_485_31_4,485-31-4,Binapacryl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_485_31_4,485-31-4,"(2-butan-2-yl-4,6-dinitrophenyl) 3-methylbut-2-enoate",international,iupac,PubChem PUG REST,high,true
+CAS_50_29_3,50-29-3,"1-Chloro-4-(2,2,2-trichloro-1-(4-chlorophenyl)ethyl)benzene",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_50471_44_8,50471-44-8,Vinclozolina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_50471_44_8,50471-44-8,Vinclozolin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_50471_44_8,50471-44-8,"3-(3,5-dichlorophenyl)-5-ethenyl-5-methyl-1,3-oxazolidine-2,4-dione",international,iupac,PubChem PUG REST,high,true
+CAS_50723_80_3,50723-80-3,"Bentazona, sal sódica",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_50723_80_3,50723-80-3,Bentazone-sodium,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_50723_80_3,50723-80-3,"sodium 2,2-dioxo-3-propan-2-yl-2lambda6,1,3-benzothiadiazin-1-id-4-one",international,iupac,PubChem PUG REST,high,true
+CAS_510_15_6,510-15-6,Clorobencilato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_510_15_6,510-15-6,Chlorobenzilate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_510_15_6,510-15-6,"ethyl 2,2-bis(4-chlorophenyl)-2-hydroxyacetate",international,iupac,PubChem PUG REST,high,true
+CAS_51218_45_2,51218-45-2,Metolacloro,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_51218_45_2,51218-45-2,Metolachlor,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_51218_45_2,51218-45-2,2-chloro-N-(2-ethyl-6-methylphenyl)-N-(1-methoxypropan-2-yl)acetamide,international,iupac,PubChem PUG REST,high,true
+CAS_51235_04_2,51235-04-2,Hexazinona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_51235_04_2,51235-04-2,Hexazinone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_51235_04_2,51235-04-2,"3-cyclohexyl-6-(dimethylamino)-1-methyl-1,3,5-triazine-2,4-dione",international,iupac,PubChem PUG REST,high,true
+CAS_51338_27_3,51338-27-3,Diclofop-metil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_51338_27_3,51338-27-3,Diclofop-methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_51338_27_3,51338-27-3,"methyl 2-[4-(2,4-dichlorophenoxy)phenoxy]propanoate",international,iupac,PubChem PUG REST,high,true
+CAS_51630_58_1,51630-58-1,Fenvalerato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_51630_58_1,51630-58-1,Fenvalerate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_51630_58_1,51630-58-1,[cyano-(3-phenoxyphenyl)methyl] 2-(4-chlorophenyl)-3-methylbutanoate,international,iupac,PubChem PUG REST,high,true
+CAS_52_68_6,52-68-6,Triclorfón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_52_68_6,52-68-6,metrifonato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_52_68_6,52-68-6,Trichlorfon,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_52_68_6,52-68-6,"2,2,2-trichloro-1-dimethoxyphosphorylethanol",international,iupac,PubChem PUG REST,high,true
+CAS_52_85_7,52-85-7,Famfur,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_52_85_7,52-85-7,Famphur,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_52_85_7,52-85-7,"4-dimethoxyphosphinothioyloxy-N,N-dimethylbenzenesulfonamide",international,iupac,PubChem PUG REST,high,true
+CAS_52315_07_8,52315-07-8,Zeta-cipermetrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_52315_07_8,52315-07-8,Cypermethrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_52315_07_8,52315-07-8,"[cyano-(3-phenoxyphenyl)methyl] 3-(2,2-dichloroethenyl)-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_5259_88_1,5259-88-1,Oxicarboxin,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_5259_88_1,5259-88-1,Oxycarboxin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_5259_88_1,5259-88-1,"6-methyl-4,4-dioxo-N-phenyl-2,3-dihydro-1,4-oxathiine-5-carboxamide",international,iupac,PubChem PUG REST,high,true
+CAS_52645_53_1,52645-53-1,Permetrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_52645_53_1,52645-53-1,Permethrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_52645_53_1,52645-53-1,"(3-phenoxyphenyl)methyl 3-(2,2-dichloroethenyl)-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_52918_63_5,52918-63-5,Deltametrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_52918_63_5,52918-63-5,Deltamethrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_52918_63_5,52918-63-5,"trans-[(S)-cyano-(3-phenoxyphenyl)methyl] (1R,3R)-3-(2,2-dibromoethenyl)-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_533_74_4,533-74-4,Dazomet,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_533_74_4,533-74-4,"3,5-dimethyl-1,3,5-thiadiazinane-2-thione",international,iupac,PubChem PUG REST,high,true
+CAS_53404_37_8,53404-37-8,"2,4-D, isooctil éster",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_53404_37_8,53404-37-8,"2,4-D 2-Ethyl-4-methylpentyl ester",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_53404_37_8,53404-37-8,"(2-ethyl-4-methylpentyl) 2-(2,4-dichlorophenoxy)acetate",international,iupac,PubChem PUG REST,high,true
+CAS_54_11_5,54-11-5,Nicotina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_54_11_5,54-11-5,Nicotine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_54_11_5,54-11-5,3-[(2S)-1-methylpyrrolidin-2-yl]pyridine,international,iupac,PubChem PUG REST,high,true
+CAS_542_75_6,542-75-6,"1,3-Dicloropropeno",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_542_75_6,542-75-6,"1,3-Dichloropropene",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_542_75_6,542-75-6,"1,3-dichloroprop-1-ene",international,iupac,PubChem PUG REST,high,true
+CAS_54593_83_8,54593-83-8,Cloretoxifós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_54593_83_8,54593-83-8,Chlorethoxyfos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_54593_83_8,54593-83-8,"diethoxy-sulfanylidene-(1,2,2,2-tetrachloroethoxy)-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_55_38_9,55-38-9,Fentión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_55_38_9,55-38-9,Fenthion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_55_38_9,55-38-9,dimethoxy-(3-methyl-4-methylsulfanylphenoxy)-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_55219_65_3,55219-65-3,Triadimenol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_55219_65_3,55219-65-3,"1-(4-chlorophenoxy)-3,3-dimethyl-1-(1,2,4-triazol-1-yl)butan-2-ol",international,iupac,PubChem PUG REST,high,true
+CAS_55283_68_6,55283-68-6,Etalfluralina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_55283_68_6,55283-68-6,Ethalfluralin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_55283_68_6,55283-68-6,"N-ethyl-N-(2-methylprop-2-enyl)-2,6-dinitro-4-(trifluoromethyl)aniline",international,iupac,PubChem PUG REST,high,true
+CAS_55285_14_8,55285-14-8,Carbosulfan,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_55285_14_8,55285-14-8,"(2,2-dimethyl-3H-1-benzofuran-7-yl) N-(dibutylamino)sulfanyl-N-methylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_556_61_6,556-61-6,Isotiocianato de metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_556_61_6,556-61-6,Methyl isothiocyanate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_556_61_6,556-61-6,methylimino(sulfanylidene)methane,international,iupac,PubChem PUG REST,high,true
+CAS_5598_13_0,5598-13-0,Clorpirifos-metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_5598_13_0,5598-13-0,Chlorpyrifos-methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_5598_13_0,5598-13-0,"dimethoxy-sulfanylidene-[(3,5,6-trichloro-2-pyridinyl)oxy]-lambda5-phosphane",international,iupac,PubChem PUG REST,high,true
+CAS_56_38_2,56-38-2,Paratión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_56_38_2,56-38-2,Parathion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_56_38_2,56-38-2,diethoxy-(4-nitrophenoxy)-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_56_72_4,56-72-4,Cumafós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_56_72_4,56-72-4,Coumaphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_56_72_4,56-72-4,3-chloro-7-diethoxyphosphinothioyloxy-4-methylchromen-2-one,international,iupac,PubChem PUG REST,high,true
+CAS_56073_07_5,56073-07-5,Difenacoum,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_56073_07_5,56073-07-5,"4-hydroxy-3-[3-(4-phenylphenyl)-1,2,3,4-tetrahydronaphthalen-1-yl]chromen-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_56073_10_0,56073-10-0,Brodifacum,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_56073_10_0,56073-10-0,Brodifacoum,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_56073_10_0,56073-10-0,"3-[3-[4-(4-bromophenyl)phenyl]-1,2,3,4-tetrahydronaphthalen-1-yl]-4-hydroxychromen-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_563_12_2,563-12-2,Etión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_563_12_2,563-12-2,Ethion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_563_12_2,563-12-2,diethoxyphosphinothioylsulfanylmethylsulfanyl-diethoxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_56634_95_8,56634-95-8,Heptanoato de bromoxinil,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_56634_95_8,56634-95-8,Bromoxynil heptanoate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_56634_95_8,56634-95-8,"(2,6-dibromo-4-cyanophenyl) heptanoate",international,iupac,PubChem PUG REST,high,true
+CAS_57_24_9,57-24-9,Estricnina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_57_24_9,57-24-9,Strychnine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_57_24_9,57-24-9,"(4aR,5aS,8aR,13aS,15aS,15bR)-4a,5,5a,7,8,13a,15,15a,15b,16-decahydro-2H-4,6-methanoindolo[3,2,1-ij]oxepino[2,3,4-de]pyrrolo[2,3-h]quinolin-14-one",international,iupac,PubChem PUG REST,high,true
+CAS_57213_69_1,57213-69-1,"Triclopir, sal de trietilamina",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_57213_69_1,57213-69-1,Triclopyr triethylamine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_57213_69_1,57213-69-1,"N,N-diethylethanamine;2-[(3,5,6-trichloro-2-pyridinyl)oxy]acetic acid",international,iupac,PubChem PUG REST,high,true
+CAS_57837_19_1,57837-19-1,Metalaxilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_57837_19_1,57837-19-1,Metalaxyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_57837_19_1,57837-19-1,"methyl 2-(N-(2-methoxyacetyl)-2,6-dimethylanilino)propanoate",international,iupac,PubChem PUG REST,high,true
+CAS_57960_19_7,57960-19-7,Acequinocilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_57960_19_7,57960-19-7,Acequinocyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_57960_19_7,57960-19-7,"(3-dodecyl-1,4-dioxonaphthalen-2-yl) acetate",international,iupac,PubChem PUG REST,high,true
+CAS_58_89_9,58-89-9,Lindano,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_58_89_9,58-89-9,Hexachlorocyclohexane,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_58_89_9,58-89-9,"1,2,3,4,5,6-hexachlorocyclohexane",international,iupac,PubChem PUG REST,high,true
+CAS_5836_29_3,5836-29-3,Cumatetralilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_5836_29_3,5836-29-3,Coumatetralyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_5836_29_3,5836-29-3,"4-hydroxy-3-(1,2,3,4-tetrahydronaphthalen-1-yl)chromen-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_584_79_2,584-79-2,D-trans Aletrina (Bioaletrina),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_584_79_2,584-79-2,Allethrins,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_584_79_2,584-79-2,"(2-methyl-4-oxo-3-prop-2-enylcyclopent-2-en-1-yl) 2,2-dimethyl-3-(2-methylprop-1-enyl)cyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_592_01_8,592-01-8,Cianuro de calcio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_592_01_8,592-01-8,Calcium cyanide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_592_01_8,592-01-8,calcium dicyanide,international,iupac,PubChem PUG REST,high,true
+CAS_59669_26_0,59669-26-0,Tiodicarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_59669_26_0,59669-26-0,Thiodicarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_59669_26_0,59669-26-0,methyl N-[methyl-[methyl-(1-methylsulfanylethylideneamino)oxycarbonylamino]sulfanylcarbamoyl]oxyethanimidothioate,international,iupac,PubChem PUG REST,high,true
+CAS_60_51_5,60-51-5,Dimetoato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_60_51_5,60-51-5,Dimethoate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_60_51_5,60-51-5,2-dimethoxyphosphinothioylsulfanyl-N-methylacetamide,international,iupac,PubChem PUG REST,high,true
+CAS_60_57_1,60-57-1,Dieldrín,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_60_57_1,60-57-1,"(1R,2S,3S,6R,7R,8S,9S,11R)-3,4,5,6,13,13-hexachloro-10-oxapentacyclo[6.3.1.13,6.02,7.09,11]tridec-4-ene",international,iupac,PubChem PUG REST,high,true
+CAS_60207_90_1,60207-90-1,Propiconazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_60207_90_1,60207-90-1,Propiconazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_60207_90_1,60207-90-1,"1-[[2-(2,4-dichlorophenyl)-4-propyl-1,3-dioxolan-2-yl]methyl]-1,2,4-triazole",international,iupac,PubChem PUG REST,high,true
+CAS_608_73_1,608-73-1,Hexaclorociclohexano,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_608_73_1,608-73-1,Isómeros mixtos de HCH,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_608_73_1,608-73-1,Hexachlorocyclohexane,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_608_73_1,608-73-1,"1,2,3,4,5,6-hexachlorocyclohexane",international,iupac,PubChem PUG REST,high,true
+CAS_61_82_5,61-82-5,Amitrol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_61_82_5,61-82-5,Amitrole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_61_82_5,61-82-5,"1H-1,2,4-triazol-5-amine",international,iupac,PubChem PUG REST,high,true
+CAS_6164_98_3,6164-98-3,Clordimeformo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_6164_98_3,6164-98-3,Chlordimeform,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_6164_98_3,6164-98-3,"N'-(4-chloro-2-methylphenyl)-N,N-dimethylmethanimidamide",international,iupac,PubChem PUG REST,high,true
+CAS_62_56_6,62-56-6,Tiourea,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_62_56_6,62-56-6,Thiourea,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_62_73_7,62-73-7,Diclorvos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_62_73_7,62-73-7,DDVP,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_62_73_7,62-73-7,Dichlorvos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_62_73_7,62-73-7,"2,2-dichloroethenyl dimethyl phosphate",international,iupac,PubChem PUG REST,high,true
+CAS_62_74_8,62-74-8,Fluoracetato de sodio (1080),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_62_74_8,62-74-8,Sodium Fluoroacetate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_62_74_8,62-74-8,sodium 2-fluoroacetate,international,iupac,PubChem PUG REST,high,true
+CAS_62476_59_9,62476-59-9,"Acifluorfen, sal sódica",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_62476_59_9,62476-59-9,Acifluorfen sodium,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_62476_59_9,62476-59-9,sodium 5-[2-chloro-4-(trifluoromethyl)phenoxy]-2-nitrobenzoate,international,iupac,PubChem PUG REST,high,true
+CAS_63_25_2,63-25-2,Carbarilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_63_25_2,63-25-2,Carbaryl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_63_25_2,63-25-2,naphthalen-1-yl N-methylcarbamate,international,iupac,PubChem PUG REST,high,true
+CAS_63333_35_7,63333-35-7,Brometalina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_63333_35_7,63333-35-7,Bromethalin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_63333_35_7,63333-35-7,"N-methyl-2,4-dinitro-N-(2,4,6-tribromophenyl)-6-(trifluoromethyl)aniline",international,iupac,PubChem PUG REST,high,true
+CAS_640_15_3,640-15-3,Tiometón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_640_15_3,640-15-3,Thiometon,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_640_15_3,640-15-3,2-ethylsulfanylethylsulfanyl-dimethoxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_640_19_7,640-19-7,Fluoroacetamida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_640_19_7,640-19-7,Fluoroacetamide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_640_19_7,640-19-7,2-fluoroacetamide,international,iupac,PubChem PUG REST,high,true
+CAS_64628_44_0,64628-44-0,Triflumurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_64628_44_0,64628-44-0,2-chloro-N-[[4-(trifluoromethoxy)phenyl]carbamoyl]benzamide,international,iupac,PubChem PUG REST,high,true
+CAS_65731_84_2,65731-84-2,"Cipermetrina, beta",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_65731_84_2,65731-84-2,Alpha-Cypermethrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_65731_84_2,65731-84-2,"trans-[(S)-cyano-(3-phenoxyphenyl)methyl] (1R,3R)-3-(2,2-dichloroethenyl)-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_658066_35_4,658066-35-4,Fluopiram,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_658066_35_4,658066-35-4,Fluopyram,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_658066_35_4,658066-35-4,N-[2-[3-chloro-5-(trifluoromethyl)-2-pyridinyl]ethyl]-2-(trifluoromethyl)benzamide,international,iupac,PubChem PUG REST,high,true
+CAS_65907_30_4,65907-30-4,Furatiocarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_65907_30_4,65907-30-4,Furathiocarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_65907_30_4,65907-30-4,"(2,2-dimethyl-3H-1-benzofuran-7-yl) N-[butoxycarbonyl(methyl)amino]sulfanyl-N-methylcarbamate",international,iupac,PubChem PUG REST,high,true
+CAS_66230_04_4,66230-04-4,Esfenvalerato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_66230_04_4,66230-04-4,Esfenvalerate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_66230_04_4,66230-04-4,[(S)-cyano-(3-phenoxyphenyl)methyl] (2S)-2-(4-chlorophenyl)-3-methylbutanoate,international,iupac,PubChem PUG REST,high,true
+CAS_67375_30_8,67375-30-8,"Cipermetrina, alfa",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_67375_30_8,67375-30-8,Alpha-Cypermethrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_67375_30_8,67375-30-8,"trans-[(S)-cyano-(3-phenoxyphenyl)methyl] (1R,3R)-3-(2,2-dichloroethenyl)-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_68049_83_2,68049-83-2,Azafenidina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_68049_83_2,68049-83-2,Azafenidin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_68049_83_2,68049-83-2,"2-(2,4-dichloro-5-prop-2-ynoxyphenyl)-5,6,7,8-tetrahydro-[1,2,4]triazolo[4,3-a]pyridin-3-one",international,iupac,PubChem PUG REST,high,true
+CAS_68085_85_8,68085-85-8,Cihalotrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_68085_85_8,68085-85-8,Cyhalothrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_68085_85_8,68085-85-8,"[cyano-(3-phenoxyphenyl)methyl] 3-[(Z)-2-chloro-3,3,3-trifluoroprop-1-enyl]-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_68359_37_5,68359-37-5,Beta-ciflutrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_68359_37_5,68359-37-5,ciflutrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_68359_37_5,68359-37-5,Cyfluthrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_68359_37_5,68359-37-5,"[cyano-(4-fluoro-3-phenoxyphenyl)methyl] 3-(2,2-dichloroethenyl)-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_68694_11_1,68694-11-1,Triflumizol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_68694_11_1,68694-11-1,Triflumizole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_68694_11_1,68694-11-1,N-[4-chloro-2-(trifluoromethyl)phenyl]-1-imidazol-1-yl-2-propoxyethanimine,international,iupac,PubChem PUG REST,high,true
+CAS_6923_22_4,6923-22-4,Monocrotofós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_6923_22_4,6923-22-4,Monocrotophos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_6923_22_4,6923-22-4,dimethyl [(E)-4-(methylamino)-4-oxobut-2-en-2-yl] phosphate,international,iupac,PubChem PUG REST,high,true
+CAS_69806_50_4,69806-50-4,Fluazifop-butilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_69806_50_4,69806-50-4,Fluazifop-butyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_69806_50_4,69806-50-4,butyl 2-[4-[[5-(trifluoromethyl)-2-pyridinyl]oxy]phenoxy]propanoate,international,iupac,PubChem PUG REST,high,true
+CAS_70124_77_5,70124-77-5,Flucitrinato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_70124_77_5,70124-77-5,Flucythrinate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_70124_77_5,70124-77-5,[cyano-(3-phenoxyphenyl)methyl] 2-[4-(difluoromethoxy)phenyl]-3-methylbutanoate,international,iupac,PubChem PUG REST,high,true
+CAS_709_98_8,709-98-8,Propanilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_709_98_8,709-98-8,Propanil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_709_98_8,709-98-8,"N-(3,4-dichlorophenyl)propanamide",international,iupac,PubChem PUG REST,high,true
+CAS_71751_41_2,71751-41-2,Abamectina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_71751_41_2,71751-41-2,Abamectin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_71751_41_2,71751-41-2,"(1'R,2R,3S,4'S,6S,8'R,10'E,12'S,13'S,14'E,16'E,20'R,21'R,24'S)-2-[(2S)-butan-2-yl]-21',24'-dihydroxy-12'-[(2R,4S,5S,6S)-5-[(2S,4S,5S,6S)-5-hydroxy-4-methoxy-6-methyloxan-2-yl]oxy-4-methoxy-6-methyloxan-2-yl]oxy-3,11',13',22'-tetramethylspiro[2,3-dihydropyran-6,6'-3,7,19-trioxatetracyclo[15.6.1.14,8.020,24]pentacosa-10,14,16,22-tetraene]-2'-one;(1'R,2R,3S,4'S,6S,8'R,10'E,12'S,13'S,14'E,16'E,20'R,21'R,24'S)-21',24'-dihydroxy-12'-[(2R,4S,5S,6S)-5-[(2S,4S,5S,6S)-5-hydroxy-4-methoxy-6-methyloxan-2-yl]oxy-4-methoxy-6-methyloxan-2-yl]oxy-3,11',13',22'-tetramethyl-2-propan-2-ylspiro[2,3-dihydropyran-6,6'-3,7,19-trioxatetracyclo[15.6.1.14,8.020,24]pentacosa-10,14,16,22-tetraene]-2'-one",international,iupac,PubChem PUG REST,high,false
+CAS_72_20_8,72-20-8,Endrín,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_72_20_8,72-20-8,"(1R,2R,3R,6S,7S,8S,9S,11R)-3,4,5,6,13,13-hexachloro-10-oxapentacyclo[6.3.1.13,6.02,7.09,11]tridec-4-ene",international,iupac,PubChem PUG REST,high,true
+CAS_72_43_5,72-43-5,Metoxicloro,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_72_43_5,72-43-5,Methoxychlor,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_72_43_5,72-43-5,"1-methoxy-4-[2,2,2-trichloro-1-(4-methoxyphenyl)ethyl]benzene",international,iupac,PubChem PUG REST,high,true
+CAS_72_54_8,72-54-8,"P,P'-ddd",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_72_54_8,72-54-8,"1-chloro-4-[2,2-dichloro-1-(4-chlorophenyl)ethyl]benzene",international,iupac,PubChem PUG REST,high,true
+CAS_72490_01_8,72490-01-8,Fenoxicarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_72490_01_8,72490-01-8,Fenoxycarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_72490_01_8,72490-01-8,ethyl N-[2-(4-phenoxyphenoxy)ethyl]carbamate,international,iupac,PubChem PUG REST,high,true
+CAS_7287_19_6,7287-19-6,Prometerina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7287_19_6,7287-19-6,Prometryn,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7287_19_6,7287-19-6,"6-methylsulfanyl-2-N,4-N-di(propan-2-yl)-1,3,5-triazine-2,4-diamine",international,iupac,PubChem PUG REST,high,true
+CAS_732_11_6,732-11-6,Fosmet,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_732_11_6,732-11-6,Phosmet,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_732_11_6,732-11-6,"2-(dimethoxyphosphinothioylsulfanylmethyl)isoindole-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_7345_69_9,7345-69-9,Tetratiocarbonato de sodio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7345_69_9,7345-69-9,Sodium tetrathiocarbonate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7345_69_9,7345-69-9,disodium;sulfidosulfanylmethanedithioate,international,iupac,PubChem PUG REST,high,true
+CAS_74_83_9,74-83-9,Bromuro de metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_74_83_9,74-83-9,Methyl Bromide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_74_83_9,74-83-9,bromomethane,international,iupac,PubChem PUG REST,high,true
+CAS_74_88_4,74-88-4,Yoduro de metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_74_88_4,74-88-4,Methyl iodide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_74_88_4,74-88-4,iodomethane,international,iupac,PubChem PUG REST,high,true
+CAS_74_90_8,74-90-8,Cianuro de hidrógeno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_74_90_8,74-90-8,Hydrogen Cyanide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_74_90_8,74-90-8,formonitrile,international,iupac,PubChem PUG REST,high,true
+CAS_741_58_2,741-58-2,Bensulida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_741_58_2,741-58-2,Bensulide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_741_58_2,741-58-2,N-[2-di(propan-2-yloxy)phosphinothioylsulfanylethyl]benzenesulfonamide,international,iupac,PubChem PUG REST,high,true
+CAS_7446_18_6,7446-18-6,Sulfato de talio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7446_18_6,7446-18-6,Thallous sulfate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7446_18_6,7446-18-6,bis(thallium(1+));sulfate,international,iupac,PubChem PUG REST,high,true
+CAS_75_21_8,75-21-8,Óxido de etileno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_75_21_8,75-21-8,Ethylene Oxide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_75_21_8,75-21-8,oxirane,international,iupac,PubChem PUG REST,high,true
+CAS_75_56_9,75-56-9,"Óxido de propileno, Oxirano",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_75_56_9,75-56-9,Propylene Oxide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_75_56_9,75-56-9,2-methyloxirane,international,iupac,PubChem PUG REST,high,true
+CAS_759_94_4,759-94-4,EPTC,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_759_94_4,759-94-4,Eptam,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_759_94_4,759-94-4,"S-ethyl N,N-dipropylcarbamothioate",international,iupac,PubChem PUG REST,high,true
+CAS_76_06_2,76-06-2,Cloropicrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_76_06_2,76-06-2,Chloropicrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_76_06_2,76-06-2,trichloro(nitro)methane,international,iupac,PubChem PUG REST,high,true
+CAS_76_44_8,76-44-8,Heptacloro,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_76_44_8,76-44-8,Heptachlor,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_76_44_8,76-44-8,"1,5,7,8,9,10,10-heptachlorotricyclo[5.2.1.02,6]deca-3,8-diene",international,iupac,PubChem PUG REST,high,true
+CAS_76_87_9,76-87-9,Hidróxido de fentina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_76_87_9,76-87-9,Triphenyltin hydroxide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_76_87_9,76-87-9,triphenylstannanylium hydroxide,international,iupac,PubChem PUG REST,high,true
+CAS_76703_62_3,76703-62-3,"Cihalotrina, gamma",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_76703_62_3,76703-62-3,gamma-Cyhalothrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_76703_62_3,76703-62-3,"trans-[(S)-cyano-(3-phenoxyphenyl)methyl] (1R,3R)-3-[(Z)-2-chloro-3,3,3-trifluoroprop-1-enyl]-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_7758_98_7,7758-98-7,Sulfato de cobre (anhidro),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7758_98_7,7758-98-7,Copper Sulfate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7758_99_8,7758-99-8,Sulfato de cobre (pentahidratado),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7758_99_8,7758-99-8,Copper sulfate pentahydrate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7775_09_9,7775-09-9,Clorato de sodio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7775_09_9,7775-09-9,Sodium Chlorate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7786_34_7,7786-34-7,Mevinfós,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7786_34_7,7786-34-7,Mevinphos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7786_34_7,7786-34-7,methyl 3-dimethoxyphosphoryloxybut-2-enoate,international,iupac,PubChem PUG REST,high,true
+CAS_7803_51_2,7803-51-2,Fosfina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_7803_51_2,7803-51-2,Phosphine,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_7803_51_2,7803-51-2,phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_79127_80_3,79127-80-3,Fenoxicarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_79127_80_3,79127-80-3,Fenoxycarb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_79127_80_3,79127-80-3,ethyl N-[2-(4-phenoxyphenoxy)ethyl]carbamate,international,iupac,PubChem PUG REST,high,true
+CAS_79538_32_2,79538-32-2,Teflutrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_79538_32_2,79538-32-2,Tefluthrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_79538_32_2,79538-32-2,"trans-(2,3,5,6-tetrafluoro-4-methylphenyl)methyl (1S,3S)-3-[(Z)-2-chloro-3,3,3-trifluoroprop-1-enyl]-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_79622_59_6,79622-59-6,Fluazinam,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_79622_59_6,79622-59-6,"3-chloro-N-[3-chloro-2,6-dinitro-4-(trifluoromethyl)phenyl]-5-(trifluoromethyl)pyridin-2-amine",international,iupac,PubChem PUG REST,high,true
+CAS_8001_35_2,8001-35-2,Toxafeno (canfecloro),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_8001_35_2,8001-35-2,Toxaphene,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_8001_35_2,8001-35-2,"1,4,5,6,7,7-hexachloro-2,2-bis(chloromethyl)-3-methylidenebicyclo[2.2.1]heptane",international,iupac,PubChem PUG REST,high,true
+CAS_8001_50_1,8001-50-1,Estrobano,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_8001_50_1,8001-50-1,Strobane,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_8001_50_1,8001-50-1,"1,2,3,4,5,7-hexachloro-2-(dichloromethyl)-6,6-dimethylbicyclo[3.1.1]heptane",international,iupac,PubChem PUG REST,high,true
+CAS_8001_58_9,8001-58-9,Creosota,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_8003_34_7,8003-34-7,Piretrinas,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_8003_34_7,8003-34-7,Pyrethrins,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_8003_34_7,8003-34-7,"cis-[(1S)-2-methyl-4-oxo-3-[(2Z)-penta-2,4-dienyl]cyclopent-2-en-1-yl] (1R,3R)-2,2-dimethyl-3-(2-methylprop-1-enyl)cyclopropane-1-carboxylate;cis-[(1S)-2-methyl-4-oxo-3-[(2Z)-penta-2,4-dienyl]cyclopent-2-en-1-yl] (1R,3R)-3-[(E)-3-methoxy-2-methyl-3-oxoprop-1-enyl]-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,false
+CAS_8012_69_9,8012-69-9,Sulfato de oxicloruro de cobre,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_8012_69_9,8012-69-9,Copper oxychloride sulfate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_8012_69_9,8012-69-9,hexacopper;chloride;nonahydroxide;sulfate,international,iupac,PubChem PUG REST,high,true
+CAS_8018_01_7,8018-01-7,Mancozeb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_8018_01_7,8018-01-7,zinc;manganese(2+);bis(N-[2-(sulfidocarbothioylamino)ethyl]carbamodithioate),international,iupac,PubChem PUG REST,high,true
+CAS_8042_47_5,8042-47-5,"Aceite mineral, refinado",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_81_81_2,81-81-2,Warfarina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_81_81_2,81-81-2,Warfarin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_81_81_2,81-81-2,4-hydroxy-3-(3-oxo-1-phenylbutyl)chromen-2-one,international,iupac,PubChem PUG REST,high,true
+CAS_81412_43_3,81412-43-3,Tridemorfo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_81412_43_3,81412-43-3,Tridemorph,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_81412_43_3,81412-43-3,"2,6-dimethyl-4-tridecylmorpholine",international,iupac,PubChem PUG REST,high,true
+CAS_81591_81_3,81591-81-3,Glifosato-trimesio,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_81591_81_3,81591-81-3,Touchdown,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_81591_81_3,81591-81-3,2-(phosphonomethylamino)acetate;trimethylsulfanium,international,iupac,PubChem PUG REST,high,true
+CAS_82_66_6,82-66-6,Difacinona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_82_66_6,82-66-6,Diphacinone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_82_66_6,82-66-6,"2-(2,2-diphenylacetyl)indene-1,3-dione",international,iupac,PubChem PUG REST,high,true
+CAS_82_68_8,82-68-8,PCNB (Quintoceno),es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_82_68_8,82-68-8,Quintozene,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_82_68_8,82-68-8,"1,2,3,4,5-pentachloro-6-nitrobenzene",international,iupac,PubChem PUG REST,high,true
+CAS_82558_50_7,82558-50-7,Isoxabeno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_82558_50_7,82558-50-7,Isoxaben,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_82558_50_7,82558-50-7,"2,6-dimethoxy-N-[3-(3-methylpentan-3-yl)-1,2-oxazol-5-yl]benzamide",international,iupac,PubChem PUG REST,high,true
+CAS_82560_54_1,82560-54-1,Benfuracarb,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_82560_54_1,82560-54-1,"ethyl 3-[[(2,2-dimethyl-3H-1-benzofuran-7-yl)oxycarbonyl-methylamino]sulfanyl-propan-2-ylamino]propanoate",international,iupac,PubChem PUG REST,high,true
+CAS_82657_04_3,82657-04-3,Bifentrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_82657_04_3,82657-04-3,Bifenthrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_82657_04_3,82657-04-3,"trans-(2-methyl-3-phenylphenyl)methyl (1R,3R)-3-[(Z)-2-chloro-3,3,3-trifluoroprop-1-enyl]-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_83_79_4,83-79-4,Rotenona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_83_79_4,83-79-4,Rotenone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_83_79_4,83-79-4,"(1S,6R,13S)-16,17-dimethoxy-6-prop-1-en-2-yl-2,7,20-trioxapentacyclo[11.8.0.03,11.04,8.014,19]henicosa-3(11),4(8),9,14,16,18-hexaen-12-one",international,iupac,PubChem PUG REST,high,true
+CAS_83121_18_0,83121-18-0,Teflubenzurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_83121_18_0,83121-18-0,"N-[(3,5-dichloro-2,4-difluorophenyl)carbamoyl]-2,6-difluorobenzamide",international,iupac,PubChem PUG REST,high,true
+CAS_84332_86_5,84332-86-5,Clozolinato,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_84332_86_5,84332-86-5,Chlozolinate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_84332_86_5,84332-86-5,"ethyl 3-(3,5-dichlorophenyl)-5-methyl-2,4-dioxo-1,3-oxazolidine-5-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_85_00_7,85-00-7,Dibromuro de diquat,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_85_00_7,85-00-7,Diquat Dibromide,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_85_00_7,85-00-7,"7,10-diazoniatricyclo[8.4.0.02,7]tetradeca-1(14),2,4,6,10,12-hexaene dibromide",international,iupac,PubChem PUG REST,high,true
+CAS_85509_19_9,85509-19-9,Flusilazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_85509_19_9,85509-19-9,Flusilazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_85509_19_9,85509-19-9,"bis(4-fluorophenyl)-methyl-(1,2,4-triazol-1-ylmethyl)silane",international,iupac,PubChem PUG REST,high,true
+CAS_86_50_0,86-50-0,Azinfos-metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_86_50_0,86-50-0,Azinphos-Methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_86_50_0,86-50-0,"3-(dimethoxyphosphinothioylsulfanylmethyl)-1,2,3-benzotriazin-4-one",international,iupac,PubChem PUG REST,high,true
+CAS_87_86_5,87-86-5,Pentaclorofenol y sus sales,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_87_86_5,87-86-5,Pentachlorophenol,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_87_86_5,87-86-5,"2,3,4,5,6-pentachlorophenol",international,iupac,PubChem PUG REST,high,true
+CAS_87392_12_9,87392-12-9,"Metolacloro, (S)",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_87392_12_9,87392-12-9,S-Metolachlor,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_87392_12_9,87392-12-9,2-chloro-N-(2-ethyl-6-methylphenyl)-N-[(2S)-1-methoxypropan-2-yl]acetamide,international,iupac,PubChem PUG REST,high,true
+CAS_87674_68_8,87674-68-8,Dimetenamida,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_87674_68_8,87674-68-8,Dimethenamid,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_87674_68_8,87674-68-8,"2-chloro-N-(2,4-dimethylthiophen-3-yl)-N-(1-methoxypropan-2-yl)acetamide",international,iupac,PubChem PUG REST,high,true
+CAS_88_85_7,88-85-7,Dinoseb y sus sales y ésteres,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_88_85_7,88-85-7,Dinoseb,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_88_85_7,88-85-7,"2-butan-2-yl-4,6-dinitrophenol",international,iupac,PubChem PUG REST,high,true
+CAS_88671_89_0,88671-89-0,Miclobutanilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_88671_89_0,88671-89-0,Myclobutanil,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_88671_89_0,88671-89-0,"2-(4-chlorophenyl)-2-(1,2,4-triazol-1-ylmethyl)hexanenitrile",international,iupac,PubChem PUG REST,high,true
+CAS_900_95_8,900-95-8,Acetato de fentina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_900_95_8,900-95-8,Fentin acetate,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_900_95_8,900-95-8,triphenylstannyl acetate,international,iupac,PubChem PUG REST,high,true
+CAS_90035_08_8,90035-08-8,Flocumafén,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_90035_08_8,90035-08-8,Flocoumafen,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_90035_08_8,90035-08-8,"4-hydroxy-3-[3-[4-[[4-(trifluoromethyl)phenyl]methoxy]phenyl]-1,2,3,4-tetrahydronaphthalen-1-yl]chromen-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_9006_42_2,9006-42-2,Metiram,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_90640_80_5,90640-80-5,Aceite de antraceno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_91465_08_6,91465-08-6,"Cihalotrina, lambda",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_91465_08_6,91465-08-6,lambda-Cyhalothrin,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_91465_08_6,91465-08-6,"trans-[(R)-cyano-(3-phenoxyphenyl)methyl] (1S,3S)-3-[(Z)-2-chloro-3,3,3-trifluoroprop-1-enyl]-2,2-dimethylcyclopropane-1-carboxylate",international,iupac,PubChem PUG REST,high,true
+CAS_919_86_8,919-86-8,Demetón-S-metilo,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_919_86_8,919-86-8,Demeton-S-methyl,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_919_86_8,919-86-8,1-dimethoxyphosphorylsulfanyl-2-ethylsulfanylethane,international,iupac,PubChem PUG REST,high,true
+CAS_93_72_1,93-72-1,Silvex,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_93_72_1,93-72-1,Fenoprop,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_93_72_1,93-72-1,"2-(2,4,5-trichlorophenoxy)propanoic acid",international,iupac,PubChem PUG REST,high,true
+CAS_93_76_5,93-76-5,"2,4,5-T",es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_93_76_5,93-76-5,Trichlorophenoxyacetic acid,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_93_76_5,93-76-5,"2-(2,4,5-trichlorophenoxy)acetic acid",international,iupac,PubChem PUG REST,high,true
+CAS_94_59_7,94-59-7,Safrol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_94_59_7,94-59-7,Safrole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_94_59_7,94-59-7,"5-prop-2-enyl-1,3-benzodioxole",international,iupac,PubChem PUG REST,high,true
+CAS_94125_34_5,94125-34-5,Prosulfurón,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_94125_34_5,94125-34-5,"1-(4-methoxy-6-methyl-1,3,5-triazin-2-yl)-3-[2-(3,3,3-trifluoropropyl)phenyl]sulfonylurea",international,iupac,PubChem PUG REST,high,true
+CAS_94361_06_5,94361-06-5,Ciproconazol,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_94361_06_5,94361-06-5,Cyproconazole,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_94361_06_5,94361-06-5,"2-(4-chlorophenyl)-3-cyclopropyl-1-(1,2,4-triazol-1-yl)butan-2-ol",international,iupac,PubChem PUG REST,high,true
+CAS_950_37_8,950-37-8,Metidatión,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_950_37_8,950-37-8,Methidathion,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_950_37_8,950-37-8,"3-(dimethoxyphosphinothioylsulfanylmethyl)-5-methoxy-1,3,4-thiadiazol-2-one",international,iupac,PubChem PUG REST,high,true
+CAS_951659_40_8,951659-40-8,Flupiradifurona,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_951659_40_8,951659-40-8,Flupyradifurone,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_951659_40_8,951659-40-8,"3-[(6-chloro-3-pyridinyl)methyl-(2,2-difluoroethyl)amino]-2H-furan-5-one",international,iupac,PubChem PUG REST,high,true
+CAS_95465_99_9,95465-99-9,Cadusafos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_95465_99_9,95465-99-9,2-[butan-2-ylsulfanyl(ethoxy)phosphoryl]sulfanylbutane,international,iupac,PubChem PUG REST,high,true
+CAS_959_98_8,959-98-8,Endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_959_98_8,959-98-8,alfa-endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_959_98_8,959-98-8,beta endosulfán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_959_98_8,959-98-8,alpha-Endosulfan,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_959_98_8,959-98-8,"(1R,2S,8R,9S)-1,9,10,11,12,12-hexachloro-4,6-dioxa-5lambda4-thiatricyclo[7.2.1.02,8]dodec-10-ene 5-oxide",international,iupac,PubChem PUG REST,high,true
+CAS_95977_29_0,95977-29-0,Haloxifop-P,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_95977_29_0,95977-29-0,Haloxyfop-P,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_95977_29_0,95977-29-0,(2R)-2-[4-[[3-chloro-5-(trifluoromethyl)-2-pyridinyl]oxy]phenoxy]propanoic acid,international,iupac,PubChem PUG REST,high,true
+CAS_96_12_8,96-12-8,DBCP,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_96_12_8,96-12-8,"1,2-Dibromo-3-Chloropropane",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_96_24_2,96-24-2,Alfa clorhidrina,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_96_24_2,96-24-2,"3-Chloro-1,2-propanediol",en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_96_24_2,96-24-2,"3-chloropropane-1,2-diol",international,iupac,PubChem PUG REST,high,true
+CAS_96_45_7,96-45-7,Etileno tiourea,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_96_45_7,96-45-7,Ethylenethiourea,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_96_45_7,96-45-7,imidazolidine-2-thione,international,iupac,PubChem PUG REST,high,true
+CAS_96182_53_5,96182-53-5,Tebupirimifos,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_96182_53_5,96182-53-5,Tebupirimfos,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_96182_53_5,96182-53-5,(2-tert-butylpyrimidin-5-yl)oxy-ethoxy-propan-2-yloxy-sulfanylidene-lambda5-phosphane,international,iupac,PubChem PUG REST,high,true
+CAS_96489_71_3,96489-71-3,Piridabén,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_96489_71_3,96489-71-3,Pyridaben,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_96489_71_3,96489-71-3,2-tert-butyl-5-[(4-tert-butylphenyl)methylsulfanyl]-4-chloropyridazin-3-one,international,iupac,PubChem PUG REST,high,true
+CAS_98_95_3,98-95-3,Nitrobenceno,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_98_95_3,98-95-3,Nitrobenzene,en_or_international,pubchem_title,PubChem PUG REST,high,true
+CAS_99_30_9,99-30-9,Diclorán,es,regulatory_name,Rainforest Alliance local list,high,true
+CAS_99_30_9,99-30-9,"2,6-Dichloro-4-nitroaniline",en_or_international,pubchem_title,PubChem PUG REST,high,true
+GROUP_ARSENICO_Y_SUS_COMPUESTOS,,Arsénico y sus compuestos,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_BORAX_SALES_DE_BORATO,,Bórax,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_BORAX_SALES_DE_BORATO,,Sales de borato,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_DNOC_Y_SUS_SALES,,DNOC y sus sales,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_FORMULA_EN_POLVO_DISPERSABLE_QUE_CONTIENE_UNA_COMBINACION_DE_BENOMILO_7_CARBOFUR,,"Fórmula en polvo dispersable. que contiene una combinación de: benomilo ≥7%, carbofurano ≥10%, tiram ≥15%.",es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_SALES_E_ISOMEROS_DE_GLUFOSINATO_DE_AMONIO,,Sales e isómeros de glufosinato de amonio,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_MERCURIO_Y_SUS_COMPUESTOS,,Mercurio y sus compuestos,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_ACEITES_DE_PARAFINA_CON_UN_CONTENIDO_DE_DMSO_3,,Aceites de parafina con un contenido de DMSO > 3%,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_COMPUESTOS_DE_TRIBUTILESTANO,,Compuestos de tributilestaño,es,regulatory_group,Rainforest Alliance local list,high,true
+GROUP_EXTRACTOS_DE_LA_RAIZ_DE_LAS_PLANTAS_CONOCIDAS_COMO_CUBE_O_K_BO_LONCHOCARPUS,,Extractos de la raíz de las plantas conocidas como cube o k-bo (Lonchocarpus),es,regulatory_group,Rainforest Alliance local list,high,true

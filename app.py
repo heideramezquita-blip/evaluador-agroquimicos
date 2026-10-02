@@ -150,6 +150,15 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
                 st.write('**Fuente:**',f'{list_label(g["source_list"])} · versión {g["source_version"]}')
                 st.write('**Tipo de evidencia:**',classes)
                 st.write('**Página(s) más relevante(s):**',pages)
+                alias_types=sorted({getattr(hit,'alias_type','') for hit in g['hit_items'] if getattr(hit,'alias_type','')})
+                alias_languages=sorted({getattr(hit,'alias_language','') for hit in g['hit_items'] if getattr(hit,'alias_language','')})
+                alias_sources=sorted({getattr(hit,'alias_source','') for hit in g['hit_items'] if getattr(hit,'alias_source','')})
+                if alias_types:
+                    st.write('**Identificación química:**',' · '.join(alias_types))
+                if alias_languages:
+                    st.write('**Idioma/convención del alias:**',' · '.join(alias_languages))
+                if alias_sources:
+                    st.write('**Fuente del alias:**',' · '.join(alias_sources))
                 st.caption('La clasificación describe el criterio de la lista. El papel de la sustancia se evalúa aparte con la evidencia del documento; la concentración solo se confirma si el PDF la especifica.')
                 st.caption('Para revisar el contenido completo y su contexto original, consulte directamente el PDF cargado.')
 
@@ -217,6 +226,13 @@ if st.button('Evaluar documentos',type='primary',use_container_width=True):
         c2.metric('OBSOLETOS',result['obsolete_count'])
         c3.metric('MITIGACIÓN',result['mitigation_count'])
         c4.metric('CAS válidos detectados',len(ev.cas_records))
+        identity_stats=result.get('chemical_identity_stats',{})
+        if identity_stats.get('substances'):
+            st.caption(
+                f"Registro químico local: {identity_stats['substances']} identidades · "
+                f"{identity_stats['enabled_aliases']} alias habilitados "
+                f"({identity_stats['aliases']} alias almacenados)."
+            )
         st.caption('Información de auditoría del análisis. No modifica el resultado mostrado arriba.')
         if result['documents']:
             st.markdown('#### Documentos')

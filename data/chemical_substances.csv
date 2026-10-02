@@ -1,0 +1,357 @@
+substance_id,canonical_name,canonical_cas,parent_substance_id,chemical_form,source
+CAS_10043_35_3,Boric Acid,10043-35-3,,,PubChem title + local regulatory lists
+CAS_101_05_3,Anilazine,101-05-3,,,PubChem title + local regulatory lists
+CAS_10265_92_6,Methamidophos,10265-92-6,,,PubChem title + local regulatory lists
+CAS_103055_07_8,Lufenuron,103055-07-8,,,PubChem title + local regulatory lists
+CAS_103112_35_2,Fenchlorazole-ethyl,103112-35-2,,,PubChem title + local regulatory lists
+CAS_103361_09_7,Flumioxazin,103361-09-7,,,PubChem title + local regulatory lists
+CAS_10453_86_8,Resmethrin,10453-86-8,,,PubChem title + local regulatory lists
+CAS_104653_34_1,Difethialone,104653-34-1,,,PubChem title + local regulatory lists
+CAS_105024_66_6,Silafluofen,105024-66-6,,,PubChem title + local regulatory lists
+CAS_106_89_8,Epichlorohydrin,106-89-8,,,PubChem title + local regulatory lists
+CAS_106_93_4,"1,2-Dibromoethane",106-93-4,,,PubChem title + local regulatory lists
+CAS_10605_21_7,Carbendazim,10605-21-7,,,PubChem title + local regulatory lists
+CAS_107_02_8,Acrolein,107-02-8,,,PubChem title + local regulatory lists
+CAS_107_06_2,"1,2-Dichloroethane",107-06-2,,,PubChem title + local regulatory lists
+CAS_108731_70_0,Fomesafen sodium,108731-70-0,,,PubChem title + local regulatory lists
+CAS_110488_70_5,Dimethomorph,110488-70-5,,,PubChem title + local regulatory lists
+CAS_1113_02_6,Omethoate,1113-02-6,,,PubChem title + local regulatory lists
+CAS_111988_49_9,"(3-((6-Chloropyridin-3-yl)methyl)-1,3-thiazolidin-2-ylidene)cyanamide",111988-49-9,,,PubChem title + local regulatory lists
+CAS_112143_82_5,Triazamate,112143-82-5,,,PubChem title + local regulatory lists
+CAS_112281_77_3,Tetraconazole,112281-77-3,,,PubChem title + local regulatory lists
+CAS_1134_23_2,Cycloate,1134-23-2,,,PubChem title + local regulatory lists
+CAS_114_26_1,Propoxur,114-26-1,,,PubChem title + local regulatory lists
+CAS_115_29_7,Endosulfan,115-29-7,,,PubChem title + local regulatory lists
+CAS_115_32_2,Dicofol,115-32-2,,,PubChem title + local regulatory lists
+CAS_116_06_3,Aldicarb,116-06-3,,,PubChem title + local regulatory lists
+CAS_116714_46_6,Novaluron,116714-46-6,,,PubChem title + local regulatory lists
+CAS_117_18_0,"1,2,4,5-Tetrachloro-3-nitrobenzene",117-18-0,,,PubChem title + local regulatory lists
+CAS_118_74_1,Hexachlorobenzene,118-74-1,,,PubChem title + local regulatory lists
+CAS_118_75_2,Chloranil,118-75-2,,,PubChem title + local regulatory lists
+CAS_1194_65_6,Dichlobenil,1194-65-6,,,PubChem title + local regulatory lists
+CAS_119738_06_6,Quizalofop-tefuryl,119738-06-6,,,PubChem title + local regulatory lists
+CAS_120068_37_3,Fipronil,120068-37-3,,,PubChem title + local regulatory lists
+CAS_12057_74_8,Magnesium phosphide,12057-74-8,,,PubChem title + local regulatory lists
+CAS_121_75_5,Malathion,121-75-5,,,PubChem title + local regulatory lists
+CAS_12122_67_7,Zineb,12122-67-7,,,PubChem title + local regulatory lists
+CAS_122_14_5,Fenitrothion,122-14-5,,,PubChem title + local regulatory lists
+CAS_122_34_9,Simazine,122-34-9,,,PubChem title + local regulatory lists
+CAS_122_42_9,Propham,122-42-9,,,PubChem title + local regulatory lists
+CAS_122453_73_0,Chlorfenapyr,122453-73-0,,,PubChem title + local regulatory lists
+CAS_122836_35_5,Sulfentrazone,122836-35-5,,,PubChem title + local regulatory lists
+CAS_123_33_1,Maleic Hydrazide,123-33-1,,,PubChem title + local regulatory lists
+CAS_12427_38_2,Maneb,12427-38-2,,,PubChem title + local regulatory lists
+CAS_125116_23_6,Metconazole,125116-23-6,,,PubChem title + local regulatory lists
+CAS_126_15_8,"2,3:4,5-Di(2-butenyl)tetrahydrofurfural",126-15-8,,,PubChem title + local regulatory lists
+CAS_12789_03_6,"Chlordane, technical",12789-03-6,,,PubChem title + local regulatory lists
+CAS_129558_76_5,Tolfenpyrad,129558-76-5,,,PubChem title + local regulatory lists
+CAS_13071_79_9,Terbufos,13071-79-9,,,PubChem title + local regulatory lists
+CAS_1314_84_7,Zinc Phosphide,1314-84-7,,,PubChem title + local regulatory lists
+CAS_1317_38_0,Copper oxide (CuO),1317-38-0,,,PubChem title + local regulatory lists
+CAS_1317_39_1,Copper oxide (Cu2O),1317-39-1,,,PubChem title + local regulatory lists
+CAS_13171_21_6,Phosphamidon,13171-21-6,,,PubChem title + local regulatory lists
+CAS_131807_57_3,Famoxadone,131807-57-3,,,PubChem title + local regulatory lists
+CAS_131860_33_8,Azoxystrobin,131860-33-8,,,PubChem title + local regulatory lists
+CAS_131929_60_7,Spinosyn A,131929-60-7,,,PubChem title + local regulatory lists
+CAS_13194_48_4,Ethoprophos,13194-48-4,,,PubChem title + local regulatory lists
+CAS_131983_72_7,Triticonazole,131983-72-7,,,PubChem title + local regulatory lists
+CAS_133_06_2,Captan,133-06-2,,,PubChem title + local regulatory lists
+CAS_133_07_3,Folpet,133-07-3,,,PubChem title + local regulatory lists
+CAS_1332_40_7,Copper oxychloride,1332-40-7,,,PubChem title + local regulatory lists
+CAS_13356_08_6,Fenbutatin oxide,13356-08-6,,,PubChem title + local regulatory lists
+CAS_133855_98_8,Epoxiconazole,133855-98-8,,,PubChem title + local regulatory lists
+CAS_134098_61_6,Fenpyroximate,134098-61-6,,,PubChem title + local regulatory lists
+CAS_1344_81_6,Calcium polysulfide,1344-81-6,,,PubChem title + local regulatory lists
+CAS_13457_18_6,Pyrazophos,13457-18-6,,,PubChem title + local regulatory lists
+CAS_135410_20_7,N-((6-Chloro-3-pyridinyl)methyl)-N'-cyano-N-methylethanimidamide,135410-20-7,,,PubChem title + local regulatory lists
+CAS_137_30_4,Ziram,137-30-4,,,PubChem title + local regulatory lists
+CAS_137_41_7,Monopotassium methyldithiocarbamate,137-41-7,,,PubChem title + local regulatory lists
+CAS_137_42_8,Metam-sodium,137-42-8,,,PubChem title + local regulatory lists
+CAS_137512_74_4,Emamectin Benzoate,137512-74-4,,,PubChem title + local regulatory lists
+CAS_138261_41_3,Imidacloprid,138261-41-3,,,PubChem title + local regulatory lists
+CAS_139001_49_3,Profoxydim,139001-49-3,,,PubChem title + local regulatory lists
+CAS_141_66_2,Dicrotophos,141-66-2,,,PubChem title + local regulatory lists
+CAS_141517_21_7,Trifloxystrobin,141517-21-7,,,PubChem title + local regulatory lists
+CAS_1420_07_1,Dinoterb,1420-07-1,,,PubChem title + local regulatory lists
+CAS_142459_58_3,Flufenacet,142459-58-3,,,PubChem title + local regulatory lists
+CAS_143_33_9,Sodium Cyanide,143-33-9,,,PubChem title + local regulatory lists
+CAS_143_50_0,Chlordecone,143-50-0,,,PubChem title + local regulatory lists
+CAS_144_54_7,Metam,144-54-7,,,PubChem title + local regulatory lists
+CAS_144550_36_7,Iodosulfuron-methyl-sodium,144550-36-7,,,PubChem title + local regulatory lists
+CAS_14484_64_1,Ferbam,14484-64-1,,,PubChem title + local regulatory lists
+CAS_148_79_8,Thiabendazole,148-79-8,,,PubChem title + local regulatory lists
+CAS_148477_71_8,Spirodiclofen,148477-71-8,,,PubChem title + local regulatory lists
+CAS_149961_52_4,Dimoxystrobin,149961-52-4,,,PubChem title + local regulatory lists
+CAS_149979_41_9,Tepraloxydim,149979-41-9,,,PubChem title + local regulatory lists
+CAS_152_16_9,Schradan,152-16-9,,,PubChem title + local regulatory lists
+CAS_15263_53_3,Cartap,15263-53-3,,,PubChem title + local regulatory lists
+CAS_15299_99_7,Napropamide,15299-99-7,,,PubChem title + local regulatory lists
+CAS_153233_91_1,Etoxazole,153233-91-1,,,PubChem title + local regulatory lists
+CAS_153719_23_4,Thiamethoxam,153719-23-4,,,PubChem title + local regulatory lists
+CAS_15545_48_9,Chlortoluron,15545-48-9,,,PubChem title + local regulatory lists
+CAS_1563_66_2,Carbofuran,1563-66-2,,,PubChem title + local regulatory lists
+CAS_1582_09_8,Trifluralin,1582-09-8,,,PubChem title + local regulatory lists
+CAS_15972_60_8,Alachlor,15972-60-8,,,PubChem title + local regulatory lists
+CAS_16118_49_3,Carbetamide,16118-49-3,,,PubChem title + local regulatory lists
+CAS_163515_14_8,Dimethenamid-P,163515-14-8,,,PubChem title + local regulatory lists
+CAS_165252_70_0,Dinotefuran,165252-70-0,,,PubChem title + local regulatory lists
+CAS_16752_77_5,Methomyl,16752-77-5,,,PubChem title + local regulatory lists
+CAS_168316_95_8,Spinosad,168316-95-8,,,PubChem title + local regulatory lists
+CAS_1689_84_5,Bromoxynil,1689-84-5,,,PubChem title + local regulatory lists
+CAS_1689_99_2,Bromoxynil octanoate,1689-99-2,,,PubChem title + local regulatory lists
+CAS_17109_49_8,Edifenphos,17109-49-8,,,PubChem title + local regulatory lists
+CAS_173584_44_6,Indoxacarb,173584-44-6,,,PubChem title + local regulatory lists
+CAS_1746_81_2,Monolinuron,1746-81-2,,,PubChem title + local regulatory lists
+CAS_175013_18_0,Pyraclostrobin,175013-18-0,,,PubChem title + local regulatory lists
+CAS_17804_35_2,Benomyl,17804-35-2,,,PubChem title + local regulatory lists
+CAS_179101_81_6,Pyridalyl,179101-81-6,,,PubChem title + local regulatory lists
+CAS_1836_75_5,Nitrofen,1836-75-5,,,PubChem title + local regulatory lists
+CAS_1861_40_1,Benfluralin,1861-40-1,,,PubChem title + local regulatory lists
+CAS_187166_40_1,Spinetoram J,187166-40-1,,,PubChem title + local regulatory lists
+CAS_18854_01_8,Isoxathion,18854-01-8,,,PubChem title + local regulatory lists
+CAS_1897_45_6,Chlorothalonil,1897-45-6,,,PubChem title + local regulatory lists
+CAS_19044_88_3,Oryzalin,19044-88-3,,,PubChem title + local regulatory lists
+CAS_1910_42_5,Paraquat dichloride,1910-42-5,CAS_4685_14_7,salt,PubChem title + local regulatory lists
+CAS_1912_24_9,Atrazine,1912-24-9,,,PubChem title + local regulatory lists
+CAS_1928_43_4,"2-Ethylhexyl (2,4-dichlorophenoxy)acetate",1928-43-4,,,PubChem title + local regulatory lists
+CAS_19666_30_9,Oxadiazon,19666-30-9,,,PubChem title + local regulatory lists
+CAS_2032_65_7,Methiocarb,2032-65-7,,,PubChem title + local regulatory lists
+CAS_20427_59_2,Copper dihydroxide,20427-59-2,,,PubChem title + local regulatory lists
+CAS_2079_00_7,Blasticidin S,2079-00-7,,,PubChem title + local regulatory lists
+CAS_20859_73_8,Aluminum Phosphide,20859-73-8,,,PubChem title + local regulatory lists
+CAS_2104_64_5,Ethyl p-nitrophenyl benzenethiophosphonate,2104-64-5,,,PubChem title + local regulatory lists
+CAS_21087_64_9,Metribuzin,21087-64-9,,,PubChem title + local regulatory lists
+CAS_210880_92_5,Clothianidin,210880-92-5,,,PubChem title + local regulatory lists
+CAS_21609_90_5,Leptophos,21609-90-5,,,PubChem title + local regulatory lists
+CAS_2164_08_1,Lenacil,2164-08-1,,,PubChem title + local regulatory lists
+CAS_21725_46_2,Cyanazine,21725-46-2,,,PubChem title + local regulatory lists
+CAS_2212_67_1,Molinate,2212-67-1,,,PubChem title + local regulatory lists
+CAS_22224_92_6,Fenamiphos,22224-92-6,,,PubChem title + local regulatory lists
+CAS_22248_79_9,Tetrachlorvinphos,22248-79-9,,,PubChem title + local regulatory lists
+CAS_22259_30_9,Formetanate,22259-30-9,,,PubChem title + local regulatory lists
+CAS_2275_23_2,Vamidothion,2275-23-2,,,PubChem title + local regulatory lists
+CAS_22781_23_3,Bendiocarb,22781-23-3,,,PubChem title + local regulatory lists
+CAS_2303_17_5,Triallate,2303-17-5,,,PubChem title + local regulatory lists
+CAS_2310_17_0,Phosalone,2310-17-0,,,PubChem title + local regulatory lists
+CAS_23103_98_2,Pirimicarb,23103-98-2,,,PubChem title + local regulatory lists
+CAS_2312_35_8,Propargite,2312-35-8,,,PubChem title + local regulatory lists
+CAS_23135_22_0,Oxamyl,23135-22-0,,,PubChem title + local regulatory lists
+CAS_23422_53_9,Formetanate hydrochloride,23422-53-9,,,PubChem title + local regulatory lists
+CAS_23560_59_0,Heptenophos,23560-59-0,,,PubChem title + local regulatory lists
+CAS_23564_05_8,Thiophanate-Methyl,23564-05-8,,,PubChem title + local regulatory lists
+CAS_23783_98_4,cis-Phosphamidon,23783-98-4,,,PubChem title + local regulatory lists
+CAS_2385_85_5,Mirex,2385-85-5,,,PubChem title + local regulatory lists
+CAS_24017_47_8,Triazophos,24017-47-8,,,PubChem title + local regulatory lists
+CAS_2425_06_1,Captafol,2425-06-1,,,PubChem title + local regulatory lists
+CAS_2439_01_2,Chinomethionat,2439-01-2,,,PubChem title + local regulatory lists
+CAS_2439_10_3,Dodine,2439-10-3,,,PubChem title + local regulatory lists
+CAS_24934_91_6,Chlormephos,24934-91-6,,,PubChem title + local regulatory lists
+CAS_25606_41_1,Propamocarb hydrochloride,25606-41-1,,,PubChem title + local regulatory lists
+CAS_2593_15_9,Etridiazole,2593-15-9,,,PubChem title + local regulatory lists
+CAS_2595_54_2,Mecarbam,2595-54-2,,,PubChem title + local regulatory lists
+CAS_2642_71_9,Azinphos-Ethyl,2642-71-9,,,PubChem title + local regulatory lists
+CAS_26544_20_7,(4-Chloro-2-methylphenoxy)acetic acid isooctyl ester,26544-20-7,,,PubChem title + local regulatory lists
+CAS_26644_46_2,Triforine,26644-46-2,,,PubChem title + local regulatory lists
+CAS_27314_13_2,Norflurazon,27314-13-2,,,PubChem title + local regulatory lists
+CAS_2764_72_9,Diquat,2764-72-9,,,PubChem title + local regulatory lists
+CAS_28249_77_6,Thiobencarb,28249-77-6,,,PubChem title + local regulatory lists
+CAS_28382_15_2,"Potassium 1,2-dihydro-3,6-pyridazinedione",28382-15-2,,,PubChem title + local regulatory lists
+CAS_28772_56_7,Bromadiolone,28772-56-7,,,PubChem title + local regulatory lists
+CAS_2921_88_2,Chlorpyrifos,2921-88-2,,,PubChem title + local regulatory lists
+CAS_29232_93_7,Pirimiphos-methyl,29232-93-7,,,PubChem title + local regulatory lists
+CAS_29450_45_1,MCPA-2-ethylhexyl,29450-45-1,,,PubChem title + local regulatory lists
+CAS_297_99_4,trans-Phosphamidon,297-99-4,,,PubChem title + local regulatory lists
+CAS_298_00_0,Methyl Parathion,298-00-0,,,PubChem title + local regulatory lists
+CAS_298_02_2,Phorate,298-02-2,,,PubChem title + local regulatory lists
+CAS_298_04_4,Disulfoton,298-04-4,,,PubChem title + local regulatory lists
+CAS_29973_13_5,Ethiofencarb,29973-13-5,,,PubChem title + local regulatory lists
+CAS_300_76_5,Naled,300-76-5,,,PubChem title + local regulatory lists
+CAS_301_12_2,Oxydemeton-methyl,301-12-2,,,PubChem title + local regulatory lists
+CAS_30560_19_1,Acephate,30560-19-1,,,PubChem title + local regulatory lists
+CAS_309_00_2,Aldrin,309-00-2,,,PubChem title + local regulatory lists
+CAS_31218_83_4,Propetamphos,31218-83-4,,,PubChem title + local regulatory lists
+CAS_314_40_9,Bromacil,314-40-9,,,PubChem title + local regulatory lists
+CAS_319_84_6,Hexachlorocyclohexane,319-84-6,CAS_608_73_1,isomer,PubChem title + local regulatory lists
+CAS_319_85_7,Hexachlorocyclohexane,319-85-7,CAS_608_73_1,isomer,PubChem title + local regulatory lists
+CAS_330_54_1,Diuron,330-54-1,,,PubChem title + local regulatory lists
+CAS_330_55_2,Linuron,330-55-2,,,PubChem title + local regulatory lists
+CAS_33089_61_1,Amitraz,33089-61-1,,,PubChem title + local regulatory lists
+CAS_33213_65_9,alpha-Endosulfan,33213-65-9,CAS_115_29_7,isomer,PubChem title + local regulatory lists
+CAS_333_41_5,Diazinon,333-41-5,,,PubChem title + local regulatory lists
+CAS_34256_82_1,Acetochlor,34256-82-1,,,PubChem title + local regulatory lists
+CAS_34681_10_2,Butocarboxim,34681-10-2,,,PubChem title + local regulatory lists
+CAS_34681_23_7,Butoxycarboxim,34681-23-7,,,PubChem title + local regulatory lists
+CAS_35367_38_5,Diflubenzuron,35367-38-5,,,PubChem title + local regulatory lists
+CAS_35471_43_3,"Potassium 2,4,5-trichlorophenolate",35471-43-3,,,PubChem title + local regulatory lists
+CAS_36734_19_7,Iprodione,36734-19-7,,,PubChem title + local regulatory lists
+CAS_3689_24_5,Sulfotep,3689-24-5,,,PubChem title + local regulatory lists
+CAS_3691_35_8,Chlorophacinone,3691-35-8,,,PubChem title + local regulatory lists
+CAS_3861_41_4,Bromoxynil butyrate,3861-41-4,,,PubChem title + local regulatory lists
+CAS_38641_94_0,Roundup,38641-94-0,,,PubChem title + local regulatory lists
+CAS_39196_18_4,Thiofanox,39196-18-4,,,PubChem title + local regulatory lists
+CAS_39300_45_3,Dinocap,39300-45-3,,,PubChem title + local regulatory lists
+CAS_39515_41_8,Fenpropathrin,39515-41-8,,,PubChem title + local regulatory lists
+CAS_40487_42_1,Pendimethalin,40487-42-1,,,PubChem title + local regulatory lists
+CAS_40596_69_8,Methoprene,40596-69-8,,,PubChem title + local regulatory lists
+CAS_41198_08_7,Profenofos,41198-08-7,,,PubChem title + local regulatory lists
+CAS_4151_50_2,Volcano,4151-50-2,,,PubChem title + local regulatory lists
+CAS_42874_03_3,Oxyfluorfen,42874-03-3,,,PubChem title + local regulatory lists
+CAS_43222_48_6,Difenzoquat metilsulfate,43222-48-6,,,PubChem title + local regulatory lists
+CAS_4685_14_7,Paraquat,4685-14-7,,,PubChem title + local regulatory lists
+CAS_470_90_6,Chlorfenvinphos,470-90-6,,,PubChem title + local regulatory lists
+CAS_4824_78_6,Bromophos-ethyl,4824-78-6,,,PubChem title + local regulatory lists
+CAS_485_31_4,Binapacryl,485-31-4,,,PubChem title + local regulatory lists
+CAS_50_29_3,"1-Chloro-4-(2,2,2-trichloro-1-(4-chlorophenyl)ethyl)benzene",50-29-3,,,PubChem title + local regulatory lists
+CAS_50471_44_8,Vinclozolin,50471-44-8,,,PubChem title + local regulatory lists
+CAS_50723_80_3,Bentazone-sodium,50723-80-3,,,PubChem title + local regulatory lists
+CAS_510_15_6,Chlorobenzilate,510-15-6,,,PubChem title + local regulatory lists
+CAS_51218_45_2,Metolachlor,51218-45-2,,,PubChem title + local regulatory lists
+CAS_51235_04_2,Hexazinone,51235-04-2,,,PubChem title + local regulatory lists
+CAS_51338_27_3,Diclofop-methyl,51338-27-3,,,PubChem title + local regulatory lists
+CAS_51630_58_1,Fenvalerate,51630-58-1,,,PubChem title + local regulatory lists
+CAS_52_68_6,Trichlorfon,52-68-6,,,PubChem title + local regulatory lists
+CAS_52_85_7,Famphur,52-85-7,,,PubChem title + local regulatory lists
+CAS_52315_07_8,Cypermethrin,52315-07-8,,,PubChem title + local regulatory lists
+CAS_5259_88_1,Oxycarboxin,5259-88-1,,,PubChem title + local regulatory lists
+CAS_52645_53_1,Permethrin,52645-53-1,,,PubChem title + local regulatory lists
+CAS_52918_63_5,Deltamethrin,52918-63-5,,,PubChem title + local regulatory lists
+CAS_533_74_4,Dazomet,533-74-4,,,PubChem title + local regulatory lists
+CAS_53404_37_8,"2,4-D 2-Ethyl-4-methylpentyl ester",53404-37-8,,,PubChem title + local regulatory lists
+CAS_54_11_5,Nicotine,54-11-5,,,PubChem title + local regulatory lists
+CAS_542_75_6,"1,3-Dichloropropene",542-75-6,,,PubChem title + local regulatory lists
+CAS_54593_83_8,Chlorethoxyfos,54593-83-8,,,PubChem title + local regulatory lists
+CAS_55_38_9,Fenthion,55-38-9,,,PubChem title + local regulatory lists
+CAS_55219_65_3,Triadimenol,55219-65-3,,,PubChem title + local regulatory lists
+CAS_55283_68_6,Ethalfluralin,55283-68-6,,,PubChem title + local regulatory lists
+CAS_55285_14_8,Carbosulfan,55285-14-8,,,PubChem title + local regulatory lists
+CAS_556_61_6,Methyl isothiocyanate,556-61-6,,,PubChem title + local regulatory lists
+CAS_5598_13_0,Chlorpyrifos-methyl,5598-13-0,,,PubChem title + local regulatory lists
+CAS_56_38_2,Parathion,56-38-2,,,PubChem title + local regulatory lists
+CAS_56_72_4,Coumaphos,56-72-4,,,PubChem title + local regulatory lists
+CAS_56073_07_5,Difenacoum,56073-07-5,,,PubChem title + local regulatory lists
+CAS_56073_10_0,Brodifacoum,56073-10-0,,,PubChem title + local regulatory lists
+CAS_563_12_2,Ethion,563-12-2,,,PubChem title + local regulatory lists
+CAS_56634_95_8,Bromoxynil heptanoate,56634-95-8,,,PubChem title + local regulatory lists
+CAS_57_24_9,Strychnine,57-24-9,,,PubChem title + local regulatory lists
+CAS_57213_69_1,Triclopyr triethylamine,57213-69-1,,,PubChem title + local regulatory lists
+CAS_57837_19_1,Metalaxyl,57837-19-1,,,PubChem title + local regulatory lists
+CAS_57960_19_7,Acequinocyl,57960-19-7,,,PubChem title + local regulatory lists
+CAS_58_89_9,Hexachlorocyclohexane,58-89-9,CAS_608_73_1,isomer,PubChem title + local regulatory lists
+CAS_5836_29_3,Coumatetralyl,5836-29-3,,,PubChem title + local regulatory lists
+CAS_584_79_2,Allethrins,584-79-2,,,PubChem title + local regulatory lists
+CAS_592_01_8,Calcium cyanide,592-01-8,,,PubChem title + local regulatory lists
+CAS_59669_26_0,Thiodicarb,59669-26-0,,,PubChem title + local regulatory lists
+CAS_60_51_5,Dimethoate,60-51-5,,,PubChem title + local regulatory lists
+CAS_60_57_1,Dieldrin,60-57-1,,,PubChem title + local regulatory lists
+CAS_60207_90_1,Propiconazole,60207-90-1,,,PubChem title + local regulatory lists
+CAS_608_73_1,Hexachlorocyclohexane,608-73-1,,,PubChem title + local regulatory lists
+CAS_61_82_5,Amitrole,61-82-5,,,PubChem title + local regulatory lists
+CAS_6164_98_3,Chlordimeform,6164-98-3,,,PubChem title + local regulatory lists
+CAS_62_56_6,Thiourea,62-56-6,,,PubChem title + local regulatory lists
+CAS_62_73_7,Dichlorvos,62-73-7,,,PubChem title + local regulatory lists
+CAS_62_74_8,Sodium Fluoroacetate,62-74-8,,,PubChem title + local regulatory lists
+CAS_62476_59_9,Acifluorfen sodium,62476-59-9,,,PubChem title + local regulatory lists
+CAS_63_25_2,Carbaryl,63-25-2,,,PubChem title + local regulatory lists
+CAS_63333_35_7,Bromethalin,63333-35-7,,,PubChem title + local regulatory lists
+CAS_640_15_3,Thiometon,640-15-3,,,PubChem title + local regulatory lists
+CAS_640_19_7,Fluoroacetamide,640-19-7,,,PubChem title + local regulatory lists
+CAS_64628_44_0,Triflumuron,64628-44-0,,,PubChem title + local regulatory lists
+CAS_65731_84_2,Alpha-Cypermethrin,65731-84-2,,,PubChem title + local regulatory lists
+CAS_658066_35_4,Fluopyram,658066-35-4,,,PubChem title + local regulatory lists
+CAS_65907_30_4,Furathiocarb,65907-30-4,,,PubChem title + local regulatory lists
+CAS_66230_04_4,Esfenvalerate,66230-04-4,,,PubChem title + local regulatory lists
+CAS_67375_30_8,Alpha-Cypermethrin,67375-30-8,,,PubChem title + local regulatory lists
+CAS_68049_83_2,Azafenidin,68049-83-2,,,PubChem title + local regulatory lists
+CAS_68085_85_8,Cyhalothrin,68085-85-8,,,PubChem title + local regulatory lists
+CAS_68359_37_5,Cyfluthrin,68359-37-5,,,PubChem title + local regulatory lists
+CAS_68694_11_1,Triflumizole,68694-11-1,,,PubChem title + local regulatory lists
+CAS_6923_22_4,Monocrotophos,6923-22-4,,,PubChem title + local regulatory lists
+CAS_69806_50_4,Fluazifop-butyl,69806-50-4,,,PubChem title + local regulatory lists
+CAS_70124_77_5,Flucythrinate,70124-77-5,,,PubChem title + local regulatory lists
+CAS_709_98_8,Propanil,709-98-8,,,PubChem title + local regulatory lists
+CAS_71751_41_2,Abamectin,71751-41-2,,,PubChem title + local regulatory lists
+CAS_72_20_8,Endrin,72-20-8,,,PubChem title + local regulatory lists
+CAS_72_43_5,Methoxychlor,72-43-5,,,PubChem title + local regulatory lists
+CAS_72_54_8,"P,P'-ddd",72-54-8,,,PubChem title + local regulatory lists
+CAS_72490_01_8,Fenoxycarb,72490-01-8,,,PubChem title + local regulatory lists
+CAS_7287_19_6,Prometryn,7287-19-6,,,PubChem title + local regulatory lists
+CAS_732_11_6,Phosmet,732-11-6,,,PubChem title + local regulatory lists
+CAS_7345_69_9,Sodium tetrathiocarbonate,7345-69-9,,,PubChem title + local regulatory lists
+CAS_74_83_9,Methyl Bromide,74-83-9,,,PubChem title + local regulatory lists
+CAS_74_88_4,Methyl iodide,74-88-4,,,PubChem title + local regulatory lists
+CAS_74_90_8,Hydrogen Cyanide,74-90-8,,,PubChem title + local regulatory lists
+CAS_741_58_2,Bensulide,741-58-2,,,PubChem title + local regulatory lists
+CAS_7446_18_6,Thallous sulfate,7446-18-6,,,PubChem title + local regulatory lists
+CAS_75_21_8,Ethylene Oxide,75-21-8,,,PubChem title + local regulatory lists
+CAS_75_56_9,Propylene Oxide,75-56-9,,,PubChem title + local regulatory lists
+CAS_759_94_4,Eptam,759-94-4,,,PubChem title + local regulatory lists
+CAS_76_06_2,Chloropicrin,76-06-2,,,PubChem title + local regulatory lists
+CAS_76_44_8,Heptachlor,76-44-8,,,PubChem title + local regulatory lists
+CAS_76_87_9,Triphenyltin hydroxide,76-87-9,,,PubChem title + local regulatory lists
+CAS_76703_62_3,gamma-Cyhalothrin,76703-62-3,,,PubChem title + local regulatory lists
+CAS_7758_98_7,Copper Sulfate,7758-98-7,,,PubChem title + local regulatory lists
+CAS_7758_99_8,Copper sulfate pentahydrate,7758-99-8,,,PubChem title + local regulatory lists
+CAS_7775_09_9,Sodium Chlorate,7775-09-9,,,PubChem title + local regulatory lists
+CAS_7786_34_7,Mevinphos,7786-34-7,,,PubChem title + local regulatory lists
+CAS_7803_51_2,Phosphine,7803-51-2,,,PubChem title + local regulatory lists
+CAS_79127_80_3,Fenoxycarb,79127-80-3,,,PubChem title + local regulatory lists
+CAS_79538_32_2,Tefluthrin,79538-32-2,,,PubChem title + local regulatory lists
+CAS_79622_59_6,Fluazinam,79622-59-6,,,PubChem title + local regulatory lists
+CAS_8001_35_2,Toxaphene,8001-35-2,,,PubChem title + local regulatory lists
+CAS_8001_50_1,Strobane,8001-50-1,,,PubChem title + local regulatory lists
+CAS_8001_58_9,Creosota,8001-58-9,,,local regulatory lists
+CAS_8003_34_7,Pyrethrins,8003-34-7,,,PubChem title + local regulatory lists
+CAS_8012_69_9,Copper oxychloride sulfate,8012-69-9,,,PubChem title + local regulatory lists
+CAS_8018_01_7,Mancozeb,8018-01-7,,,PubChem title + local regulatory lists
+CAS_8042_47_5,"Aceite mineral, refinado",8042-47-5,,,local regulatory lists
+CAS_81_81_2,Warfarin,81-81-2,,,PubChem title + local regulatory lists
+CAS_81412_43_3,Tridemorph,81412-43-3,,,PubChem title + local regulatory lists
+CAS_81591_81_3,Touchdown,81591-81-3,,,PubChem title + local regulatory lists
+CAS_82_66_6,Diphacinone,82-66-6,,,PubChem title + local regulatory lists
+CAS_82_68_8,Quintozene,82-68-8,,,PubChem title + local regulatory lists
+CAS_82558_50_7,Isoxaben,82558-50-7,,,PubChem title + local regulatory lists
+CAS_82560_54_1,Benfuracarb,82560-54-1,,,PubChem title + local regulatory lists
+CAS_82657_04_3,Bifenthrin,82657-04-3,,,PubChem title + local regulatory lists
+CAS_83_79_4,Rotenone,83-79-4,,,PubChem title + local regulatory lists
+CAS_83121_18_0,Teflubenzuron,83121-18-0,,,PubChem title + local regulatory lists
+CAS_84332_86_5,Chlozolinate,84332-86-5,,,PubChem title + local regulatory lists
+CAS_85_00_7,Diquat Dibromide,85-00-7,,,PubChem title + local regulatory lists
+CAS_85509_19_9,Flusilazole,85509-19-9,,,PubChem title + local regulatory lists
+CAS_86_50_0,Azinphos-Methyl,86-50-0,,,PubChem title + local regulatory lists
+CAS_87_86_5,Pentachlorophenol,87-86-5,,,PubChem title + local regulatory lists
+CAS_87392_12_9,S-Metolachlor,87392-12-9,,,PubChem title + local regulatory lists
+CAS_87674_68_8,Dimethenamid,87674-68-8,,,PubChem title + local regulatory lists
+CAS_88_85_7,Dinoseb,88-85-7,,,PubChem title + local regulatory lists
+CAS_88671_89_0,Myclobutanil,88671-89-0,,,PubChem title + local regulatory lists
+CAS_900_95_8,Fentin acetate,900-95-8,,,PubChem title + local regulatory lists
+CAS_90035_08_8,Flocoumafen,90035-08-8,,,PubChem title + local regulatory lists
+CAS_9006_42_2,Metiram,9006-42-2,,,local regulatory lists
+CAS_90640_80_5,Aceite de antraceno,90640-80-5,,,local regulatory lists
+CAS_91465_08_6,lambda-Cyhalothrin,91465-08-6,,,PubChem title + local regulatory lists
+CAS_919_86_8,Demeton-S-methyl,919-86-8,,,PubChem title + local regulatory lists
+CAS_93_72_1,Fenoprop,93-72-1,,,PubChem title + local regulatory lists
+CAS_93_76_5,Trichlorophenoxyacetic acid,93-76-5,,,PubChem title + local regulatory lists
+CAS_94_59_7,Safrole,94-59-7,,,PubChem title + local regulatory lists
+CAS_94125_34_5,Prosulfuron,94125-34-5,,,PubChem title + local regulatory lists
+CAS_94361_06_5,Cyproconazole,94361-06-5,,,PubChem title + local regulatory lists
+CAS_950_37_8,Methidathion,950-37-8,,,PubChem title + local regulatory lists
+CAS_951659_40_8,Flupyradifurone,951659-40-8,,,PubChem title + local regulatory lists
+CAS_95465_99_9,Cadusafos,95465-99-9,,,PubChem title + local regulatory lists
+CAS_959_98_8,alpha-Endosulfan,959-98-8,CAS_115_29_7,isomer,PubChem title + local regulatory lists
+CAS_95977_29_0,Haloxyfop-P,95977-29-0,,,PubChem title + local regulatory lists
+CAS_96_12_8,"1,2-Dibromo-3-Chloropropane",96-12-8,,,PubChem title + local regulatory lists
+CAS_96_24_2,"3-Chloro-1,2-propanediol",96-24-2,,,PubChem title + local regulatory lists
+CAS_96_45_7,Ethylenethiourea,96-45-7,,,PubChem title + local regulatory lists
+CAS_96182_53_5,Tebupirimfos,96182-53-5,,,PubChem title + local regulatory lists
+CAS_96489_71_3,Pyridaben,96489-71-3,,,PubChem title + local regulatory lists
+CAS_98_95_3,Nitrobenzene,98-95-3,,,PubChem title + local regulatory lists
+CAS_99_30_9,"2,6-Dichloro-4-nitroaniline",99-30-9,,,PubChem title + local regulatory lists
+GROUP_ARSENICO_Y_SUS_COMPUESTOS,Arsénico y sus compuestos,,,regulatory_group,local regulatory lists
+GROUP_BORAX_SALES_DE_BORATO,Bórax; Sales de borato,,,regulatory_group,local regulatory lists
+GROUP_DNOC_Y_SUS_SALES,DNOC y sus sales,,,regulatory_group,local regulatory lists
+GROUP_FORMULA_EN_POLVO_DISPERSABLE_QUE_CONTIENE_UNA_COMBINACION_DE_BENOMILO_7_CARBOFUR,"Fórmula en polvo dispersable. que contiene una combinación de: benomilo ≥7%, carbofurano ≥10%, tiram ≥15%.",,,regulatory_group,local regulatory lists
+GROUP_SALES_E_ISOMEROS_DE_GLUFOSINATO_DE_AMONIO,Sales e isómeros de glufosinato de amonio,,,regulatory_group,local regulatory lists
+GROUP_MERCURIO_Y_SUS_COMPUESTOS,Mercurio y sus compuestos,,,regulatory_group,local regulatory lists
+GROUP_ACEITES_DE_PARAFINA_CON_UN_CONTENIDO_DE_DMSO_3,Aceites de parafina con un contenido de DMSO > 3%,,,regulatory_group,local regulatory lists
+GROUP_COMPUESTOS_DE_TRIBUTILESTANO,Compuestos de tributilestaño,,,regulatory_group,local regulatory lists
+GROUP_EXTRACTOS_DE_LA_RAIZ_DE_LAS_PLANTAS_CONOCIDAS_COMO_CUBE_O_K_BO_LONCHOCARPUS,Extractos de la raíz de las plantas conocidas como cube o k-bo (Lonchocarpus),,,regulatory_group,local regulatory lists

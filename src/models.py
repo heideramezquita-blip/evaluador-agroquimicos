@@ -110,6 +110,11 @@ class EvidenceHit:
     context_class: str
     strength: str
     rationale: str
+    substance_id: str = ""
+    canonical_name: str = ""
+    alias_language: str = ""
+    alias_type: str = ""
+    alias_source: str = ""
 
 
 @dataclass
