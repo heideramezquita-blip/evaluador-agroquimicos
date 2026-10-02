@@ -139,6 +139,62 @@ div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button *{co
 .clean-table th{background:#f2f4f7;color:#344054;font-weight:750;text-align:left;padding:.72rem .75rem;border-bottom:1px solid #d0d5dd;white-space:nowrap}
 .clean-table td{background:#fff;color:#101828;padding:.72rem .75rem;border-bottom:1px solid #eaecf0;vertical-align:top}
 .clean-table tr:last-child td{border-bottom:0}.clean-table tbody tr:hover td{background:#f9fafb}
+/* Print/PDF: expose collapsed Streamlit expander content. */
+@media print{
+  html,body,[data-testid="stAppViewContainer"],.stApp{background:#fff!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+
+  /* Native <details> elements are normally printed in their current
+     collapsed state. Force Streamlit expander bodies to participate in
+     print layout without changing their interactive state on screen. */
+  div[data-testid="stExpander"] details,
+  div[data-testid="stExpander"] details:not([open]){
+    overflow:visible!important;
+    height:auto!important;
+    max-height:none!important;
+  }
+  div[data-testid="stExpander"] details>div,
+  div[data-testid="stExpander"] details:not([open])>div,
+  div[data-testid="stExpander"] details>summary~*{
+    display:block!important;
+    visibility:visible!important;
+    overflow:visible!important;
+    height:auto!important;
+    max-height:none!important;
+    opacity:1!important;
+  }
+  div[data-testid="stExpander"]{
+    overflow:visible!important;
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+  div[data-testid="stExpander"] summary{
+    break-after:avoid-page!important;
+    page-break-after:avoid!important;
+  }
+
+  /* Interactive controls are not part of the printable evaluation report. */
+  [data-testid="stHeader"],
+  [data-testid="stToolbar"],
+  [data-testid="stFileUploader"],
+  div.stButton,
+  footer{
+    display:none!important;
+  }
+
+  .block-container{
+    max-width:none!important;
+    padding:0.35in 0.45in!important;
+  }
+  .brand{margin-bottom:1.4rem!important}
+  .hero{margin-bottom:1.2rem!important}
+  .clean-table-wrap{overflow:visible!important}
+  .result-card,.match-box,.clean-table-wrap,[data-testid="stMetric"]{
+    break-inside:avoid-page!important;
+    page-break-inside:avoid!important;
+  }
+}
+
 footer{visibility:hidden}
 @media(max-width:700px){.block-container{padding-top:1.2rem}.brand{margin-bottom:2.2rem}.hero h1{font-size:2rem}.hero p{font-size:.98rem}}
 </style>"""
